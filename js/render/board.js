@@ -2,7 +2,7 @@
 // small white highlights), with the same grass and dirt colors as Carrot Patch.
 import { G } from '../engine/game.js';
 import { ell, rng } from '../../kit/js/draw.js';
-import { DIRS } from '../engine/flow.js';
+import { DIRS, rotMask } from '../engine/flow.js';
 
 let cv, g, boardEl, tile = 60, W = 0, H = 0, dpr = 1;
 const flashes = {};                 // tile index → time the hint glow ends
@@ -72,6 +72,7 @@ export function draw(now){
       T.vis += (target - T.vis) * .35; if (Math.abs(target - T.vis) < .5) T.vis = target;
       if (T.locked) lockedRim(x, y, s);
       pipe(T, cx, cy, s, f.wet.has(T.i), t);
+      if (f.wet.has(T.i)) ripples(T, cx, cy, s, f.entry[T.i], t);
       if (T.pump) windmill(x+s*.8, y+s*.2, s, f.wet.has(T.i), t);
     }
     else if (T.type==='src') barrel(g, cx, cy, s);
@@ -127,8 +128,19 @@ function pipe(T, cx, cy, s, wet, t){
     if (!dash) ell(g, 0, 0, w/2, w/2, col);
   };
   seg(s*.5, '#9c7446'); seg(s*.44, '#b48d5a'); seg(s*.3, '#dcbd8b');
-  if (wet){ seg(s*.22, '#5aaee0'); seg(s*.05, 'rgba(255,255,255,.75)', [s*.07, s*.17]); }
+  if (wet) seg(s*.22, '#5aaee0');
   else { const R=rng(T.i*13+5); for (let k=0;k<4;k++){ const a=Math.floor(R()*4); if (!(m&(1<<a))) continue; const d=R()*.4; ell(g, ENDS[a][0]*s*d+(R()-.5)*s*.08, ENDS[a][1]*s*d+(R()-.5)*s*.08, s*.025, s*.018, '#c4a271'); } }
+  g.restore();
+}
+// Little ripples that run the way the water flows: from the side it came in, out through every other opening.
+// Drawn once the piece has finished turning, so they always line up with the channel.
+function ripples(T, cx, cy, s, inSide, t){
+  if (T.vis !== T.rot*90 || !inSide) return;
+  const m = rotMask(T.base, T.rot), k0 = [1,2,4,8].indexOf(inSide);
+  g.save(); g.strokeStyle='rgba(255,255,255,.75)'; g.lineWidth=s*.05; g.lineCap='butt';
+  g.setLineDash([s*.07, s*.17]); g.lineDashOffset = -t*s*.5;
+  ENDS.forEach(([dx,dy],k) => { if (!(m & (1<<k)) || k===k0) return;
+    g.beginPath(); g.moveTo(cx+ENDS[k0][0]*s/2, cy+ENDS[k0][1]*s/2); g.lineTo(cx, cy); g.lineTo(cx+dx*s/2, cy+dy*s/2); g.stroke(); });
   g.restore();
 }
 function lockedRim(x, y, s){

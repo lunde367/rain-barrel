@@ -136,3 +136,4 @@
 .set-row .btn{ flex:none; min-width:64px }
 .dev-solve{ flex:none; background:#2b2440 !important; color:#ffe9a8 !important; border-color:#2b2440 !important }
 .board{ display:flex; align-items:center; justify-content:center }
+.app:not(.home-mode) .msg{ height:auto; min-height:2.5em; overflow:visible }

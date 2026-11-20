@@ -31,25 +31,26 @@ export function flow(s){
   const mask=t=>t&&t.type==='pipe'?rotMask(t.base,t.rot):0;
   const can=(a,b)=>b.h<=a.h||(b.pump&&b.h<=a.h+1);
   const spend=n=>{const x=Math.min(left,n);left-=x;used+=x;};
-  const push=n=>{
+  const entry={};   // tile index → the side water came in from (N=1,E=2,S=4,W=8)
+  const push=(n,b)=>{
     const cost=n.hot?3:1;
     // Thirsty cows next to this channel drink first.
     for(const [b,dr,dc] of DIRS){const x=at(n.r+dr,n.c+dc);
       if(x&&x.type==='cow'&&!drank.has(x.i)&&left>0){drank.add(x.i);spend(2);}}
     if(left<cost){ranOut=true;return;}
-    spend(cost);wet.add(n.i);order.push(n.i);q.push(n);
+    spend(cost);entry[n.i]=OPP[b];wet.add(n.i);order.push(n.i);q.push(n);
     const m=mask(n);
     for(const [b,dr,dc] of DIRS){if(!(m&b))continue;const x=at(n.r+dr,n.c+dc);
       const ok=x&&((x.type==='pipe'&&(mask(x)&OPP[b]))||x.type==='src'||x.type==='plant');if(!ok){leaks.push([n.i,b]);spend(2);}}
   };
   tiles.forEach(t=>{if(t.type!=='src')return;
-    for(const [b,dr,dc] of DIRS){const n=at(t.r+dr,t.c+dc);if(n&&n.type==='pipe'&&(mask(n)&OPP[b])&&!wet.has(n.i)&&can(t,n))push(n);}});
+    for(const [b,dr,dc] of DIRS){const n=at(t.r+dr,t.c+dc);if(n&&n.type==='pipe'&&(mask(n)&OPP[b])&&!wet.has(n.i)&&can(t,n))push(n,b);}});
   while(q.length){const t=q.shift(),m=mask(t);
     for(const [b,dr,dc] of DIRS){if(!(m&b))continue;const n=at(t.r+dr,t.c+dc);if(!n)continue;
-      if(n.type==='pipe'&&(mask(n)&OPP[b])&&!wet.has(n.i)&&can(t,n))push(n);
+      if(n.type==='pipe'&&(mask(n)&OPP[b])&&!wet.has(n.i)&&can(t,n))push(n,b);
       else if(n.type==='plant'&&can(t,n))watered.add(n.i);
       else if((n.type==='plant'||(n.type==='pipe'&&(mask(n)&OPP[b])))&&!can(t,n))blocked.push([t.i,b]);}}
-  return {wet,watered,leaks,water:used,left,order,drank,ranOut,blocked};
+  return {wet,watered,leaks,water:used,left,order,drank,ranOut,blocked,entry};
 }
 export function needed(t){for(let k=0;k<4;k++)if(rotMask(t.base,t.rot+k)===t.base)return k;return 0;}
 
