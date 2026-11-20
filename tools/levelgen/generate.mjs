@@ -1,0 +1,119 @@
+// Level generator: builds levels for each world in curriculum.mjs, rates them, and keeps the ones
+// that hit each level's target difficulty. Writes js/data/lab.js (played in test mode, under
+// "Level Lab") and tools/levelgen/report.md.
+//
+//   node tools/levelgen/generate.mjs            all worlds, seed 1
+//   node tools/levelgen/generate.mjs 42         a different batch (seed 42)
+//
+// A level is accepted only if it: can be solved; has at most 2 different best answers; doesn't
+// start out solved; and scores within TOLERANCE of its target.
+import { writeFileSync } from 'node:fs';
+import { PLAN, TOLERANCE, TRIES } from './curriculum.mjs';
+import { blank, placeEnds, carvePath, lay, PATTERNS, toRows, rngFrom } from './patterns.mjs';
+import { rate } from './rate.mjs';
+import { parse, flow, mulberry32 } from '../../js/engine/flow.js';
+
+const seed = +(process.argv[2] || 1);
+const lerp = (pair, t) => Array.isArray(pair) ? pair[0] + (pair[1]-pair[0])*t : pair;
+const ADJ = ['Muddy','Sunny','Mossy','Quiet','Twisty','Thirsty','Windy','Pebbly','Shady','Dusty','Dewy','Crooked','Lazy','Bumpy','Misty','Sleepy'];
+const NOUN = ['Ditch','Furrow','Trickle','Puddle','Bend','Orchard','Lane','Hollow','Patch','Brook','Meadow','Corner','Gully','Terrace','Field','Spring'];
+
+// One attempt at a level for world W at progress t (0 = first level, 1 = last).
+function build(W, t, R){
+  const w = Math.round(lerp(W.width, t) + (R.f()-.5)), h = Math.round(lerp(W.height, t) + (R.f()-.5));
+  const B = blank(Math.max(3, w), Math.max(3, h));
+  const plants = Math.max(1, Math.round(lerp(W.plants, t) + (R.f()-.5)*.8));
+  const ends = placeEnds(B, R, { plants, minDist: Math.max(3, Math.round((B.W+B.H)/3)) }); if (!ends) return null;
+  const used = [];
+  const shortcut = R.chance(lerp(W.patterns.decoyShortcut || 0, t));
+  // The real route: winding, and kept away from the straight line when a decoy shortcut will use it.
+  let tree = [...ends.srcs];
+  for (const p of ends.pls){
+    const avoid = shortcut ? (x => { const s=ends.srcs[0], dx=p.c-s.c, dy=p.r-s.r, len=Math.hypot(dx,dy)||1;
+      const d = Math.abs((x.c-s.c)*dy - (x.r-s.r)*dx)/len; return d < .8 ? 3 : 0; }) : null;
+    const path = carvePath(B, R, tree, p, { wiggle: lerp(W.wiggle, t), avoid }); if (!path) return null;
+    lay(B, path); tree = tree.concat(path.filter(x => x.k==='pipe'));
+  }
+  if (shortcut){ if (PATTERNS.decoyShortcut(B, R, ends, W.penalty)) used.push(`decoy shortcut (${W.penalty==='none'?'rocks':W.penalty})`); }
+  if (W.patterns.hills && R.chance(lerp(W.patterns.hills, t))){ const pumps = R.chance(lerp(W.pumps || 0, t)); PATTERNS.hills(B, R, ends, { pumps }); used.push(pumps ? 'hills + pump' : 'hills'); }
+  const locked = Math.round(lerp(W.locked, t)); if (locked){ PATTERNS.lockedAnchor(B, R, ends, locked); used.push('locked anchor'); }
+  if (W.patterns.sunPatch){ PATTERNS.sunPatch(B, R, ends, lerp(W.patterns.sunPatch, t)); used.push('sun-baked patch'); }
+  PATTERNS.rocks(B, R, ends, lerp(W.rocks, t));
+  const dec = lerp(W.decoys, t); if (dec > .05){ PATTERNS.decoyFill(B, R, ends, dec); used.push('decoy fill'); }
+  if (W.penalty==='none' && shortcut){   // in the first world a shortcut is simply blocked by a rock later on
+    const alt = B.cells.filter(x => x.alt && !x.route && x.k==='pipe'); if (alt.length){ R.pick(alt).k='#'; } }
+  const level = { rows: toRows(B), src: R.pick(W.sources) };
+  if (ends.srcs.length > 1) level.src = 'barrel';
+  return { level, used };
+}
+
+// Solve, check the rules, set the barrel size, and rate.
+export const WHY = {};
+const no = why => { WHY[why] = (WHY[why]||0)+1; return null; };
+function finish(cand, W, t, R){
+  const r0 = rate(cand.level);
+  if (!r0.solvable) return no('unsolvable'); if (r0.optimal > 2) return no('too many answers'); if (r0.min < 2) return no('too short'); if (r0.truncated) return no('too big to check');
+  const level = { ...cand.level, rows: r0.rows };
+  if (W.cap && R.chance(lerp(W.cap, t))){ level.cap = r0.min; level.src = 'barrel'; cand.used.push('limited barrel'); }
+  const r = rate(level); if (!r.solvable || r.optimal > 2) return null;
+  if ((W.require||[]).some(m => !r.mechanics.includes(m))) return no('missing world mechanic');
+  // must not start out solved after the game's own scramble
+  const S = parse(level), rnd = mulberry32(1234); let solvedAtStart = true;
+  for (let k=0; k<60 && solvedAtStart; k++){ S.tiles.forEach(x => { if (x.type==='pipe' && !x.locked) x.rot = Math.floor(rnd()*4); }); solvedAtStart = flow(S).watered.size === S.plants; }
+  if (solvedAtStart) return no('starts solved');
+  return { level:{ ...level, rows:r.rows }, rating:r, used:cand.used };
+}
+
+function checkPlan(){
+  const problems = [];
+  PLAN.forEach((W, i) => { if (W.to <= W.from) problems.push(`${W.name}: last level must be harder than the first`);
+    if (i && W.from <= PLAN[i-1].from) problems.push(`${W.name} must start harder than ${PLAN[i-1].name}`);
+    if (i && W.to <= PLAN[i-1].to) problems.push(`${W.name} must end harder than ${PLAN[i-1].name}`); });
+  if (problems.length){ console.error('The difficulty plan breaks the rules:\n  ' + problems.join('\n  ')); process.exit(1); }
+}
+
+checkPlan();
+const R = rngFrom(seed), out = [], report = [];
+PLAN.forEach((W, wi) => {
+  const found = [];
+  for (let li=0; li<W.count; li++){
+    const t = W.count > 1 ? li/(W.count-1) : 0, target = W.from + (W.to-W.from)*t;
+    let best = null;
+    for (let k=0; k<TRIES; k++){
+      const c = build(W, t, R); if (!c) continue;
+      const f = finish(c, W, t, R); if (!f) continue;
+      const off = Math.abs(f.rating.score - target);
+      if (!best || off < best.off) best = { ...f, off };
+      if (off <= TOLERANCE) break;
+    }
+    if (!best){ console.log(`${W.name} ${li+1}: no level found`); continue; }
+    found.push({ ...best, target });
+  }
+  // Rule 1: within a world, easiest first. Sorting by score guarantees it even when a level overshoots.
+  found.sort((a,b) => a.rating.score - b.rating.score);
+  found.forEach((best, li) => {
+    const name = `${ADJ[Math.floor(R.f()*ADJ.length)]} ${NOUN[Math.floor(R.f()*NOUN.length)]}`, r = best.rating;
+    out.push({ name, world:wi, ...best.level,
+      note:`Generated: score ${r.score}. ${best.used.join(', ') || 'plain route'}.` });
+    report.push(`| ${W.name} | ${li+1} | ${name} | ${best.target.toFixed(1)} | ${r.score}${best.off > TOLERANCE ? ' ⚠' : ''} | ${r.size} | ${r.pieces} | ${r.decoys} | ${r.traps} | ${r.min}${best.level.cap?` (cap ${best.level.cap})`:''} | ${best.used.join(', ') || '-'} |`);
+    console.log(`${W.name} ${li+1}: ${name.padEnd(16)} score ${String(r.score).padStart(4)}  ${r.size}  ${best.used.join(', ')}`);
+  });
+});
+
+const worlds = PLAN.map(W => ({ name:W.name, icon:W.icon, grass:W.grass, hot:!!W.hot }));
+writeFileSync(new URL('../../js/data/lab.js', import.meta.url),
+`// Generated by tools/levelgen/generate.mjs (seed ${seed}). Don't edit by hand: change curriculum.mjs and run it again.
+// These levels only show in test mode, under "Level Lab". Copy the ones you like into levels.js.
+export const LAB = ${JSON.stringify({ seed, worlds, levels:out }, null, 1)};
+`);
+writeFileSync(new URL('./report.md', import.meta.url),
+`# Level Lab report (seed ${seed})
+
+Generated by \`node tools/levelgen/generate.mjs ${seed}\`. Targets come from curriculum.mjs; ⚠ means no level got within ${TOLERANCE} of the target.
+
+| World | # | Name | Target | Score | Size | Pieces | Decoys | Traps | Best water | Patterns |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+${report.join('\n')}
+`);
+console.log('\nRejected attempts:', WHY);
+console.log(`\nWrote js/data/lab.js (${out.length} levels) and tools/levelgen/report.md`);

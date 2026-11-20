@@ -19,13 +19,13 @@ export let screen = 'home';
 // Unlocking: a world opens once you have enough stars from the world before it.
 // Inside an open world every level is playable in any order; only the tutorial (Spring Meadow 1) must come first.
 const worldStars = wi => LEVELS.filter(l => l.wi===wi).reduce((a,l) => a+(Save.data.stars[l.gi]||0), 0);
-const worldOpen = wi => devMode || wi===0 || (worldOpen(wi-1) && worldStars(wi-1) >= WORLDS[wi].need);
+const worldOpen = wi => devMode || (!WORLDS[wi].lab && (wi===0 || (worldOpen(wi-1) && worldStars(wi-1) >= WORLDS[wi].need)));
 const tutorialDone = () => (Save.data.stars[0]||0) > 0;
 const unlocked = gi => { if (devMode) return true; const L=LEVELS[gi];
   if (!worldOpen(L.wi)) return false; return !(L.wi===0 && L.li>0 && !tutorialDone()); };
 // The next world that's still closed, and how many more stars it needs.
 function nextGoal(){
-  const wi = WORLDS.findIndex((w,i) => !worldOpen(i)); if (wi < 0) return null;
+  const wi = WORLDS.findIndex((w,i) => !w.lab && !worldOpen(i)); if (wi < 0) return null;
   return { wi, W:WORLDS[wi], prev:WORLDS[wi-1], left:WORLDS[wi].need - worldStars(wi-1) };
 }
 const msg = t => { $('msg').textContent = t; };
@@ -40,7 +40,7 @@ function home(html){
   paintDev();
 }
 function nextLevel(){
-  const i = LEVELS.findIndex(l => unlocked(l.gi) && !(Save.data.stars[l.gi]>0));
+  const i = LEVELS.findIndex(l => !l.lab && unlocked(l.gi) && !(Save.data.stars[l.gi]>0));
   return i < 0 ? null : LEVELS[i];
 }
 export function showMenu(){
@@ -58,7 +58,7 @@ export function showMenu(){
     return `<div class="chap"><header><canvas data-icon="${Wd.icon}" width="88" height="88"></canvas>
       <span><b>${Wd.name}</b><small>${Wd.blurb}</small></span></header><div class="lvls">${lvls}</div></div>`;
   };
-  const parts = PARTS.map(P => {
+  const parts = PARTS.filter(P => !P.lab || devMode).map(P => {
     const ws = WORLDS.map((w,i) => [w,i]).filter(([w]) => w.part===P.n);
     const lv = LEVELS.filter(l => WORLDS[l.wi].part===P.n), got = lv.reduce((a,l) => a+(Save.data.stars[l.gi]||0), 0);
     const open = Save.data.fold[P.n] !== false;

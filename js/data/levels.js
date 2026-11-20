@@ -8,9 +8,12 @@
 // Worlds are the "gardens" on the home screen; parts group them like Carrot Patch's story parts.
 // need = stars you must collect in the world before it to open this one (about two thirds of them).
 // Every level in an open world can be played in any order, except that Spring Meadow 1 (the tutorial) comes first.
+import { LAB } from './lab.js';
+
 export const PARTS = [
   { n:1, name:'The Meadow', tint:'#4f8a3c' },
   { n:2, name:'New ideas to test', tint:'#3a9cc4' },
+  { n:3, name:'Level Lab', tint:'#8a5aa8', lab:true },   // generated levels, test mode only
 ];
 export const WORLDS = [
   { name:'Spring Meadow', blurb:'Rocks, corners and stuck pieces', icon:'barrel', part:1, grass:['#a6cf8a','#9ec781'] },
@@ -99,6 +102,11 @@ const DATA = [
   "│1 .0 .0 .0 │1p",
   "└0 ─0 ─0 ─0 ┘0"]}
 ];
+
+// Generated levels (tools/levelgen) go last, so they never shift the stars saved for real levels.
+const BASE = WORLDS.length;
+for (const w of LAB.worlds) WORLDS.push({ ...w, name:`Lab: ${w.name}`, blurb:'Generated levels to try out', part:3, lab:true });
+for (const L of LAB.levels) DATA.push({ ...L, world:BASE + L.world, lab:true });
 
 // Flat list with handy indexes: gi = position in the whole game, li = position in its world.
 export const SOURCES = {
