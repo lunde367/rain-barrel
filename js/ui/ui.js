@@ -12,13 +12,12 @@ import { G, startLevel, turn, undo, applyHint, solveAll } from '../engine/game.j
 import { LEVELS, WORLDS, PARTS } from '../data/levels.js';
 import { FREE_HINTS } from '../data/config.js';
 import { resize, cellAt, flashTile, drawIcon } from '../render/board.js';
+import { IC_HOME } from './markup.js';
 
 export let screen = 'home';
 const unlocked = gi => devMode || gi===0 || (Save.data.stars[gi-1]||0) > 0;
 const worldOpen = wi => devMode || unlocked(LEVELS.find(l => l.wi===wi).gi);
 const msg = t => { $('msg').textContent = t; };
-const svgIcon = d => `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
-const IC_HOME = svgIcon('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>');
 
 const coach = createCoach({ onFinish(){ Save.data.tutorialDone = true; Save.commit(); } });
 

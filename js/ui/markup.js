@@ -1,6 +1,8 @@
 // The page layout. Same structure and class names as Carrot Patch, so the kit styles it the same way.
 import { ICON } from '../../kit/js/ui.js';
 export { ICON };
+// House icon for going back to the home screen (also used on the results card).
+export const IC_HOME = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg>`;
 
 export const MARKUP = `
 <div class="app home-mode" id="app">
@@ -20,7 +22,7 @@ export const MARKUP = `
     <button class="btn ghost" id="undo">Undo</button>
     <button class="btn ghost icon" id="restart" aria-label="Restart level" title="Restart level">${ICON.restart}<span class="lbl"></span></button>
     <button class="btn ghost icon" id="sound" aria-label="Sound" title="Sound">${ICON.soundAll}</button>
-    <button class="btn ghost icon" id="map" aria-label="Gardens" title="Gardens">${ICON.map}</button>
+    <button class="btn ghost icon" id="map" aria-label="Home" title="Home">${IC_HOME}</button>
   </div>
 
   <div class="board" id="board">
