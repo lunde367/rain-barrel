@@ -9,13 +9,14 @@ const defaults = () => ({
   owned: {},                                   // purchases, e.g. { remove_ads:true }
   stats: { wins:0, hints:0 },
   fold: {},                                    // home screen: parts the player closed
+  seen: {},                                    // one-time tips already shown, e.g. { leakTip:true }
 });
 
 function migrate(d, base){
   return { ...base, ...d, v:base.v,
     stars: Array.isArray(d.stars) ? d.stars : [],
     settings: { ...base.settings, ...(d.settings||{}) },
-    owned: { ...(d.owned||{}) }, stats: { ...base.stats, ...(d.stats||{}) }, fold: { ...(d.fold||{}) } };
+    owned: { ...(d.owned||{}) }, stats: { ...base.stats, ...(d.stats||{}) }, fold: { ...(d.fold||{}) }, seen: { ...(d.seen||{}) } };
 }
 
 export const Save = createSave({

@@ -156,9 +156,27 @@ function windmill(x, y, s, wet, t){
 function edgeMark(T, b, s, t, kind){
   const k = [1,2,4,8].indexOf(b), cx = T.c*s+s/2 + ENDS[k][0]*s*.5, cy = T.r*s+s/2 + ENDS[k][1]*s*.5;
   const p = 1 + .12*Math.sin(t*6 + T.i);
-  if (kind==='leak'){ ell(g, cx, cy, s*.1*p, s*.12*p, '#5aaee0', '#ffffff', 2); ell(g, cx-s*.03, cy-s*.04, s*.025, s*.03, 'rgba(255,255,255,.85)'); return; }
+  if (kind==='leak'){ splash(cx, cy, ENDS[k][0], ENDS[k][1], s, t + T.i*.37); return; }
   ell(g, cx, cy, s*.13*p, s*.13*p, '#d64545', '#ffffff', 2);
   g.fillStyle='#fff'; g.font=`800 ${Math.round(s*.14)}px Nunito, sans-serif`; g.textAlign='center'; g.textBaseline='middle'; g.fillText('▲', cx, cy+1);
+}
+// A leak: a puddle spilling out of the open channel end, with drips running off it.
+function splash(cx, cy, dx, dy, s, t){
+  const px = -dy, py = dx;                         // sideways from the spill direction
+  const ox = cx + dx*s*.1, oy = cy + dy*s*.1;      // puddle sits just past the opening
+  const wob = 1 + .06*Math.sin(t*4);
+  g.save();
+  for (const [a, b, r] of [[0,0,.15],[.12,.08,.09],[-.13,.06,.08],[.05,.2,.07],[-.06,.17,.06]]){
+    const x = ox + px*a*s + dx*b*s, y = oy + py*a*s + dy*b*s;
+    ell(g, x, y, s*r*wob, s*r*.8*wob, 'rgba(90,174,224,.85)', '#3a86b8', 1.2);
+  }
+  ell(g, ox - px*s*.04 - dx*s*.02, oy - py*s*.04 - dy*s*.02, s*.05, s*.025, 'rgba(255,255,255,.75)');
+  for (let k=0; k<3; k++){                         // drips running away from the leak, fading as they go
+    const d = (t*1.1 + k/3) % 1, side = (k-1)*.12;
+    const x = ox + dx*s*(.12 + d*.3) + px*s*side, y = oy + dy*s*(.12 + d*.3) + py*s*side;
+    g.globalAlpha = 1 - d; ell(g, x, y, s*.035, s*.045, '#5aaee0', '#3a86b8', 1);
+  }
+  g.restore();
 }
 function glow(x, y, s, left, t){
   g.save(); g.globalAlpha = Math.min(1, left*1.6) * (.6 + .4*Math.sin(t*10));

@@ -4,6 +4,7 @@ import { $, starStr, ICON } from '../../kit/js/ui.js';
 import { on } from '../../kit/js/events.js';
 import { Audio } from '../../kit/js/audio.js';
 import { Ads } from '../../kit/js/monetization.js';
+import { toast } from '../../kit/js/fx.js';
 import { devMode, secretTaps } from '../../kit/js/native.js';
 import { createCoach } from '../../kit/js/coach.js';
 import { setHaptics } from '../../kit/js/haptics.js';
@@ -156,7 +157,7 @@ function showWin(w){
 }
 
 // ---------- wiring ----------
-let eraseArmed = false;
+let eraseArmed = false, playerTurned = false;
 export function initUI(){
   $('board').addEventListener('pointerdown', e => {
     if (screen!=='play' || !$('over').hidden || e.target.closest('button')) return;
@@ -193,7 +194,14 @@ export function initUI(){
   });
   paintSound();
 
-  on('changed', () => { paintHud(); paintDev(); });
+  on('changed', () => { paintHud(); paintDev(); playerTurned = false; });
+  // One-time tip, only when the player's own move opens a new leak (not leaks the level starts with).
+  on('turn', () => { playerTurned = true; });
+  on('leak', () => {
+    if (!playerTurned || Save.data.seen.leakTip) return;
+    Save.data.seen.leakTip = true; Save.commit();
+    toast('<span class="t-icon">💧</span><span><b>Leak!</b><small>Water is spilling out where the channels don’t line up. Each leak wastes 2 drops. Turn the pieces so the openings meet.</small></span>', { ms:7000 });
+  });
   on('locked', () => { Audio.play('denied'); msg('That piece has a stone rim: it is stuck in place.'); });
   on('dry', () => msg('The barrel ran dry before the water got there!'));
   on('uphill', () => msg('A red ▲ means water can’t flow uphill there.'));
