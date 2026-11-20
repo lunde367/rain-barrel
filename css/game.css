@@ -1,0 +1,137 @@
+/* Rain Barrel: layout and pieces specific to this game. The family look is in kit/css/kit.css.
+   The layout rules below are shared with Carrot Patch Defense so both games look and feel the same. */
+.app{ max-width:560px; margin:0 auto; display:flex; flex-direction:column; gap:10px }
+.top{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap }
+.stats{ display:flex; gap:6px }
+.title-row{ display:flex; align-items:center; gap:8px; flex-wrap:wrap }
+.dev-badge{ font-size:.68rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#fff; background:var(--berry);
+  border-radius:var(--r-pill); padding:3px 8px }
+.controls{ display:flex; gap:6px }
+.controls .btn.main{ flex:1; min-width:0 }
+.board{ position:relative; align-self:center; border-radius:var(--r-lg); overflow:hidden; box-shadow:0 0 0 3px var(--line); touch-action:manipulation }
+.app.home-mode .stats, .app.home-mode .controls, .app.home-mode .board,
+.app.home-mode .msg, .app.home-mode .info, .app.home-mode .bar{ display:none }
+.home{ display:flex; flex-direction:column; gap:12px; padding-top:6px }
+.home h2{ margin:0; font-size:1.4rem; flex:1 }
+.home-head{ display:flex; align-items:center; justify-content:space-between; gap:10px }
+.home-note{ margin:0; color:var(--muted); line-height:1.45 }
+.devnote{ font-size:.8rem; color:var(--muted); margin:0 }
+.part{ display:flex; flex-direction:column; gap:10px }
+.part-head{ display:flex; align-items:center; gap:10px; width:100%; font:inherit; color:var(--ink); text-align:left; cursor:pointer;
+  background:var(--surface); border:1px solid var(--line); border-left:6px solid var(--part, var(--line)); border-radius:var(--r-lg); padding:10px 12px }
+.part-head b{ font-family:var(--display); font-size:1.12rem; flex:1; min-width:0 }
+.part-n{ font-size:.7rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--part, var(--muted)); flex:none }
+.part-meta{ font-weight:800; font-size:.85rem; color:var(--muted); font-variant-numeric:tabular-nums; flex:none }
+.part-head .chev, .part-head > svg{ width:20px; height:20px; flex:none; color:var(--muted); transition:transform .2s }
+.part.open .chev{ transform:rotate(180deg) }
+.part-body{ display:none; flex-direction:column; gap:10px; padding-left:8px; border-left:2px solid color-mix(in srgb, var(--part) 35%, transparent) }
+.part.open .part-body{ display:flex }
+.part.locked .part-head{ cursor:default; background:transparent; border-style:dashed; border-left-width:1px }
+.part.locked b{ color:var(--muted) }
+.part-card{ display:flex; flex-direction:column; align-items:center; gap:8px; animation:part-in 1s ease-out }
+.part-before{ margin:0 0 14px !important; font-style:italic; color:#c6d4b6; font-size:1rem; animation:part-in 1.6s ease-out }
+.part-card span{ font-size:.8rem; font-weight:800; letter-spacing:.2em; text-transform:uppercase; color:var(--part) }
+.part-card h2{ font-size:2rem !important; line-height:1.1; color:#f4f7ec; max-width:12ch }
+.part-card::after{ content:''; width:60px; height:3px; border-radius:2px; background:var(--part); margin-top:6px }
+.part-card{ animation:none }
+.part-head .chev{ transition:none }
+.chap{ display:flex; flex-direction:column; gap:9px; padding:12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--r-lg) }
+.chap header{ display:flex; gap:12px; align-items:center }
+.chap.locked{ background:transparent; border-style:dashed }
+.chap.locked b{ color:var(--muted) }
+.chap-lock{ width:44px; height:44px; border-radius:10px; flex:none; display:grid; place-items:center; background:var(--line); color:var(--muted) }
+.chap-lock svg{ width:22px; height:22px }
+.chap canvas{ width:44px; height:44px; border-radius:10px; background:#8a5e3c; flex:none }
+.chap b{ font-family:var(--display); font-size:1.08rem; display:block }
+.chap small{ font-weight:700; font-size:.8rem; color:var(--muted) }
+.lvls{ display:grid; grid-template-columns:repeat(3,1fr); gap:7px }
+.lv{ font:inherit; border:2px solid var(--line); background:var(--bg); color:var(--ink); border-radius:var(--r-sm); padding:7px 4px; display:flex;
+  flex-direction:column; align-items:center; gap:2px; cursor:pointer; min-width:0 }
+.lv b{ font-family:var(--body); font-size:.78rem; font-weight:800; line-height:1.15; text-align:center }
+.lv .stars{ font-size:.9rem; letter-spacing:1px; color:var(--gold) }
+.lv .stars i{ color:var(--line) }
+.lv-lock{ font-size:.72rem; font-weight:700; color:var(--muted) }
+.lv:disabled{ opacity:.5; cursor:default }
+.lv.cur{ border-color:var(--accent) }
+.home-tools{ display:grid; grid-template-columns:1fr 1fr; gap:8px }
+.home-tools .wide{ grid-column:1 / -1 }
+.board.spray-left .spray-btn{ right:auto; left:10px }
+.home-foot{ display:flex; justify-content:center; padding-top:8px }
+.msg{ margin:0; line-height:1.25; height:3.75em; overflow:hidden; display:flex; align-items:center; justify-content:center; color:var(--muted); font-weight:700; font-size:.85rem; text-align:center; text-wrap:balance }
+.lv{ position:relative }
+.lv-long{ position:absolute; top:-8px; right:6px; font-style:normal; font-size:.62rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase;
+  background:var(--berry); color:#fff; border-radius:var(--r-pill); padding:1px 7px }
+.board.spray-left .fert-btn{ right:auto; left:10px }
+.board.spray-left .offer-pill.small{ right:auto; left:72px }
+.app:not(.home-mode) .title-row{ display:none }
+.app:not(.home-mode) .top{ justify-content:center }
+.over .panel .btn.ghost{ background:#fff; border-color:var(--panel-line); color:var(--panel-ink) }
+.over .panel .btn.ghost small{ color:var(--panel-muted) }
+.home-head h2 .where{ display:block; font-size:.7rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-family:var(--body, inherit) }
+.btn.continue{ width:100%; white-space:normal; line-height:1.25; padding-block:12px }
+.stats-list{ display:flex; flex-direction:column; background:var(--surface); border:1px solid var(--line); border-radius:var(--r-lg); overflow:hidden }
+.stats-list div{ display:flex; justify-content:space-between; gap:12px; padding:11px 14px; border-top:1px solid var(--line) }
+.stats-list div:first-child{ border-top:0 }
+.stats-list b{ font-variant-numeric:tabular-nums }
+.app:not(.home-mode){ gap:6px }
+.app:not(.home-mode) .controls .btn{ min-height:0; height:40px; padding-block:0 }
+.app:not(.home-mode) .chip{ padding-block:3px }
+.app:not(.home-mode) .msg{ height:2.5em; font-size:.8rem }
+.app:not(.home-mode) .card{ padding:2px 0 3px }
+.part-card.ending h2{ font-size:1.45rem !important; max-width:14ch }
+.lv-chal{ font-size:.62rem; letter-spacing:2px; line-height:1 }
+.lv-chal i{ font-style:normal; color:var(--line) }
+.lv-chal i.got{ color:#3a9cc4 }
+.msg-row{ display:flex; align-items:center; gap:8px; min-height:2.5em }
+.msg-row .msg{ flex:1; min-width:0 }
+.msg-row .undo{ flex:none }
+.part-art{ width:min(240px, 78%); margin:0 auto 12px; box-shadow:0 0 0 2px rgba(255,255,255,.35), 0 6px 16px rgba(0,0,0,.3) }
+.app:not(.home-mode){ max-width:min(94vw, 860px) }
+.home{ padding-bottom:calc(78px + env(safe-area-inset-bottom, 0px)) }
+.home-nav{ position:fixed; left:0; right:0; bottom:0; z-index:20; display:grid; grid-template-columns:repeat(3,1fr); gap:4px; background:var(--bg);
+  border-top:1px solid var(--line); padding:6px max(10px, env(safe-area-inset-left, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(10px, env(safe-area-inset-right, 0px)) }
+.home-nav button{ position:relative; display:flex; flex-direction:column; align-items:center; gap:2px; font:inherit; font-size:.74rem; font-weight:800; color:var(--muted);
+  background:none; border:0; border-radius:var(--r-md); padding:7px 4px; cursor:pointer }
+.home-nav button svg{ width:24px; height:24px }
+.home-nav button.on{ color:var(--ink); background:var(--surface); box-shadow:0 0 0 1px var(--line) }
+.home-nav button i{ position:absolute; top:2px; left:calc(50% + 10px); font-style:normal; font-size:.62rem; background:var(--accent); color:var(--accent-ink); border-radius:var(--r-pill); padding:1px 6px; white-space:nowrap }
+.home-head h2{ flex:1 }
+.part-art{ background:#fbf6e6; border-radius:8px; width:min(190px, 60%); aspect-ratio:190/170 }
+.panel.result{ display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; padding:16px 16px 14px; max-width:320px }
+.panel.result h3{ margin:0; font-size:1.3rem; text-wrap:balance }
+.panel.result p{ margin:0; color:var(--panel-muted); font-size:.92rem; line-height:1.35; max-width:none }
+.panel.result .stars{ font-size:2rem; line-height:1; letter-spacing:4px }
+.res-chips{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center }
+.res-chips span{ font-weight:800; font-size:.85rem; padding:4px 10px; border-radius:var(--r-pill); background:#fde9b8; color:#6a4a08 }
+.res-chips span.blue{ background:#d5edf7; color:#1f5f7d }
+.res-chips span.plain{ background:rgba(0,0,0,.06); color:var(--panel-ink) }
+.panel.result .chal-list{ width:100%; color:var(--panel-ink) }
+.panel.result .chal-list b{ color:#c9641a }
+.res-actions{ display:flex; flex-direction:column; align-items:center; gap:10px; width:100% }
+.res-actions .btn.main{ min-width:200px }
+.res-icons{ display:flex; gap:12px; justify-content:center }
+.btn.round{ position:relative; width:50px; height:50px; padding:0; border-radius:50%; display:inline-flex; align-items:center; justify-content:center }
+.btn.round i{ position:absolute; top:-6px; right:-10px; font-style:normal; font-size:.62rem; font-weight:800; background:var(--accent); color:var(--accent-ink); border-radius:var(--r-pill); padding:1px 6px; white-space:nowrap }
+.panel.result .rate-box{ background:rgba(0,0,0,.05); width:100%; box-sizing:border-box }
+.board.spray-left .fert-btn.nudge::before{ left:0; transform:none }
+.board:not(.spray-left) .fert-btn.nudge::before{ left:auto; right:0; transform:none }
+.dev-skip{ position:absolute; right:8px; top:46px; z-index:5; border:0; border-radius:999px; padding:6px 11px; cursor:pointer;
+  background:#2b2440; color:#ffe9a8; font:800 .74rem var(--body); box-shadow:0 2px 6px rgba(0,0,0,.3) }
+/* ---------- Rain Barrel additions ---------- */
+.d-water{ background:#5aaee0; box-shadow:inset -3px -2px 0 #3a86b8 }
+.d-tap{ background:var(--gold) }
+.d-plant{ background:#f48fb1; box-shadow:inset -3px -2px 0 #c2456b }
+.chip.warn{ border-color:var(--berry); color:var(--berry) }
+.chip.warn small{ color:var(--berry) }
+.board{ background:#9ec781; align-self:center }
+.board canvas{ display:block; touch-action:manipulation }
+.controls .btn.main small.ad-tag{ font-family:var(--body); font-size:.62rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em;
+  background:rgba(255,255,255,.3); border-radius:var(--r-pill); padding:1px 6px; margin-left:4px; vertical-align:middle }
+.controls .btn.ghost:disabled{ opacity:.45 }
+.chap canvas{ background:#e4efd4 }
+.set-list{ display:flex; flex-direction:column; background:var(--surface); border:1px solid var(--line); border-radius:var(--r-lg); overflow:hidden }
+.set-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:11px 14px; border-top:1px solid var(--line) }
+.set-row:first-child{ border-top:0 }
+.set-row small{ display:block; color:var(--muted); font-size:.8rem; font-weight:600 }
+.set-row .btn{ flex:none; min-width:64px }
+.dev-solve{ flex:none; background:#2b2440 !important; color:#ffe9a8 !important; border-color:#2b2440 !important }
