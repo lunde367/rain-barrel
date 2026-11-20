@@ -16,8 +16,18 @@ import { resize, cellAt, flashTile, drawIcon } from '../render/board.js';
 import { IC_HOME } from './markup.js';
 
 export let screen = 'home';
-const unlocked = gi => devMode || gi===0 || (Save.data.stars[gi-1]||0) > 0;
-const worldOpen = wi => devMode || unlocked(LEVELS.find(l => l.wi===wi).gi);
+// Unlocking: a world opens once you have enough stars from the world before it.
+// Inside an open world every level is playable in any order; only the tutorial (Spring Meadow 1) must come first.
+const worldStars = wi => LEVELS.filter(l => l.wi===wi).reduce((a,l) => a+(Save.data.stars[l.gi]||0), 0);
+const worldOpen = wi => devMode || wi===0 || (worldOpen(wi-1) && worldStars(wi-1) >= WORLDS[wi].need);
+const tutorialDone = () => (Save.data.stars[0]||0) > 0;
+const unlocked = gi => { if (devMode) return true; const L=LEVELS[gi];
+  if (!worldOpen(L.wi)) return false; return !(L.wi===0 && L.li>0 && !tutorialDone()); };
+// The next world that's still closed, and how many more stars it needs.
+function nextGoal(){
+  const wi = WORLDS.findIndex((w,i) => !worldOpen(i)); if (wi < 0) return null;
+  return { wi, W:WORLDS[wi], prev:WORLDS[wi-1], left:WORLDS[wi].need - worldStars(wi-1) };
+}
 const msg = t => { $('msg').textContent = t; };
 
 const coach = createCoach({ onFinish(){ Save.data.tutorialDone = true; Save.commit(); } });
@@ -37,12 +47,14 @@ export function showMenu(){
   const worldHtml = (Wd, wi) => {
     if (!worldOpen(wi)){
       const prev = WORLDS[wi-1];
+      const have = Math.min(Wd.need, worldStars(wi-1)), reach = worldOpen(wi-1);
       return `<div class="chap locked" aria-disabled="true"><header><span class="chap-lock">${ICON.lock}</span>
-        <span><b>${Wd.name}</b><small>Finish ${prev ? prev.name : 'the last garden'} to unlock</small></span></header></div>`;
+        <span><b>${Wd.name}</b><small>${reach ? `Collect ${Wd.need} ★ in ${prev.name} to open` : `Open ${prev.name} first`}</small></span></header>
+        ${reach ? `<div class="need"><div class="need-bar"><i style="width:${Math.round(have/Wd.need*100)}%"></i></div><span>★ ${have}/${Wd.need}</span></div>` : ''}</div>`;
     }
     const lvls = LEVELS.filter(l => l.wi===wi).map(l => { const ok=unlocked(l.gi), st=Save.data.stars[l.gi]||0;
       return `<button class="lv${G.LV&&G.LV.gi===l.gi?' cur':''}" data-lv="${l.gi}" ${ok?'':'disabled'}><b>${l.li+1}. ${l.name}</b>
-        ${ok?`<span class="stars">${starStr(st)}</span>`:'<span class="lv-lock">Locked</span>'}</button>`; }).join('');
+        ${ok?`<span class="stars">${starStr(st)}</span>`:`<span class="lv-lock">${l.wi===0?'Play 1 first':'Locked'}</span>`}</button>`; }).join('');
     return `<div class="chap"><header><canvas data-icon="${Wd.icon}" width="88" height="88"></canvas>
       <span><b>${Wd.name}</b><small>${Wd.blurb}</small></span></header><div class="lvls">${lvls}</div></div>`;
   };
@@ -55,11 +67,12 @@ export function showMenu(){
         <b>${P.name}</b><span class="part-meta">★ ${got}/${lv.length*3}</span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <div class="part-body">${ws.map(([w,i]) => worldHtml(w,i)).join('')}</div></section>`;
   }).join('');
-  const nx = nextLevel();
+  const nx = nextLevel(), goal = nextGoal();
   home(`<div class="home-head"><h2>Your gardens</h2>
       <button class="btn ghost icon" data-go="settings" aria-label="Settings">${ICON.gear}</button></div>
     ${nx ? `<button class="btn main continue" data-lv="${nx.gi}">${starsEarned()>0?'Continue':'Start'} · ${nx.W.name} ${nx.li+1}: ${nx.name}</button>`
-         : `<p class="home-note">Every garden is watered. Replay any level to earn more stars.</p>`}
+         : goal ? `<p class="home-note">Collect ${goal.left} more ★ in ${goal.prev.name} to open ${goal.W.name}. Replay levels to earn 3 stars.</p>`
+         : `<p class="home-note">Every garden is open. Replay any level to earn more stars.</p>`}
     ${parts}
     ${devMode?'<p class="devnote">Test mode is on: every level is unlocked, and each level has a Solve button. Tap the title 7 times to turn it off.</p>':''}`);
   for (const c of $('home').querySelectorAll('canvas[data-icon]')) drawIcon(c, c.dataset.icon);
@@ -146,12 +159,15 @@ function overlay(html){
 }
 function closeOverlay(){ $('over').hidden = true; $('board').style.minHeight = ''; }
 function showWin(w){
-  const S = G.S, LV = G.LV, next = LEVELS[LV.gi+1];
+  const S = G.S, LV = G.LV, after = LEVELS[LV.gi+1], next = after && unlocked(after.gi) ? after : null, goal = nextGoal();
+  const chips = (w.opened||[]).map(i => `<span>${WORLDS[i].name} is open!</span>`).join('')
+    + (!next && goal && goal.wi===LV.wi+1 ? `<span class="plain">${goal.left} more ★ to open ${goal.W.name}</span>` : '');
   const tips = [];
   if (w.water > w.budget) tips.push(w.leaks ? 'Fix the leaks and use a shorter route to save water.' : 'A shorter or cooler route would save water.');
   if (w.taps > w.par) tips.push(`Solve it in ${w.par} taps or fewer for the last star.`);
   overlay(`<div class="panel result"><h3>${LV.name}: watered!</h3><div class="stars">${starStr(w.stars)}</div>
       <div class="res-chips"><span class="blue">${w.capped ? `${S.cap - w.water} of ${S.cap} drops left` : `${w.water} of ${w.budget} drops`}</span><span class="plain">${w.taps} tap${w.taps===1?"":"s"} · par ${w.par}</span></div>
+      ${chips ? `<div class="res-chips">${chips}</div>` : ''}
       <p>${tips.length ? tips.join(' ') : 'Perfect! Mother Nature thanks you.'}</p></div>
     <div class="res-actions">${next ? `<button class="btn main" data-go="next">${next.wi!==LV.wi ? `On to ${next.W.name}` : 'Next level'}</button>`
       : `<button class="btn main" data-go="menu">Back to the gardens</button>`}${resultIcons()}</div>`);
@@ -208,7 +224,10 @@ export function initUI(){
   on('uphill', () => msg('A red ▲ means water can’t flow uphill there.'));
   on('moo', () => { if (G.S.cap!==Infinity) msg('A cow took a drink: 2 drops gone.'); });
   on('win', w => {
+    const before = WORLDS.map((_,i) => worldOpen(i));
     if ((Save.data.stars[w.gi]||0) < w.stars){ Save.data.stars[w.gi] = w.stars; }
+    w.opened = WORLDS.map((_,i) => i).filter(i => !before[i] && worldOpen(i));
+    if (w.opened.length) setTimeout(() => toast(`<span class="t-icon">★</span><span><b>${WORLDS[w.opened[0]].name} is open!</b><small>New puzzles are waiting on the home screen.</small></span>`), 900);
     Save.data.stats.wins++; Save.commit();
     setTimeout(() => { if (G.LV && G.LV.gi===w.gi && screen==='play') { showWin(w); Audio.play('win'); } }, 700);
   });

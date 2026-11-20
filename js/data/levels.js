@@ -6,15 +6,17 @@
 // Levels with a cap always use barrels, since a barrel is what holds a set number of drops.
 
 // Worlds are the "gardens" on the home screen; parts group them like Carrot Patch's story parts.
+// need = stars you must collect in the world before it to open this one (about two thirds of them).
+// Every level in an open world can be played in any order, except that Spring Meadow 1 (the tutorial) comes first.
 export const PARTS = [
   { n:1, name:'The Meadow', tint:'#4f8a3c' },
   { n:2, name:'New ideas to test', tint:'#3a9cc4' },
 ];
 export const WORLDS = [
   { name:'Spring Meadow', blurb:'Rocks, corners and stuck pieces', icon:'barrel', part:1, grass:['#a6cf8a','#9ec781'] },
-  { name:'Summer Heat', blurb:'Sun-baked tiles soak up water', icon:'sun', part:1, grass:['#c3cb88','#b9c17e'], hot:true },
-  { name:'Thirsty Cows', blurb:'Cows drink, barrels run dry', icon:'cow', part:2, grass:['#9ccc8f','#93c386'] },
-  { name:'Hill Country', blurb:'Water only flows downhill', icon:'hill', part:2, grass:['#a6cf8a','#9ec781'] },
+  { name:'Summer Heat', need:16, blurb:'Sun-baked tiles soak up water', icon:'sun', part:1, grass:['#c3cb88','#b9c17e'], hot:true },
+  { name:'Thirsty Cows', need:4, blurb:'Cows drink, barrels run dry', icon:'cow', part:2, grass:['#9ccc8f','#93c386'] },
+  { name:'Hill Country', need:6, blurb:'Water only flows downhill', icon:'hill', part:2, grass:['#a6cf8a','#9ec781'] },
 ];
 const DATA = [
  {name:"First Sip",world:0,note:"Tap a channel to turn it. Get water from the barrel to the sprout.",rows:[
