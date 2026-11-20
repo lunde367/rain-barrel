@@ -75,7 +75,7 @@ export function draw(now){
       if (f.wet.has(T.i)) ripples(T, cx, cy, s, f.entry[T.i], t);
       if (T.pump) windmill(x+s*.8, y+s*.2, s, f.wet.has(T.i), t);
     }
-    else if (T.type==='src') barrel(g, cx, cy, s);
+    else if (T.type==='src') source(G.LV.src || 'barrel', cx, cy, s, outlets(S, T, f), t);
     else if (T.type==='plant'){ T.bloom = (T.bloom||0) + ((f.watered.has(T.i)?1:0) - (T.bloom||0))*.15; plant(g, cx, cy, s, T.bloom, t); }
     else if (T.type==='rock') rock(g, cx, cy, s, T.i);
     else if (T.type==='cow') cow(g, cx, cy, s, f.drank.has(T.i), t);
@@ -181,6 +181,111 @@ function splash(cx, cy, dx, dy, s, t){
 function glow(x, y, s, left, t){
   g.save(); g.globalAlpha = Math.min(1, left*1.6) * (.6 + .4*Math.sin(t*10));
   g.beginPath(); g.roundRect(x+2, y+2, s-4, s-4, 10); g.strokeStyle='#f0913f'; g.lineWidth=4; g.stroke(); g.restore();
+}
+
+// ---------- water sources ----------
+// Sides where a channel connects to this source and carries water (N=1, E=2, S=4, W=8).
+function outlets(S, T, f){
+  const at = (r,c) => (r<0||c<0||r>=S.H||c>=S.W) ? null : S.tiles[r*S.W+c], out = [];
+  for (const [b,dr,dc] of DIRS){ const n = at(T.r+dr, T.c+dc);
+    if (n && n.type==='pipe' && f.wet.has(n.i) && (rotMask(n.base, n.rot) & ({1:4,2:8,4:1,8:2})[b])) out.push(b); }
+  return out;
+}
+const ANGLE = { 1:-Math.PI/2, 2:0, 4:Math.PI/2, 8:Math.PI };
+// Each source has an outlet (spigot, hose, stream) pointing at every connected channel.
+// With nothing connected it shows one dry outlet facing down.
+function source(kind, cx, cy, s, sides, t){
+  const list = sides.length ? sides : [4], wet = sides.length > 0;
+  const body = BODY[kind] || BODY.barrel, outlet = OUTLET[kind] || OUTLET.barrel;
+  // outlets behind the body for the top side, in front for the others
+  for (const b of list) if (b===1) withDir(cx, cy, b, () => outlet(s, wet, t));
+  body(g, cx, cy, s, t);
+  for (const b of list) if (b!==1) withDir(cx, cy, b, () => outlet(s, wet, t));
+}
+function withDir(cx, cy, b, fn){ g.save(); g.translate(cx, cy); g.rotate(ANGLE[b]); fn(); g.restore(); }
+// A stream of water from an outlet's tip to the tile edge, with ripples running outward.
+function stream(x0, s, w, t){
+  g.strokeStyle='#5aaee0'; g.lineWidth=w; g.lineCap='butt'; g.beginPath(); g.moveTo(x0, 0); g.lineTo(s*.5, 0); g.stroke();
+  g.strokeStyle='rgba(255,255,255,.75)'; g.lineWidth=w*.25; g.setLineDash([s*.05, s*.09]); g.lineDashOffset=-t*s*.5;
+  g.beginPath(); g.moveTo(x0, 0); g.lineTo(s*.5, 0); g.stroke(); g.setLineDash([]);
+}
+const OUTLET = {
+  // brass spigot with a little wheel handle
+  barrel(s, wet, t){
+    if (wet) stream(s*.36, s, s*.13, t);
+    g.beginPath(); g.roundRect(s*.2, -s*.055, s*.2, s*.11, s*.03); g.fillStyle='#d9a441'; g.fill(); g.strokeStyle='#7a5a1a'; g.lineWidth=1.4; g.stroke();
+    g.beginPath(); g.roundRect(s*.36, -s*.075, s*.07, s*.15, s*.02); g.fillStyle='#c48f2c'; g.fill(); g.stroke();
+    g.strokeStyle='#7a5a1a'; g.lineWidth=2; g.beginPath(); g.moveTo(s*.29, -s*.055); g.lineTo(s*.29, -s*.13); g.stroke();
+    ell(g, s*.29, -s*.14, s*.05, s*.022, '#c2456b', '#7a2a40', 1.2);
+    ell(g, s*.25, -s*.025, s*.03, s*.012, 'rgba(255,255,255,.6)');
+  },
+  // green garden hose with a nozzle
+  house(s, wet, t){
+    if (wet) stream(s*.42, s, s*.1, t);
+    g.strokeStyle='#2f7a3a'; g.lineWidth=s*.09; g.lineCap='round';
+    g.beginPath(); g.moveTo(s*.05, s*.18); g.bezierCurveTo(s*.3, s*.3, s*.12, -s*.12, s*.38, 0); g.stroke();
+    g.strokeStyle='#5fb34a'; g.lineWidth=s*.05; g.stroke();
+    g.beginPath(); g.roundRect(s*.34, -s*.05, s*.12, s*.1, s*.02); g.fillStyle='#e0a21c'; g.fill(); g.strokeStyle='#7a5a1a'; g.lineWidth=1.3; g.stroke();
+  },
+  // a little channel cut through the bank
+  pond(s, wet, t){
+    g.fillStyle='#c9a76c'; g.fillRect(s*.2, -s*.1, s*.3, s*.2);
+    if (wet) stream(s*.2, s, s*.14, t); else { g.fillStyle='#b48d5a'; g.fillRect(s*.2, -s*.06, s*.3, s*.12); }
+  },
+  // wooden trough
+  well(s, wet, t){
+    if (wet) stream(s*.36, s, s*.11, t);
+    g.beginPath(); g.roundRect(s*.18, -s*.075, s*.24, s*.15, s*.02); g.fillStyle='#a0703f'; g.fill(); g.strokeStyle='#5e3d20'; g.lineWidth=1.4; g.stroke();
+    if (wet){ g.fillStyle='#5aaee0'; g.fillRect(s*.2, -s*.035, s*.2, s*.07); }
+  },
+};
+OUTLET.barn = OUTLET.house; OUTLET.river = OUTLET.pond;
+const BODY = {
+  barrel: (c, cx, cy, s) => barrel(c, cx, cy, s*.92),
+  house(c, cx, cy, s){ cottage(c, cx, cy, s, '#f3ead8', '#c2456b', '#8a6a4a'); },
+  barn(c, cx, cy, s){ cottage(c, cx, cy, s, '#c94b3c', '#6e3a2a', '#f3ead8', true); },
+  pond(c, cx, cy, s, t){
+    ell(c, cx, cy, s*.4, s*.3, '#e5d3a3', '#b8a070', 1.5); ell(c, cx, cy, s*.33, s*.23, '#5aaee0', '#3a86b8', 1.5);
+    ell(c, cx-s*.1, cy-s*.06, s*.1, s*.03, 'rgba(255,255,255,.55)');
+    ell(c, cx+s*.12, cy+s*.06, s*.07, s*.045, '#6fae54', '#3f7a2a', 1); ell(c, cx+s*.14, cy+s*.04, s*.02, s*.02, '#f48fb1');
+    c.strokeStyle='#4f8a3c'; c.lineWidth=2; for (const dx of [-.3,-.26,-.22]){ c.beginPath(); c.moveTo(cx+dx*s, cy+s*.2); c.lineTo(cx+dx*s+Math.sin(t*2+dx*9)*s*.01, cy-s*.02); c.stroke(); }
+    ell(c, cx-s*.26, cy-s*.03, s*.015, s*.05, '#8a5a3a');
+  },
+  river(c, cx, cy, s, t){
+    const x0=cx-s/2, y0=cy-s/2;
+    c.fillStyle='#e5d3a3'; c.beginPath(); c.moveTo(x0, y0+s*.08); c.bezierCurveTo(x0+s*.4, y0+s*.2, x0+s*.6, y0+s*.75, x0+s, y0+s*.9); c.lineTo(x0+s, y0+s*.5);
+    c.bezierCurveTo(x0+s*.7, y0+s*.4, x0+s*.5, y0-s*.05, x0+s*.1, y0); c.closePath(); c.fill();
+    c.fillStyle='#5aaee0'; c.beginPath(); c.moveTo(x0, y0+s*.12); c.bezierCurveTo(x0+s*.4, y0+s*.24, x0+s*.6, y0+s*.7, x0+s, y0+s*.84); c.lineTo(x0+s, y0+s*.56);
+    c.bezierCurveTo(x0+s*.68, y0+s*.46, x0+s*.48, y0+s*.02, x0+s*.12, y0); c.lineTo(x0, y0); c.closePath(); c.fill();
+    c.strokeStyle='#3a86b8'; c.lineWidth=1.3; c.stroke();
+    c.strokeStyle='rgba(255,255,255,.7)'; c.lineWidth=2; c.setLineDash([s*.06, s*.1]); c.lineDashOffset=-t*s*.4;
+    c.beginPath(); c.moveTo(x0+s*.05, y0+s*.05); c.bezierCurveTo(x0+s*.4, y0+s*.15, x0+s*.58, y0+s*.6, x0+s, y0+s*.7); c.stroke(); c.setLineDash([]);
+    rock(c, x0+s*.82, y0+s*.2, s*.35, 5);
+  },
+  well(c, cx, cy, s){
+    ell(c, cx, cy+s*.28, s*.3, s*.07, 'rgba(40,60,20,.25)');
+    c.strokeStyle='#5e3d20'; c.lineWidth=3; c.beginPath(); c.moveTo(cx-s*.22, cy+s*.1); c.lineTo(cx-s*.22, cy-s*.3); c.moveTo(cx+s*.22, cy+s*.1); c.lineTo(cx+s*.22, cy-s*.3); c.stroke();
+    c.beginPath(); c.moveTo(cx-s*.32, cy-s*.26); c.lineTo(cx, cy-s*.42); c.lineTo(cx+s*.32, cy-s*.26); c.closePath(); c.fillStyle='#c94b3c'; c.fill(); c.strokeStyle='#6e3a2a'; c.lineWidth=1.5; c.stroke();
+    c.beginPath(); c.roundRect(cx-s*.26, cy-s*.04, s*.52, s*.3, s*.06); c.fillStyle='#a7aa9c'; c.fill(); c.strokeStyle='#6d7064'; c.lineWidth=1.5; c.stroke();
+    c.strokeStyle='#85887a'; c.lineWidth=1; for (const dy of [.06,.16]){ c.beginPath(); c.moveTo(cx-s*.26, cy+dy*s); c.lineTo(cx+s*.26, cy+dy*s); c.stroke(); }
+    ell(c, cx, cy-s*.04, s*.24, s*.06, '#2f4a5a', '#6d7064', 1.5); ell(c, cx-s*.06, cy-s*.05, s*.06, s*.015, 'rgba(120,190,230,.6)');
+    c.strokeStyle='#8a6a4a'; c.lineWidth=1.2; c.beginPath(); c.moveTo(cx+s*.06, cy-s*.3); c.lineTo(cx+s*.06, cy-s*.16); c.stroke();
+    c.beginPath(); c.roundRect(cx+s*.02, cy-s*.17, s*.08, s*.07, s*.015); c.fillStyle='#a0703f'; c.fill(); c.strokeStyle='#5e3d20'; c.stroke();
+  },
+};
+function cottage(c, cx, cy, s, wall, roof, trim, barn=false){
+  ell(c, cx, cy+s*.3, s*.32, s*.07, 'rgba(40,60,20,.25)');
+  c.beginPath(); c.rect(cx-s*.26, cy-s*.08, s*.52, s*.38); c.fillStyle=wall; c.fill(); c.strokeStyle='#5e3d20'; c.lineWidth=1.5; c.stroke();
+  c.beginPath(); c.moveTo(cx-s*.34, cy-s*.06); c.lineTo(cx, cy-s*.38); c.lineTo(cx+s*.34, cy-s*.06); c.closePath(); c.fillStyle=roof; c.fill(); c.stroke();
+  if (barn){
+    c.beginPath(); c.rect(cx-s*.1, cy+s*.06, s*.2, s*.24); c.fillStyle='#8a3a2e'; c.fill(); c.strokeStyle=trim; c.lineWidth=2; c.stroke();
+    c.beginPath(); c.moveTo(cx-s*.1, cy+s*.06); c.lineTo(cx+s*.1, cy+s*.3); c.moveTo(cx+s*.1, cy+s*.06); c.lineTo(cx-s*.1, cy+s*.3); c.stroke();
+    ell(c, cx, cy-s*.17, s*.05, s*.05, trim, '#5e3d20', 1);
+  } else {
+    c.beginPath(); c.roundRect(cx-s*.06, cy+s*.1, s*.12, s*.2, [s*.06, s*.06, 0, 0]); c.fillStyle=trim; c.fill(); c.strokeStyle='#5e3d20'; c.lineWidth=1.2; c.stroke();
+    c.beginPath(); c.rect(cx+s*.1, cy+s*.0, s*.1, s*.09); c.fillStyle='#bfe3f2'; c.fill(); c.stroke();
+    c.beginPath(); c.rect(cx-s*.2, cy+s*.0, s*.1, s*.09); c.fill(); c.stroke();
+  }
 }
 
 // ---------- things on the board (also used for the small pictures on the home screen) ----------

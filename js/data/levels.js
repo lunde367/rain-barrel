@@ -2,6 +2,8 @@
 // S = rain barrel, P = plant, # = rock, C = cow, . = grass
 // Pipes: ─ │ └ ┌ ┐ ┘ ├ ┤ ┬ ┴ ┼   Marks after a piece: * locked, ! sun-baked (3 drops),
 // a digit = hill height, p = windmill pump. cap = how many drops the barrel holds.
+// src = where the water comes from: barrel (default), house or barn (a garden hose), pond, river, well.
+// Levels with a cap always use barrels, since a barrel is what holds a set number of drops.
 
 // Worlds are the "gardens" on the home screen; parts group them like Carrot Patch's story parts.
 export const PARTS = [
@@ -23,11 +25,11 @@ const DATA = [
   "S ─ ┐ .",
   ". . │ .",
   ". . └ P"]},
- {name:"Rock Garden",world:0,note:"Rocks block water. Find a way around them.",rows:[
+ {name:"Rock Garden",src:"house",world:0,note:"Rocks block water. Find a way around them.",rows:[
   "S ┐ # .",
   ". │ # P",
   ". └ ─ ┘"]},
- {name:"Two Sprouts",world:0,note:"A T-split sends water two ways at once.",rows:[
+ {name:"Two Sprouts",src:"pond",world:0,note:"A T-split sends water two ways at once.",rows:[
   ". . P . .",
   "S ─ ┴ ─ ┐",
   ". . . . P"]},
@@ -36,7 +38,7 @@ const DATA = [
   ". ├* ─ ┐ .",
   ". │ # │ .",
   ". └ P └ P"]},
- {name:"Stray Pipes",world:0,note:"Not every pipe is needed. Watch for leaks: they waste water.",rows:[
+ {name:"Stray Pipes",src:"river",world:0,note:"Not every pipe is needed. Watch for leaks: they waste water.",rows:[
   "S ─ ┐ ┘ .",
   "┌ . │ ─ .",
   "└ ┐ └ ─ P"]},
@@ -46,18 +48,18 @@ const DATA = [
   "P ─ ┤ . │",
   ". . │ . S",
   ". . P . ."]},
- {name:"Long Way Round",world:0,note:"The meadow's last puzzle. Sometimes the long way is the only way.",rows:[
+ {name:"Long Way Round",src:"barn",world:0,note:"The meadow's last puzzle. Sometimes the long way is the only way.",rows:[
   "S ─ ─ ┐ # .",
   "# # └ │ # .",
   "┌ ─ ─ ┘* ─ .",
   "│ # # # # .",
   "└ ─ ┬* ─ ─ P",
   ". . P . ┐ ."]},
- {name:"Hot Afternoon",world:1,note:"Sun-baked tiles dry out water: each costs 3 drops. The shortest path isn't the cheapest.",rows:[
+ {name:"Hot Afternoon",src:"well",world:1,note:"Sun-baked tiles dry out water: each costs 3 drops. The shortest path isn't the cheapest.",rows:[
   "┌ ─ ─ ─ ─ ─ ┐",
   "│ . . . . . │",
   "S │ │! │! │! │ P"]},
- {name:"Dry Spell",world:1,note:"Three plants and scorching ground. Make every drop count.",rows:[
+ {name:"Dry Spell",src:"well",world:1,note:"Three plants and scorching ground. Make every drop count.",rows:[
   ". . P . . .",
   ". . │ . . .",
   "S ─ ┴ ┐ # .",
@@ -65,7 +67,7 @@ const DATA = [
   ". ┌ ─ ┴* ─! P",
   ". P . . . ."]},
  // --- New mechanics: C = cow, cap = barrel size, digits = hill height, p = windmill pump ---
- {name:"Moo-ving Water",world:2,note:"Cows drink 2 drops from any channel that runs past them. Can you keep the water away from the cow?",rows:[
+ {name:"Moo-ving Water",src:"pond",world:2,note:"Cows drink 2 drops from any channel that runs past them. Can you keep the water away from the cow?",rows:[
   "S │ ─ ┐",
   "│ . C │",
   "│ . . │",
@@ -80,11 +82,11 @@ const DATA = [
   "S │ ─ ─ P",
   "│ . . . │",
   "└ ─ ─ ─ ┘"]},
- {name:"Downhill",world:3,note:"Water only flows downhill or on level ground. Green is low, yellow-green is ▲1, tan is ▲2. Dark edges are cliffs.",rows:[
+ {name:"Downhill",src:"river",world:3,note:"Water only flows downhill or on level ground. Green is low, yellow-green is ▲1, tan is ▲2. Dark edges are cliffs.",rows:[
   "S1 │1 ─2 ─0 P0",
   "│1 . #2 . │0",
   "└1 ─1 ─1 ─0 ┘0"]},
- {name:"Windmill",world:3,note:"A windmill pump can lift water up one level. The plant is up on the hill.",rows:[
+ {name:"Windmill",src:"pond",world:3,note:"A windmill pump can lift water up one level. The plant is up on the hill.",rows:[
   ". . ┌2 ─2 P2",
   ". . │2p . │2",
   "S1 ─1 ┘1 │1 ┘1"]},
@@ -97,4 +99,9 @@ const DATA = [
 ];
 
 // Flat list with handy indexes: gi = position in the whole game, li = position in its world.
+export const SOURCES = {
+  barrel:{ name:'rain barrel' }, house:{ name:'farmhouse hose' }, barn:{ name:'barn hose' },
+  pond:{ name:'pond' }, river:{ name:'river' }, well:{ name:'old well' },
+};
+
 export const LEVELS = DATA.map((L, gi) => ({ ...L, gi, wi:L.world, li:DATA.slice(0, gi).filter(x => x.world===L.world).length, W:WORLDS[L.world] }));

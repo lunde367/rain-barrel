@@ -10,7 +10,7 @@ import { createCoach } from '../../kit/js/coach.js';
 import { setHaptics } from '../../kit/js/haptics.js';
 import { Save, starsEarned } from '../save.js';
 import { G, startLevel, turn, undo, applyHint, solveAll } from '../engine/game.js';
-import { LEVELS, WORLDS, PARTS } from '../data/levels.js';
+import { LEVELS, WORLDS, PARTS, SOURCES } from '../data/levels.js';
 import { FREE_HINTS } from '../data/config.js';
 import { resize, cellAt, flashTile, drawIcon } from '../render/board.js';
 import { IC_HOME } from './markup.js';
@@ -83,7 +83,8 @@ export function play(gi){
   $('home').hidden = true; closeOverlay(); $('app').classList.remove('home-mode');
   startLevel(gi);
   const LV = G.LV;
-  msg(`${LV.W.name} ${LV.li+1}: ${LV.name}. ${LV.note}`);
+  const src = LV.src && LV.src!=='barrel' ? ` Water comes from the ${SOURCES[LV.src].name}.` : '';
+  msg(`${LV.W.name} ${LV.li+1}: ${LV.name}.${src} ${LV.note}`);
   paintHud(); paintDev();
   requestAnimationFrame(resize);
   if (gi===0 && !Save.data.tutorialDone) setTimeout(() => coach.start([
