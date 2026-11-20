@@ -152,12 +152,9 @@ async function onHint(){
 const resultIcons = () => `<div class="res-icons">
   <button class="btn ghost round" data-go="menu" aria-label="All gardens" title="All gardens">${IC_HOME}</button>
   <button class="btn ghost round" data-go="retry" aria-label="Play again" title="Play again">${ICON.restart}</button></div>`;
-// Small boards (3 rows) are shorter than the results card: grow the board to fit it, so the card never scrolls.
-function overlay(html){
-  const o=$('over'), b=$('board'); o.innerHTML=html; o.hidden=false; o.scrollTop=0;
-  b.style.minHeight=''; const need=o.scrollHeight; if (need > b.clientHeight) b.style.minHeight = need+'px';
-}
-function closeOverlay(){ $('over').hidden = true; $('board').style.minHeight = ''; }
+// The results card covers the whole screen, so nothing else (Hint, Undo...) can be tapped behind it.
+function overlay(html){ const o=$('over'); o.innerHTML=html; o.hidden=false; o.scrollTop=0; }
+function closeOverlay(){ $('over').hidden = true; }
 function showWin(w){
   const S = G.S, LV = G.LV, after = LEVELS[LV.gi+1], next = after && unlocked(after.gi) ? after : null, goal = nextGoal();
   const chips = (w.opened||[]).map(i => `<span>${WORLDS[i].name} is open!</span>`).join('')

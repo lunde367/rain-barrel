@@ -27,11 +27,12 @@ export const MARKUP = `
 
   <div class="board" id="board">
     <canvas id="cv" aria-label="Garden board"></canvas>
-    <div class="over" id="over" hidden></div>
   </div>
 
   <div class="msg-row">
     <p class="msg" id="msg" aria-live="polite"></p>
     <button class="btn ghost small dev-solve" id="devSkip" hidden>Solve ★★★</button>
   </div>
+
+  <div class="over" id="over" hidden></div>
 </div>`;
