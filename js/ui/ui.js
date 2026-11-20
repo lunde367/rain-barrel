@@ -24,7 +24,7 @@ const coach = createCoach({ onFinish(){ Save.data.tutorialDone = true; Save.comm
 // ---------- home screen ----------
 function home(html){
   screen = 'home'; coach.stop();
-  $('app').classList.add('home-mode'); $('over').hidden = true;
+  $('app').classList.add('home-mode'); closeOverlay();
   const h = $('home'); h.innerHTML = html; h.hidden = false; window.scrollTo(0,0);
   paintDev();
 }
@@ -79,7 +79,7 @@ function showSettings(){
 export function play(gi){
   if (!unlocked(gi)) return;
   screen = 'play'; coach.stop();
-  $('home').hidden = true; $('over').hidden = true; $('app').classList.remove('home-mode');
+  $('home').hidden = true; closeOverlay(); $('app').classList.remove('home-mode');
   startLevel(gi);
   const LV = G.LV;
   msg(`${LV.W.name} ${LV.li+1}: ${LV.name}. ${LV.note}`);
@@ -137,14 +137,19 @@ async function onHint(){
 const resultIcons = () => `<div class="res-icons">
   <button class="btn ghost round" data-go="menu" aria-label="All gardens" title="All gardens">${IC_HOME}</button>
   <button class="btn ghost round" data-go="retry" aria-label="Play again" title="Play again">${ICON.restart}</button></div>`;
-function overlay(html){ const o=$('over'); o.innerHTML=html; o.hidden=false; o.scrollTop=0; }
+// Small boards (3 rows) are shorter than the results card: grow the board to fit it, so the card never scrolls.
+function overlay(html){
+  const o=$('over'), b=$('board'); o.innerHTML=html; o.hidden=false; o.scrollTop=0;
+  b.style.minHeight=''; const need=o.scrollHeight; if (need > b.clientHeight) b.style.minHeight = need+'px';
+}
+function closeOverlay(){ $('over').hidden = true; $('board').style.minHeight = ''; }
 function showWin(w){
   const S = G.S, LV = G.LV, next = LEVELS[LV.gi+1];
   const tips = [];
   if (w.water > w.budget) tips.push(w.leaks ? 'Fix the leaks and use a shorter route to save water.' : 'A shorter or cooler route would save water.');
   if (w.taps > w.par) tips.push(`Solve it in ${w.par} taps or fewer for the last star.`);
   overlay(`<div class="panel result"><h3>${LV.name}: watered!</h3><div class="stars">${starStr(w.stars)}</div>
-      <div class="res-chips"><span class="blue">${w.capped ? `${S.cap - w.water} of ${S.cap} drops left` : `${w.water} of ${w.budget} drops`}</span><span class="plain">${w.taps} taps · par ${w.par}</span></div>
+      <div class="res-chips"><span class="blue">${w.capped ? `${S.cap - w.water} of ${S.cap} drops left` : `${w.water} of ${w.budget} drops`}</span><span class="plain">${w.taps} tap${w.taps===1?"":"s"} · par ${w.par}</span></div>
       <p>${tips.length ? tips.join(' ') : 'Perfect! Mother Nature thanks you.'}</p></div>
     <div class="res-actions">${next ? `<button class="btn main" data-go="next">${next.wi!==LV.wi ? `On to ${next.W.name}` : 'Next level'}</button>`
       : `<button class="btn main" data-go="menu">Back to the gardens</button>`}${resultIcons()}</div>`);
