@@ -160,23 +160,44 @@ function edgeMark(T, b, s, t, kind){
   ell(g, cx, cy, s*.13*p, s*.13*p, '#d64545', '#ffffff', 2);
   g.fillStyle='#fff'; g.font=`800 ${Math.round(s*.14)}px Nunito, sans-serif`; g.textAlign='center'; g.textBaseline='middle'; g.fillText('▲', cx, cy+1);
 }
-// A leak: a puddle spilling out of the open channel end, with drips running off it.
+// A leak: water pours out of the open channel end into one soft, uneven puddle,
+// with teardrop drips running off it.
 function splash(cx, cy, dx, dy, s, t){
   const px = -dy, py = dx;                         // sideways from the spill direction
-  const ox = cx + dx*s*.1, oy = cy + dy*s*.1;      // puddle sits just past the opening
-  const wob = 1 + .06*Math.sin(t*4);
+  const P = (along, side) => [cx + dx*along*s + px*side*s, cy + dy*along*s + py*side*s];
   g.save();
-  for (const [a, b, r] of [[0,0,.15],[.12,.08,.09],[-.13,.06,.08],[.05,.2,.07],[-.06,.17,.06]]){
-    const x = ox + px*a*s + dx*b*s, y = oy + py*a*s + dy*b*s;
-    ell(g, x, y, s*r*wob, s*r*.8*wob, 'rgba(90,174,224,.85)', '#3a86b8', 1.2);
+  // the puddle: one wobbly outline, see-through so the grass shows a little
+  const n = 10, pts = [];
+  for (let k=0; k<n; k++){
+    const a = k/n*6.283, wob = 1 + .14*Math.sin(a*3 + 1.3) + .05*Math.sin(t*2.2 + a*2);
+    pts.push(P(.13 + Math.cos(a)*.11*wob, Math.sin(a)*.17*wob));
   }
-  ell(g, ox - px*s*.04 - dx*s*.02, oy - py*s*.04 - dy*s*.02, s*.05, s*.025, 'rgba(255,255,255,.75)');
-  for (let k=0; k<3; k++){                         // drips running away from the leak, fading as they go
-    const d = (t*1.1 + k/3) % 1, side = (k-1)*.12;
-    const x = ox + dx*s*(.12 + d*.3) + px*s*side, y = oy + dy*s*(.12 + d*.3) + py*s*side;
-    g.globalAlpha = 1 - d; ell(g, x, y, s*.035, s*.045, '#5aaee0', '#3a86b8', 1);
+  g.beginPath();
+  for (let k=0; k<n; k++){
+    const [x1,y1] = pts[k], [x2,y2] = pts[(k+1)%n], mx=(x1+x2)/2, my=(y1+y2)/2;
+    if (k===0) g.moveTo(mx, my); else g.quadraticCurveTo(x1, y1, mx, my);
+  }
+  g.quadraticCurveTo(...pts[0], ...(([x1,y1],[x2,y2]) => [(x1+x2)/2,(y1+y2)/2])(pts[0], pts[1]));
+  g.closePath(); g.fillStyle='rgba(90,174,224,.6)'; g.fill(); g.strokeStyle='rgba(58,134,184,.55)'; g.lineWidth=1.5; g.stroke();
+  // a glint on the water
+  const [gx,gy] = P(.1, -.05); g.strokeStyle='rgba(255,255,255,.7)'; g.lineWidth=2; g.lineCap='round';
+  g.beginPath(); g.moveTo(gx, gy); g.lineTo(gx + px*s*.06, gy + py*s*.06); g.stroke();
+  // water spilling out of the opening
+  const [sx,sy] = P(-.02, 0), [ex,ey] = P(.12, 0);
+  g.strokeStyle='#5aaee0'; g.lineWidth=s*.1; g.lineCap='butt'; g.beginPath(); g.moveTo(sx, sy); g.lineTo(ex, ey); g.stroke();
+  // teardrop drips running away, fading as they go
+  for (let k=0; k<3; k++){
+    const d = (t*1.1 + k/3) % 1, [x,y] = P(.2 + d*.28, (k-1)*.11);
+    g.globalAlpha = 1 - d; drop(x, y, dx, dy, s*.045);
   }
   g.restore();
+}
+// A teardrop pointing the way it's moving.
+function drop(x, y, dx, dy, r){
+  g.save(); g.translate(x, y); g.rotate(Math.atan2(dy, dx));
+  g.beginPath(); g.moveTo(r*1.6, 0); g.quadraticCurveTo(r*.2, -r, -r*.6, -r*.6); g.arc(-r*.4, 0, r*.65, -Math.PI/2, Math.PI/2, true);
+  g.quadraticCurveTo(r*.2, r, r*1.6, 0); g.closePath();
+  g.fillStyle='#5aaee0'; g.fill(); g.strokeStyle='rgba(58,134,184,.8)'; g.lineWidth=1; g.stroke(); g.restore();
 }
 function glow(x, y, s, left, t){
   g.save(); g.globalAlpha = Math.min(1, left*1.6) * (.6 + .4*Math.sin(t*10));
