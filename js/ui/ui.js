@@ -11,7 +11,7 @@ import { setHaptics } from '../../kit/js/haptics.js';
 import { Save, starsEarned } from '../save.js';
 import { G, startLevel, turn, undo, applyHint, solveAll } from '../engine/game.js';
 import { LEVELS, WORLDS, PARTS, SOURCES } from '../data/levels.js';
-import { FREE_HINTS } from '../data/config.js';
+import { FREE_HINTS, HINTS_FROM } from '../data/config.js';
 import { resize, cellAt, flashTile, drawIcon } from '../render/board.js';
 import { IC_HOME } from './markup.js';
 
@@ -100,6 +100,10 @@ export function play(gi){
   msg(`${LV.W.name} ${LV.li+1}: ${LV.name}.${src} ${LV.note}`);
   paintHud(); paintDev();
   requestAnimationFrame(resize);
+  if (gi >= HINTS_FROM && !G.LV.lab && !Save.data.seen.hintTip){
+    Save.data.seen.hintTip = true; Save.commit();
+    setTimeout(() => toast('<span class="t-icon">💡</span><span><b>Hints are here</b><small>Stuck? The Hint button turns one channel the right way. Your first hint in each level is free.</small></span>', { ms:6500 }), 600);
+  }
   if (gi===0 && !Save.data.tutorialDone) setTimeout(() => coach.start([
     { text:'Tap a channel to turn it. Water flows when the channels line up.', target:'#board', place:'over-bottom', until:'turn' },
     { text:'Get water from the rain barrel to the sprout. Use Undo if you make a mistake.', target:'#board', place:'over-bottom', until:'win' },
@@ -116,6 +120,8 @@ function paintHud(){
   $('tapsChip').classList.toggle('warn', S.taps > S.par);
   $('plants').textContent = `${f.watered.size}/${S.plants}`;
   $('undo').disabled = !S.history.length || S.done;
+  const hintsHere = G.LV.gi >= HINTS_FROM;
+  $('hint').hidden = !hintsHere; $('undo').classList.toggle('grow', !hintsHere);
   const free = S.hints < FREE_HINTS;
   $('hint').innerHTML = free ? 'Free hint' : 'Hint <small class="ad-tag">ad</small>';
   $('hint').disabled = S.done;

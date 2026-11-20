@@ -141,3 +141,4 @@
 .need-bar{ flex:1; height:8px; border-radius:var(--r-pill); background:var(--line); overflow:hidden }
 .need-bar i{ display:block; height:100%; background:var(--gold); border-radius:inherit }
 #over{ position:fixed; inset:0; z-index:30; padding:max(16px, env(safe-area-inset-top,0px)) 16px max(16px, env(safe-area-inset-bottom,0px)) }
+.controls .btn.grow{ flex:1 }
