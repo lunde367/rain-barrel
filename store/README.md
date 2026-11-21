@@ -9,10 +9,9 @@ form answers against the stores' own pages.
 
 ## Decisions to make first
 
-- [ ] **App ID.** `capacitor.config.json` still says `com.example.rainbarrel`. Google Play rejects
-      `com.example` names, and the ID can never change after the first release. Pick your own, for
-      example `com.<yourname>.rainbarrel`, before running `npx cap add` (or delete `ios/` and `android/`
-      and add them again). Use the same pattern as Carrot Patch Defense.
+- [x] **App ID:** `com.kitchentablegames.rainbarrel`, matching Carrot Patch Defense
+      (`com.kitchentablegames.carrotpatch`): every game in the family ships under Kitchen Table Games.
+      It can never change after the first release.
 - [ ] **Name.** Check that "Rain Barrel" is free on both stores (search them). A fallback is
       "Rain Barrel: Water Puzzle".
 - [ ] **Who it's for.** If you tell Google Play the game is meant for children under 13 as well, it falls
@@ -62,7 +61,7 @@ Turn the channels and get water from the rain barrel to every thirsty plant. Wat
 - Support: `https://lunde367.github.io/rain-barrel/support.html`
 - Marketing site: `https://lunde367.github.io/rain-barrel/`
 
-**Copyright:** © 2026 (your name)
+**Copyright:** © 2026 Kitchen Table Games
 
 ## Pictures
 
@@ -112,7 +111,7 @@ yes, used for advertising (the AdMob plugin adds the permission).
 
 ## Building the release versions
 
-1. `npm install`, then `npx cap add ios` and `npx cap add android` (after setting the App ID).
+1. `npm install`, then `npx cap add ios` and `npx cap add android`.
 2. `npm run app:prepare` (fonts, icons, splash screens, portrait lock, version number, sync).
 3. **Android:** make your private upload key once (Android Studio → Build → Generate Signed Bundle),
    keep it somewhere safe and backed up, then build an `.aab` and upload it to the closed testing

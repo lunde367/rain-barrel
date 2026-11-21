@@ -3,6 +3,7 @@
 import { emit } from '../../kit/js/events.js';
 import { LEVELS } from '../data/levels.js';
 import { parse, flow, solved, rotMask, mulberry32 } from './flow.js';
+import { fewestMoves } from './par.js';
 
 export const G = { LV:null, S:null };
 
@@ -31,12 +32,15 @@ export function prepare(LV, seed){
     if (!solved(S, flow(S))) break;
   }
   for (let i=S.tray.length-1; i>0; i--){ const j = Math.floor(rnd()*(i+1)); [S.tray[i], S.tray[j]] = [S.tray[j], S.tray[i]]; }
-  // par: turns to fix the solution's pieces (once per linked group), plus placing and turning tray pieces
+  // fallback par: turns to fix the written solution's pieces (once per linked group), plus placing and turning tray pieces
   const counted = new Set(); let par = 0;
   for (const i of S.solOrder){ const t = S.tiles[i];
     if (t.type==='slot'){ const p = S.tray.find(p => p.home===i); par += 1 + [0,1,2,3].find(k => rotMask(p.base, p.rot+k)===p.base); continue; }
     if (t.locked || (t.link && counted.has(t.link))) continue; if (t.link) counted.add(t.link); par += needed(S, t); }
-  S.par = par + 3;
+  // Par is the fewest taps that win from this exact starting board. The count above (fixing the
+  // written solution) is only a fallback for boards too big to search fully.
+  const fewest = fewestMoves(S);
+  S.par = fewest ?? par;
   S.taps = 0; S.history = []; S.done = false; S.hints = 0;
   S.flow = flow(S);
   return S;

@@ -60,7 +60,9 @@ npm run android               # copies web/ in and opens Android Studio
 
 After any change in `web/`, run `npm run sync` (or `npm run ios` / `npm run android`).
 
-**Before publishing,** work through [`store/README.md`](store/README.md): the App ID (`com.example.rainbarrel` must change before `npx cap add`), real ad IDs, the listing text, the store forms and the release builds.
+**Before publishing,** work through [`store/README.md`](store/README.md): real ad IDs, the listing text, the store forms and the release builds.
+
+- The app ID is `com.kitchentablegames.rainbarrel` (studio: Kitchen Table Games, same as Carrot Patch Defense). It can't be changed after the first store release.
 
 To redraw the icon or splash: edit `tools/icons/art.html`, serve the project root (`python3 -m http.server 8767`), run `npm run icons`, then `npm run assets`.
 

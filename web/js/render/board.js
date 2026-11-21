@@ -404,8 +404,11 @@ export function cow(c, cx, cy, s, drinking=false, t=0){
   ell(c, cx+s*.24, hy-s*.03, s*.02, s*.02, '#2a2a24');
   if (drinking){
     ell(c, cx+s*.38, hy+s*.18, s*.05, s*.06, '#5aaee0', '#ffffff', 1.5);
-    c.fillStyle='#1f6fa0'; c.font=`800 ${Math.round(s*.16)}px Nunito, sans-serif`; c.textAlign='center'; c.textBaseline='middle';
-    c.fillText('-2', cx-s*.24, cy-s*.3);
+    // "-2" in a white bubble, big enough to read on a phone
+    const bx = cx-s*.22, by = cy-s*.3, bw = s*.36, bh = s*.24;
+    c.beginPath(); c.roundRect(bx-bw/2, by-bh/2, bw, bh, bh/2); c.fillStyle='#ffffff'; c.fill(); c.strokeStyle='#3a86b8'; c.lineWidth=1.5; c.stroke();
+    c.fillStyle='#1f6fa0'; c.font=`800 ${Math.round(s*.2)}px Nunito, sans-serif`; c.textAlign='center'; c.textBaseline='middle';
+    c.fillText('−2', bx, by+1);
   }
 }
 // A cactus in sandy soil: happy when dry, droopy and dripping when water reaches it.
