@@ -8,7 +8,7 @@
 // A level is accepted only if it: can be solved; has at most 2 different best answers; doesn't
 // start out solved; and scores within TOLERANCE of its target.
 import { writeFileSync } from 'node:fs';
-import { PLAN, TOLERANCE, TRIES } from './curriculum.mjs';
+import { PLAN, TOLERANCE, TRIES, START_AT } from './curriculum.mjs';
 import { blank, placeEnds, carvePath, lay, PATTERNS, toRows, rngFrom } from './patterns.mjs';
 import { rate } from './rate.mjs';
 import { parse, flow, mulberry32 } from '../../js/engine/flow.js';
@@ -67,7 +67,9 @@ function finish(cand, W, t, R){
 function checkPlan(){
   const problems = [];
   PLAN.forEach((W, i) => { if (W.to <= W.from) problems.push(`${W.name}: last level must be harder than the first`);
-    if (i && W.from <= PLAN[i-1].from) problems.push(`${W.name} must start harder than ${PLAN[i-1].name}`);
+    if (i){ const P = PLAN[i-1], low = P.from + (P.to-P.from)*START_AT;
+      if (W.from < low) problems.push(`${W.name} starts too easy: its first level should be at least ${low.toFixed(1)} (${Math.round(START_AT*100)}% of the way up ${P.name})`);
+      if (W.from >= P.to) problems.push(`${W.name} starts too hard: its first level should be easier than ${P.name}'s last (${P.to})`); }
     if (i && W.to <= PLAN[i-1].to) problems.push(`${W.name} must end harder than ${PLAN[i-1].name}`); });
   if (problems.length){ console.error('The difficulty plan breaks the rules:\n  ' + problems.join('\n  ')); process.exit(1); }
 }

@@ -57,7 +57,7 @@ The generator in `tools/levelgen/` makes new levels that follow rules we set, so
   - *Sun-baked patch:* some decoys cost 3 drops.
   - *Hills (+ pump):* the real route only runs downhill, with a windmill pump where it must climb.
   - *Limited barrel:* the barrel holds exactly enough for the best route, so wasteful routes fail outright.
-- **`curriculum.mjs`** is the difficulty plan: board size, number of plants, patterns and target score for each world, from its first level to its last. The generator checks the plan's rules: levels get harder within a world, each world starts and ends harder than the one before, and every level in a world uses that world's mechanic.
+- **`curriculum.mjs`** is the difficulty plan: board size, number of plants, patterns and target score for each world, from its first level to its last. The generator checks the plan's rules: levels get harder within a world; each world ends harder than the one before; a new world starts only moderately easy (its first level at least 60% of the way up the previous world's range, set by `START_AT`); and every level in a world uses that world's mechanic.
 
 Commands:
 

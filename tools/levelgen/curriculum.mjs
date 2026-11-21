@@ -2,26 +2,30 @@
 //
 // General rules (checked by generate.mjs):
 //   1. Inside a world, levels get harder from first to last (the target score climbs from `from` to `to`).
-//   2. Each world starts harder than the world before it started, and ends harder than it ended.
-//   3. Each world brings in its own mechanic (`require`): every level in it must use that mechanic.
+//   2. Each world ends harder than the world before it ended.
+//   3. A new world starts only moderately easy: its first level sits at least START_AT of the way
+//      up the previous world's range (never back at 'start from scratch' easy), but below its hardest.
+//   4. Each world brings in its own mechanic (`require`): every level in it must use that mechanic.
 //
 // Every number with two values is [first level, last level]; levels in between get a blend.
 // Scores come from rate.mjs (the 16 hand-made levels score from about 3 to 30).
 export const PLAN = [
-  { name:'Spring Meadow', icon:'barrel', grass:['#a6cf8a','#9ec781'], count:10, from:3, to:13,
-    width:[4,6], height:[3,5], plants:[1,2], wiggle:[.5,2], decoys:[0,.45], rocks:[.25,.12], locked:[1,0],
+  { name:'Spring Meadow', icon:'barrel', grass:['#a6cf8a','#9ec781'], count:10, from:3, to:15,
+    width:[4,7], height:[3,6], plants:[1,2], wiggle:[.5,2], decoys:[0,.45], rocks:[.25,.12], locked:[1,0],
     patterns:{ decoyShortcut:[0,.3] }, penalty:'none', sources:['barrel','house','pond'] },
-  { name:'Summer Heat', icon:'sun', grass:['#c3cb88','#b9c17e'], hot:true, count:8, from:9, to:18,
-    width:[5,6], height:[4,6], plants:[1,2], wiggle:[1,2], decoys:[.3,.55], rocks:[.15,.1], locked:[1,0],
+  { name:'Summer Heat', icon:'sun', grass:['#c3cb88','#b9c17e'], hot:true, count:8, from:11, to:22,
+    width:[5,7], height:[5,7], plants:[1,2], wiggle:[1,2], decoys:[.3,.55], rocks:[.15,.1], locked:[1,0],
     patterns:{ decoyShortcut:[.7,1], sunPatch:[.2,.4] }, penalty:'hot', require:['hot'], sources:['well','barrel','barn'] },
-  { name:'Thirsty Cows', icon:'cow', grass:['#9ccc8f','#93c386'], count:8, from:12, to:22,
-    width:[5,6], height:[4,6], plants:[1,2], wiggle:[1,2.5], decoys:[.3,.5], rocks:[.12,.08], locked:[0,0],
+  { name:'Thirsty Cows', icon:'cow', grass:['#9ccc8f','#93c386'], count:8, from:18, to:29,
+    width:[6,8], height:[5,7], plants:[1,2], wiggle:[1,2.5], decoys:[.3,.5], rocks:[.12,.08], locked:[0,0],
     patterns:{ decoyShortcut:[1,1] }, penalty:'cows', require:['cows'], cap:[.5,1], sources:['barrel'] },
-  { name:'Hill Country', icon:'hill', grass:['#a6cf8a','#9ec781'], count:8, from:14, to:26,
-    width:[5,6], height:[4,6], plants:[1,2], wiggle:[1,2.5], decoys:[.35,.55], rocks:[.1,.06], locked:[0,0],
+  { name:'Hill Country', icon:'hill', grass:['#a6cf8a','#9ec781'], count:8, from:25, to:36,
+    width:[6,8], height:[6,8], plants:[1,2], wiggle:[1,2.5], decoys:[.35,.55], rocks:[.1,.06], locked:[0,0],
     patterns:{ decoyShortcut:[.5,.8], hills:[1,1] }, penalty:'cows', require:['hills'], pumps:[.3,.8], cap:[0,.6], sources:['river','pond','barrel'] },
 ];
 
 // How close a level's score must be to its target, and how hard the generator tries.
+// A new world's first level must be at least this far up the previous world's range (0 = its first level, 1 = its last).
+export const START_AT = .6;
 export const TOLERANCE = 1.5;
 export const TRIES = 500;
