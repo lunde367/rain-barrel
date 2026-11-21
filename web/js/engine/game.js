@@ -24,12 +24,27 @@ export function prepare(LV, seed){
   S.tray = [];
   for (const t of S.tiles) if (t.tray){ S.tray.push({ base:t.base, rot:0, used:false, home:t.i }); t.type='slot'; t.base=0; }
   for (const b of S.extra) S.tray.push({ base:b, rot:0, used:false, home:-1 });
-  for (let tries=0; tries<60; tries++){
+  const scramble = () => { for (let tries=0; tries<60; tries++){
     const groups = {};
     S.tiles.forEach(t => { if (t.type!=='pipe' || t.locked) return;
       if (t.link){ groups[t.link] ??= Math.floor(rnd()*4); t.rot = groups[t.link]; } else t.rot = Math.floor(rnd()*4); });
     S.tray.forEach(p => { p.rot = Math.floor(rnd()*4); });
     if (!solved(S, flow(S))) break;
+  } };
+  scramble();
+  // A random scramble can land one tap from the answer. On real puzzles (6+ turnable pieces on the
+  // route, or 8+ turnable pieces in all) keep scrambling until the start needs at least 4 taps, keeping the best of a few tries.
+  const route = sol.order.filter(i => S.tiles[i].type==='pipe' && !S.tiles[i].locked).length;
+  const turnable = S.tiles.filter(t => t.type==='pipe' && !t.locked).length;
+  if (route >= 6 || turnable >= 8){
+    let best = null;
+    for (let k=0; k<12; k++){
+      const m = fewestMoves(S);
+      if (m === null || m >= 4){ best = null; break; }
+      if (!best || m > best.m) best = { m, rots:S.tiles.map(t => t.rot), tray:S.tray.map(p => p.rot) };
+      scramble();
+    }
+    if (best && (fewestMoves(S) ?? 99) < best.m){ S.tiles.forEach((t, i) => { t.rot = best.rots[i]; }); S.tray.forEach((p, i) => { p.rot = best.tray[i]; }); }
   }
   for (let i=S.tray.length-1; i>0; i--){ const j = Math.floor(rnd()*(i+1)); [S.tray[i], S.tray[j]] = [S.tray[j], S.tray[i]]; }
   // fallback par: turns to fix the written solution's pieces (once per linked group), plus placing and turning tray pieces

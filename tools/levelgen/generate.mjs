@@ -8,7 +8,9 @@
 // A level is accepted only if it: can be solved; has at most 2 different best answers; doesn't
 // start out solved; and scores within TOLERANCE of its target.
 import { writeFileSync } from 'node:fs';
+import { solve } from './solver.mjs';
 import { PLAN as LAB_PLAN, SHED, TOLERANCE, TRIES, START_AT } from './curriculum.mjs';
+const ONLY = process.argv.find(a => a.startsWith('--only='));
 const PLAN = process.argv.includes('--shed') ? [SHED] : LAB_PLAN;
 import { blank, placeEnds, carvePath, lay, PATTERNS, toRows, rngFrom } from './patterns.mjs';
 import { rate } from './rate.mjs';
@@ -42,7 +44,9 @@ function build(W, t, R){
   const locked = Math.round(lerp(W.locked, t)); if (locked){ PATTERNS.lockedAnchor(B, R, ends, locked); used.push('locked anchor'); }
   if (W.patterns.sunPatch){ PATTERNS.sunPatch(B, R, ends, lerp(W.patterns.sunPatch, t)); used.push('sun-baked patch'); }
   PATTERNS.rocks(B, R, ends, lerp(W.rocks, t));
-  const dec = lerp(W.decoys, t); if (dec > .05){ PATTERNS.decoyFill(B, R, ends, dec); used.push('decoy fill'); }
+  const jn = lerp(W.junctions || 0, t); if (jn > .02){ PATTERNS.junctions(B, R, ends, jn); used.push('junctions'); }
+  const shapes = W.shapes ? W.shapes[0].map((v,i) => v + (W.shapes[1][i]-v)*t) : undefined;
+  const dec = lerp(W.decoys, t); if (dec > .05){ PATTERNS.decoyFill(B, R, ends, dec, shapes); used.push('decoy fill'); }
   if (W.penalty==='none' && shortcut){   // in the first world a shortcut is simply blocked by a rock later on
     const alt = B.cells.filter(x => x.alt && !x.route && x.k==='pipe'); if (alt.length){ R.pick(alt).k='#'; } }
   // the newer mechanics (preview worlds)
@@ -59,7 +63,7 @@ function build(W, t, R){
 export const WHY = {};
 const no = why => { WHY[why] = (WHY[why]||0)+1; return null; };
 function finish(cand, W, t, R){
-  const r0 = rate(cand.level);
+  const r0 = solve(cand.level, { nodeLimit:60000 });
   if (!r0.solvable) return no('unsolvable'); if (r0.optimal > 2) return no('too many answers'); if (r0.min < 2) return no('too short'); if (r0.truncated) return no('too big to check');
   const level = { ...cand.level, rows: r0.rows }; if (r0.extra && r0.extra.length) level.extra = r0.extra; else delete level.extra;
   if (W.cap && R.chance(lerp(W.cap, t))){ level.cap = r0.min; level.src = 'barrel'; cand.used.push('limited barrel'); }
@@ -87,8 +91,8 @@ PLAN.forEach((W, wi) => {
   const found = [];
   for (let li=0; li<W.count; li++){
     const t = W.count > 1 ? li/(W.count-1) : 0, target = W.from + (W.to-W.from)*t;
-    let best = null;
-    for (let k=0; k<TRIES; k++){
+    let best = null; const t0 = Date.now();
+    for (let k=0; k<TRIES && Date.now()-t0 < 45000; k++){   // at most 45 seconds per level
       const c = build(W, t, R); if (!c) continue;
       const f = finish(c, W, t, R); if (!f) continue;
       const off = Math.abs(f.rating.score - target);
@@ -96,6 +100,8 @@ PLAN.forEach((W, wi) => {
       if (off <= TOLERANCE) break;
     }
     if (!best){ console.log(`${W.name} ${li+1}: no level found`); continue; }
+    best.rating.traps = rate(best.level, { traps:true }).traps;
+    console.error(`  ${W.name} ${li+1}/${W.count}: target ${target.toFixed(1)} got ${best.rating.score}`);
     found.push({ ...best, target });
   }
   // Rule 1: within a world, easiest first. Sorting by score guarantees it even when a level overshoots.

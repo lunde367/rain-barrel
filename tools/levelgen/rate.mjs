@@ -4,29 +4,30 @@
 import { parse } from '../../web/js/engine/flow.js';
 import { solve, explore, distinct } from './solver.mjs';
 
+// The main measure is EFFORT: how many partial routes a careful player would have to try before
+// finding the answer, if they never spill more water than the best answer does. A tiny number means
+// the route can just be followed; a big one means real thinking. DEAD ENDS are complete routes that
+// look fine but leave a plant dry. (Checked against the hand-made levels: First Sip needs 5 tries,
+// Long Way Round 31, Last Drops 1813.)
 export const WEIGHTS = {
-  search: 1.2,     // per doubling of the routes a player could try (how big the maze of choices is)
-  pieces: .35,     // per piece you can turn
-  decoys: .25,     // per piece that isn't part of the answer
-  traps: 1.5,      // per doubling of routes that work but waste water (tempting wrong answers)
-  mechanic: 1,     // per mechanic in play (locked, sun-baked, cows, hills, pumps, limited barrel)
+  effort: 3,       // per doubling of the routes a careful player would try
+  deadEnds: 2,     // per doubling of complete-looking routes that fail
+  mechanic: 1,     // per mechanic in play (locked, sun-baked, cows, hills, pumps, limited barrel, cactus, tray, linked)
   plants: 1,       // per extra plant
-  sources: .7,     // per extra water source
-  answers: -1.5,   // per doubling of different best answers (more answers = easier)
-  tray: .5,        // per tray piece and empty slot (placing pieces is extra thinking)
+  answers: -2,     // per doubling of different best answers (more answers = easier)
 };
 
-export function rate(level, { margin = 8 } = {}){
+export function rate(level, { effortLimit = 60000, traps:countTraps = false } = {}){
   const S = parse(level), sol = solve(level);
   if (!sol.solvable) return { solvable:false };
   const capped = S.cap !== Infinity;
-  // Routes that water every plant without the barrel limit, but cost more than the best one.
-  const loose = explore(level, { noCap:true, bound:sol.min + margin });
-  const wins = distinct(loose.outcomes.filter(o => o.all));
-  const traps = wins.filter(o => o.water > sol.min).length;
-  const routes = distinct(loose.outcomes).length;
+  const careful = explore(level, { bound:sol.min, maxLeaks:sol.best.leaks, nodeLimit:effortLimit });
+  const effort = careful.nodes, deadEnds = distinct(careful.outcomes.filter(o => !o.all)).length;
+  // routes that water everything without the barrel limit but cost more (tempting wrong answers)
+  // (slow, so only counted for the report)
+  const traps = countTraps ? distinct(explore(level, { noCap:true, bound:sol.min + 6, nodeLimit:effortLimit })
+    .outcomes.filter(o => o.all && o.water > sol.min)).length : null;
   const pipes = S.tiles.filter(t => t.type==='pipe'), turnable = pipes.filter(t => !t.locked);
-  const traySize = S.tiles.filter(t => t.tray).length + S.extra.length, slots = S.tiles.filter(t => t.slot).length;
   const onRoute = new Set(sol.best.key.split(',').map(x => +x.split(':')[0]));
   const decoys = turnable.filter(t => !onRoute.has(t.i)).length;
   const mech = {
@@ -34,12 +35,10 @@ export function rate(level, { margin = 8 } = {}){
     locked: pipes.some(t => t.locked), hot: S.tiles.some(t => t.hot), cows: S.tiles.some(t => t.type==='cow'),
     hills: S.tiles.some(t => t.h > 0), pumps: S.tiles.some(t => t.pump), cap: capped,
   };
-  const sources = S.tiles.filter(t => t.type==='src').length;
   const w = WEIGHTS, lg = x => Math.log2(1 + x);
-  const score = w.search*lg(routes) + w.pieces*turnable.length + w.tray*(traySize + slots) + w.decoys*decoys + w.traps*lg(traps)
-    + w.mechanic*Object.values(mech).filter(Boolean).length + w.plants*(S.plants-1) + w.sources*(sources-1)
-    + w.answers*Math.log2(sol.optimal);
-  return { solvable:true, score:Math.round(score*10)/10, min:sol.min, optimal:sol.optimal, routes, traps,
-    pieces:turnable.length, decoys, plants:S.plants, sources, size:`${S.W}x${S.H}`,
-    mechanics:Object.keys(mech).filter(k => mech[k]), truncated:loose.truncated || sol.truncated, rows:sol.rows, extra:sol.extra };
+  const score = w.effort*Math.log2(effort) + w.deadEnds*lg(deadEnds)
+    + w.mechanic*Object.values(mech).filter(Boolean).length + w.plants*(S.plants-1) + w.answers*Math.log2(sol.optimal);
+  return { solvable:true, score:Math.round(score*10)/10, min:sol.min, optimal:sol.optimal, effort, deadEnds, traps,
+    pieces:turnable.length, decoys, plants:S.plants, size:`${S.W}x${S.H}`,
+    mechanics:Object.keys(mech).filter(k => mech[k]), truncated:sol.truncated, effortCapped:careful.truncated, rows:sol.rows, extra:sol.extra };
 }

@@ -20,7 +20,8 @@ export function orientations(base){
 //   bound:  skip routes that already use more than this many drops (water only ever goes up as pieces are decided)
 //   noCap:  ignore the barrel's limit (to find routes that would work if the barrel were bigger: traps)
 //   best:   branch-and-bound: tighten `bound` whenever a cheaper winning route is found
-export function explore(level, { bound = Infinity, noCap = false, best = false, nodeLimit = 400000 } = {}){
+//   maxLeaks: also drop routes with more leaks than this (a careful player who never spills more than needed)
+export function explore(level, { bound = Infinity, noCap = false, best = false, nodeLimit = 400000, maxLeaks = Infinity } = {}){
   const S = parse(level);
   if (noCap) S.cap = Infinity;
   const tray = {};
@@ -36,7 +37,7 @@ export function explore(level, { bound = Infinity, noCap = false, best = false, 
   const rec = () => {
     if (++nodes > nodeLimit){ truncated = true; return; }
     const f = flow(S);
-    if (f.water > bound || f.soaked.size) return;   // a wet cactus can never be undone by deciding more pieces
+    if (f.water > bound || f.soaked.size || f.leaks.length > maxLeaks) return;   // a wet cactus can never be undone by deciding more pieces
     if (!f.frontier.size){
       const all = solved(S, f);
       // routes count as the same when the same channels carry water, facing the same way

@@ -78,9 +78,20 @@ export const PATTERNS = {
     return true;
   },
   // DECOY FILL: extra pieces on empty grass, so there are many more ways to go wrong.
-  decoyFill(B, R, ends, amount){
+  // `shapes` = how likely each kind of piece is: [straight, corner, T, cross]. More T's and crosses
+  // means more ways for water to branch off and leak, which is what makes a dense board hard.
+  decoyFill(B, R, ends, amount, shapes = [.35,.45,.2,0]){
+    const kinds = [[10,5],[3,6,12,9],[7,13,14,11],[15]], total = shapes.reduce((a,b) => a+b, 0);
     for (const x of B.cells) if (free(B, x) && R.chance(amount)){
-      x.k='pipe'; x.m = R.pick([10,10,5,3,6,12,9,7,13,14,11]); x.decoy = true; }
+      let r = R.f()*total, k = 0; while (k < 3 && r > shapes[k]){ r -= shapes[k]; k++; }
+      x.k='pipe'; x.m = R.pick(kinds[k]); x.decoy = true; }
+  },
+  // JUNCTIONS: give some pieces of the real route an extra opening (a corner becomes a T, a T a cross).
+  // The extra arm has to be pointed somewhere harmless, so the player can't just follow the route.
+  junctions(B, R, ends, amount){
+    for (const x of B.cells){ if (x.k!=='pipe' || !x.route || x.locked || x.tray || !R.chance(amount)) continue;
+      const open = DIRS.filter(([bit]) => !(x.m & bit)); if (!open.length) continue;
+      x.m |= R.pick(open)[0]; }
   },
   // ROCKS: block some grass, narrowing the choices (easier) or forcing a detour (when put on shortcuts).
   rocks(B, R, ends, amount){ for (const x of B.cells) if (free(B, x) && R.chance(amount)) x.k='#'; },

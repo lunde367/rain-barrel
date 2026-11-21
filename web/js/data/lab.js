@@ -69,727 +69,753 @@ export const LAB = {
  ],
  "levels": [
   {
+   "name": "Dusty Orchard",
+   "world": 0,
+   "rows": [
+    "│ . # #",
+    "P . ┌ .",
+    "└ ─* ─ S"
+   ],
+   "src": "pond",
+   "note": "Generated: score 11.4. locked anchor, decoy fill."
+  },
+  {
+   "name": "Shady Bend",
+   "world": 0,
+   "rows": [
+    ". . . S #",
+    "├ . │ │ .",
+    "# . ┴ │ .",
+    "P ─ ─ ┘* ┐"
+   ],
+   "src": "house",
+   "note": "Generated: score 12.5. locked anchor, junctions, decoy fill."
+  },
+  {
    "name": "Dusty Corner",
    "world": 0,
    "rows": [
-    ". . # #",
-    "P . . .",
-    "└ ─* ─ S"
+    ". . . .",
+    "P ┐ . .",
+    "└ ┴ ─* S",
+    ". # . ─"
    ],
    "src": "barrel",
-   "note": "Generated: score 4.5. locked anchor."
+   "note": "Generated: score 12.7. locked anchor, junctions, decoy fill."
   },
   {
-   "name": "Crooked Puddle",
+   "name": "Thirsty Trickle",
    "world": 0,
    "rows": [
-    ". # . P",
-    ". ┌* ─ ┘",
-    ". S . ."
-   ],
-   "src": "house",
-   "note": "Generated: score 4.5. locked anchor."
-  },
-  {
-   "name": "Shady Orchard",
-   "world": 0,
-   "rows": [
-    ". # P #",
-    "# P ┤ .",
-    ". . │* #",
-    ". . └ S"
+    ". . . P .",
+    ". # ┌ ┘ .",
+    "# . │* ┴ .",
+    "┴ # S . ┤"
    ],
    "src": "barrel",
-   "note": "Generated: score 6.1. locked anchor, decoy fill."
+   "cap": 3,
+   "note": "Generated: score 15.1. locked anchor, junctions, decoy fill, limited barrel."
   },
   {
-   "name": "Pebbly Brook",
+   "name": "Sunny Spring",
    "world": 0,
    "rows": [
-    ". ┐ . # .",
-    "S . # . .",
-    "│ ┌ . # #",
-    "└ ─ ─* P ."
+    "S ┐ ┘ . │",
+    "┬ └ ┬* ─ ┐",
+    ". └ P ─ P",
+    ". ┌ └ . ┬"
    ],
    "src": "pond",
-   "note": "Generated: score 6.4. locked anchor, decoy fill."
+   "note": "Generated: score 18.6. locked anchor, junctions, decoy fill."
   },
   {
-   "name": "Mossy Brook",
+   "name": "Twisty Hollow",
    "world": 0,
    "rows": [
-    "# . # ┌ ─ P",
-    ". . # │* ┬ .",
-    ". . . │ . ┤",
-    ". S ─ ┘ . ─"
+    "P ┬ ─ ┬ ─ S",
+    ". │ ┤ ┬ # #",
+    ". │ . . . .",
+    ". P . . ─ ."
    ],
    "src": "pond",
-   "note": "Generated: score 8.4. locked anchor, decoy fill."
+   "note": "Generated: score 20.2. junctions, decoy fill."
   },
   {
-   "name": "Dewy Terrace",
+   "name": "Twisty Brook",
    "world": 0,
    "rows": [
-    ". ┬ . # ┴ P",
-    ". . . . . │",
-    "S ─ ─ ─ ─ ┤",
-    "# . . . . P"
+    "│ P ┬ P ┘ ┌ .",
+    "# └ └ ┴ ─ ─ ┐",
+    "│ ─ . ─ # │ ┤",
+    "─ . . ├ │ . S",
+    "─ . . . ┴ . ┬",
+    "─ ┬ └ ┼ . │ ┼"
    ],
    "src": "barrel",
-   "note": "Generated: score 8.5. decoy fill."
+   "note": "Generated: score 22.7. junctions, decoy fill."
   },
   {
-   "name": "Dewy Corner",
+   "name": "Bumpy Puddle",
    "world": 0,
    "rows": [
-    ". P . P ┤ .",
-    "┐ └ ┬ ┘ . ┘",
-    ". . │ . . .",
-    "# . │ ┬ # .",
-    ". # S . . ┘"
+    ". └ . ┬ ┬ .",
+    "S └ ┬ . ─ │",
+    "│ │ ┐ . # .",
+    "│ └ ┬ . P #",
+    "└ ─ ─ ─ ┴ P"
    ],
    "src": "barrel",
-   "note": "Generated: score 10.8. decoy fill."
+   "cap": 7,
+   "note": "Generated: score 22.9. junctions, decoy fill, limited barrel."
   },
   {
-   "name": "Misty Gully",
+   "name": "Windy Furrow",
    "world": 0,
    "rows": [
-    "S . . . . . .",
-    "│ . . . # ┴ .",
-    "│ . ┴ . # ┌ #",
-    "└ ─ ─ ─ ─ ┐ .",
-    ". # ┌ ├ └ └ P"
+    ". # . # └ │ └",
+    "# ┌ P ┬ ┬ ┐ ┼",
+    "┤ P ─ ┘ └ ┤ ├",
+    "┬ ┐ # . . │ │",
+    "│ │ ┌ └ # S ."
    ],
-   "src": "house",
-   "note": "Generated: score 11.8. decoy fill."
+   "src": "pond",
+   "note": "Generated: score 25.1. junctions, decoy fill."
   },
   {
    "name": "Misty Field",
    "world": 0,
    "rows": [
-    ". P # ┴ ┴ ┘",
-    ". ├ ─ P . ┤",
-    ". │ . ┐ . ┌",
-    ". │ │ └ . .",
-    ". │ . . # .",
-    "S ┘ ┘ ─ # │"
+    ". ┌ . ├ ─ P ┤",
+    "┌ ┐ ┴ ┌ ┌ │ .",
+    "# ┌ . # P ┤ ┤",
+    "# └ ┘ ┌ ┴ ┘ ┌",
+    "┘ │ ┌ ┘ ┼ ─ │",
+    "S ─ ┘ ┤ . ┘ ─"
    ],
    "src": "barrel",
-   "note": "Generated: score 14. decoy fill."
+   "note": "Generated: score 27.4. junctions, decoy fill."
   },
   {
-   "name": "Windy Meadow",
-   "world": 0,
+   "name": "Mossy Orchard",
+   "world": 1,
    "rows": [
-    ". ┌ . . . . .",
-    ". P ┐ . ┌ P .",
-    "┤ . └ ─ ┤ . ├",
-    "─ # ┐ . │ . .",
-    "├ ┴ │ . │ ┌ .",
-    "# ┘ ┐ . S . ."
+    "└ # # ─ ┤",
+    "─ ┐ ┌ . .",
+    "└ ┌! │! │! S",
+    "─ │! └ ┬ ┤",
+    "# P ─ ┴ ┘"
    ],
    "src": "barrel",
-   "note": "Generated: score 16.4. decoy fill."
+   "cap": 7,
+   "note": "Generated: score 20.8. decoy shortcut (hot), sun-baked patch, junctions, decoy fill, limited barrel."
   },
   {
-   "name": "Muddy Field",
+   "name": "Twisty Corner",
    "world": 1,
    "rows": [
-    "┌ ─ P . .",
-    "│* . │! . ─",
-    "S │! ┘! . .",
-    ". . . # .",
-    "┤ # ─ . ."
-   ],
-   "src": "barn",
-   "note": "Generated: score 13.7. decoy shortcut (hot), locked anchor, sun-baked patch, decoy fill."
-  },
-  {
-   "name": "Dewy Terrace",
-   "world": 1,
-   "rows": [
-    ". ─ . . #",
-    ". . P ─! ┐!",
-    ". . │ . │!",
-    ". ┐ │ . ─!",
-    ". . └ ─* S",
-    ". . . # #"
-   ],
-   "src": "barn",
-   "note": "Generated: score 13.7. decoy shortcut (hot), locked anchor, sun-baked patch, decoy fill."
-  },
-  {
-   "name": "Crooked Terrace",
-   "world": 1,
-   "rows": [
-    "├ . ┌ ─ S",
-    ". . │ # ─!",
-    ". . │* # │!",
-    "└ . P ─! ┘!",
-    "# . . # ."
+    ". . . ┘ .",
+    "P ┐! # # ┐",
+    "├ │! ┐ . .",
+    "│ └! ─! ┘! #",
+    "└ ─ ─ S ."
    ],
    "src": "well",
-   "note": "Generated: score 14.7. decoy shortcut (hot), locked anchor, sun-baked patch, decoy fill."
+   "note": "Generated: score 23.3. decoy shortcut (hot), sun-baked patch, junctions, decoy fill."
   },
   {
-   "name": "Lazy Field",
+   "name": "Pebbly Patch",
    "world": 1,
    "rows": [
-    "P ─! ┐! . .",
-    "├ P │! . .",
-    "│ └ │! . #",
-    "│ . ─! . ┌",
-    "└ ─* S . ┤"
+    "─ ─ . ┐! S",
+    "┐ ┌! ─! ┘! ├",
+    "┤ │! . ┤ │",
+    ". │! ├ . │",
+    ". P ─ ─ ┘",
+    "└ ┬ ┬ ┐ └"
    ],
    "src": "barn",
-   "note": "Generated: score 16.9. decoy shortcut (hot), locked anchor, sun-baked patch, decoy fill."
+   "note": "Generated: score 26.2. decoy shortcut (hot), sun-baked patch, junctions, decoy fill."
   },
   {
-   "name": "Sunny Orchard",
+   "name": "Thirsty Patch",
    "world": 1,
    "rows": [
-    "├ . # S ┐ .",
-    ". . ┴ ─! │ ┴",
-    ". │ ┤ │! │ #",
-    ". . . │! │ .",
-    ". # ┌! ┘! │ .",
-    "# . P ─ ┘ ."
-   ],
-   "src": "barn",
-   "note": "Generated: score 18.7. decoy shortcut (hot), sun-baked patch, decoy fill."
-  },
-  {
-   "name": "Quiet Ditch",
-   "world": 1,
-   "rows": [
-    ". S ─ ─ ┐ ┌",
-    ". ─! . . └ ┐",
-    ". │! . . . │",
-    "# │! # . # │",
-    "┌ └! ─! ─! ─! P",
-    ". . . . # ┘",
-    ". . # └ ─ ┌"
-   ],
-   "src": "barrel",
-   "note": "Generated: score 20.2. decoy shortcut (hot), sun-baked patch, decoy fill."
-  },
-  {
-   "name": "Windy Hollow",
-   "world": 1,
-   "rows": [
-    "└ ┬ ┘ ├ . .",
-    "# . . # . .",
-    "┌ ─ ─ ─ P .",
-    "│ . . ┌ │! ┤",
-    "S │! ─! ─! ┘! ┘",
-    ". . │ . ┘ ┬",
-    "┐ └ # ┐ ┘ ."
-   ],
-   "src": "barn",
-   "note": "Generated: score 21.9. decoy shortcut (hot), sun-baked patch, decoy fill."
-  },
-  {
-   "name": "Crooked Hollow",
-   "world": 1,
-   "rows": [
-    "┬ ─ . P ─! ─! ┐!",
-    ". ├ # ├ P ┴ │!",
-    ". │ # │ . . │!",
-    "┤ . # │ . ┤ │!",
-    "# . . │ . # │!",
-    "┐ . # │ # . ─!",
-    ". . . └ ─ ─ S"
-   ],
-   "src": "well",
-   "note": "Generated: score 23.2. decoy shortcut (hot), sun-baked patch, decoy fill."
-  },
-  {
-   "name": "Mossy Patch",
-   "world": 2,
-   "rows": [
-    "# ┌ ─ P . ┐",
-    ". │ ┌ ┘ C #",
-    ". │ │ C # .",
-    ". │ ─ C . #",
-    ". └ S . . ."
-   ],
-   "src": "barrel",
-   "note": "Generated: score 16.9. decoy shortcut (cows), decoy fill."
-  },
-  {
-   "name": "Mossy Hollow",
-   "world": 2,
-   "rows": [
-    ". C C ┐ S .",
-    "P ─ ─ ┘ │ #",
-    "└ ─ ─ ─ ┘ ─",
-    ". # . ┘ ─ #",
-    ". . . . . ."
-   ],
-   "src": "barrel",
-   "note": "Generated: score 20.3. decoy shortcut (cows), decoy fill."
-  },
-  {
-   "name": "Lazy Corner",
-   "world": 2,
-   "rows": [
-    "# C C C . ┐ .",
-    "┌ ─ ─ ─ P . .",
-    "─ ┌ . ┐ │ . ┐",
-    "S ─ ─ ─ ┘ . ┬",
-    ". . . └ ┘ # ."
+    "# . ┼ └ ┐ .",
+    "┬ P ─ ─ ─ ┐",
+    "┐ └! ┐! ├ # │",
+    "┌ ─ └! ─! │! S",
+    "┬ . ┬ ┌ ├ ┌",
+    "│ ├ ┬ │ ─ ┼"
    ],
    "src": "barrel",
    "cap": 5,
-   "note": "Generated: score 21.8. decoy shortcut (cows), decoy fill, limited barrel."
-  },
-  {
-   "name": "Sleepy Orchard",
-   "world": 2,
-   "rows": [
-    "# . C C C # .",
-    "P ─ ─ ─ ─ │ S",
-    "└ ─ ─ ─ ─ ─ ┘",
-    "│ └ . . . ┌ .",
-    ". . ┴ . . ─ .",
-    ". ┤ . . ├ . #"
-   ],
-   "src": "barrel",
-   "cap": 7,
-   "note": "Generated: score 22.5. decoy shortcut (cows), decoy fill, limited barrel."
-  },
-  {
-   "name": "Mossy Field",
-   "world": 2,
-   "rows": [
-    ". . ┬ . ─ # #",
-    "┌ ─ ─ ─ ─ ─ ┐",
-    "S │ ─ ─ ─ ─ P",
-    ". C C . . ┤ .",
-    ". │ . ┌ └ . ┌",
-    "# # ─ . . ─ #"
-   ],
-   "src": "barrel",
-   "cap": 7,
-   "note": "Generated: score 24.2. decoy shortcut (cows), decoy fill, limited barrel."
-  },
-  {
-   "name": "Shady Patch",
-   "world": 2,
-   "rows": [
-    "# . . # . └ ┘",
-    "P ─ ┐ . . ┐ ┘",
-    "└ ┐ └ ┐ . ┘ .",
-    "C └ ┐ │ . . ┴",
-    ". C ─ │ . ┴ .",
-    ". . S ┘ . . ."
-   ],
-   "src": "barrel",
-   "note": "Generated: score 24.8. decoy shortcut (cows), decoy fill."
-  },
-  {
-   "name": "Windy Orchard",
-   "world": 2,
-   "rows": [
-    "# . ─ ┘ C C .",
-    "│ . . ┌ ─ │ S",
-    ". ┌ ─ ┘ ┤ . │",
-    ". │ . . . ┌ ┘",
-    "├ P . . . │ #",
-    "└ └ ─ ┬ ─ ┘ #",
-    ". ┤ . P . . ┤"
-   ],
-   "src": "barrel",
-   "cap": 9,
-   "note": "Generated: score 26.3. decoy shortcut (cows), decoy fill, limited barrel."
-  },
-  {
-   "name": "Sunny Corner",
-   "world": 2,
-   "rows": [
-    ". . # └ P ┐ . #",
-    ". └ . . . │ . ┤",
-    ". ┌ . . . │ . .",
-    ". # ─ # ┌ ┴ ─ P",
-    "├ ├ # ┌ ┘ │ ┌ ┘",
-    ". . . │ ┌ ─ ┘ C",
-    ". ┐ . S └ C . ."
-   ],
-   "src": "barrel",
-   "cap": 9,
-   "note": "Generated: score 29.2. decoy shortcut (cows), decoy fill, limited barrel."
+   "note": "Generated: score 27.6. decoy shortcut (hot), sun-baked patch, junctions, decoy fill, limited barrel."
   },
   {
    "name": "Mossy Patch",
-   "world": 3,
+   "world": 1,
    "rows": [
-    ".2 .2 .2 .1 .1 └1",
-    ".2 .2 .2 └2 ┬2 ┘1",
-    "┌2 .2 .2 ┌1 ─1 P1",
-    ".2 .2 C2 │2 .2 │1",
-    "┌2 ┘2 ┘2 ┘2 #2 │1",
-    "┘2 .2 S2 ─2 ─1 ┘1"
-   ],
-   "src": "pond",
-   "note": "Generated: score 25.2. decoy shortcut (cows), hills, decoy fill."
-  },
-  {
-   "name": "Misty Bend",
-   "world": 3,
-   "rows": [
-    ".2 P1 .2 .2 .2 #2",
-    ".2 └1 ┬2 ─2 ─2 ┐2",
-    "┌ ─1 ┘1 #2 .2 S2",
-    "│p1 ┌1 ─1 ─2 ─2 ┌2",
-    "P ┘1 C1 .2 .2 .2",
-    ". C1 .1 .2 └2 │2"
-   ],
-   "src": "river",
-   "note": "Generated: score 26.6. decoy shortcut (cows), hills + pump, decoy fill."
-  },
-  {
-   "name": "Dusty Patch",
-   "world": 3,
-   "rows": [
-    "P ─ ─ ─ ┬ P",
-    ". └ ─ . │p1 │",
-    "┌1 # . . │ │2",
-    "┌1 .1 ┌1 ┴1 │1 │2",
-    "└2 #2 #2 .2 │2 │2",
-    ".2 .2 .2 ─2 │2 ─2",
-    "┐2 .2 .2 ┴2 └2 S2"
-   ],
-   "src": "river",
-   "note": "Generated: score 27.7. hills + pump, decoy fill."
-  },
-  {
-   "name": "Twisty Furrow",
-   "world": 3,
-   "rows": [
-    "┌2 .2 #1 .2 ┴2 ─2 .2",
-    ".2 P1 .1 .2 └2 .2 .2",
-    "P1 ┤2 .2 .2 ┤2 .2 ─2",
-    "└2 └2 ─2 ┐2 .2 .2 .2",
-    ".2 ┬2 ┤2 │2 .2 .2 .2",
-    ".2 ┬2 ┌2 │2 .2 │2 ┴2",
-    "┴2 ┐2 ┐2 S2 .2 .2 ┬2"
+    "┌ ─ ┴ ─ ─ S",
+    "│ ┌! ─! ─! ─! ┌!",
+    "│ │! . ┴ ┬ #",
+    "P ┘! ┐ . . ┬",
+    "# ─ ┼ │ ┘ ┬",
+    "─ # ┌ │ └ ┘"
    ],
    "src": "barrel",
-   "note": "Generated: score 29.9. hills + pump, decoy fill."
+   "cap": 9,
+   "note": "Generated: score 28.3. decoy shortcut (hot), sun-baked patch, junctions, decoy fill, limited barrel."
   },
   {
-   "name": "Dusty Furrow",
-   "world": 3,
+   "name": "Shady Ditch",
+   "world": 1,
    "rows": [
-    "#2 ┤2 S2 ─2 ─2 ─1 ┐1",
-    ".2 └2 .2 #2 ┐2 ┤1 │",
-    ".2 ┌2 ┬2 ├2 .2 # │",
-    ".2 ┤2 ┘2 . . ┌ ┤",
-    "─ ├1 .1 . ┤ │p1 P",
-    "# ─1 . #1 . │ .",
-    ". . .1 ┤1 ┐ └ P"
+    ". ├ ┐ ┌ # .",
+    ". . ┬ ┬ ┐ P",
+    "─ ─ . ┐ . │",
+    "┌ ─ ─ ─ ─ ┤",
+    "S └! ┌ ┤ ─ │",
+    "┐ └! ─! ─! ─! P"
+   ],
+   "src": "barrel",
+   "cap": 8,
+   "note": "Generated: score 31.8. decoy shortcut (hot), sun-baked patch, junctions, decoy fill, limited barrel."
+  },
+  {
+   "name": "Quiet Gully",
+   "world": 1,
+   "rows": [
+    "┴ ┌! ─! ─! │! S",
+    "┌! ┘! ┼ │ ┴ │",
+    "P ┼ . . ┌ │",
+    "│ ┌ P ┐ ┌ ┘",
+    "└ ┴ ┴ ─ ┘ ─",
+    "─ ─ . ┤ ┘ ┤",
+    "┴ ┐ ┘ │ ─ ┘"
    ],
    "src": "barrel",
    "cap": 11,
-   "note": "Generated: score 30.4. hills + pump, decoy fill, limited barrel."
+   "note": "Generated: score 32.7. decoy shortcut (hot), sun-baked patch, junctions, decoy fill, limited barrel."
   },
   {
-   "name": "Dewy Puddle",
-   "world": 3,
+   "name": "Bumpy Corner",
+   "world": 1,
    "rows": [
-    ".2 . ┬ . ┘ P ┐",
-    ".2 .1 .1 │ . │ .",
-    ".2 │1 .1 └1 # │ .",
-    "┬2 #1 .1 .1 ┌1 │1 .1",
-    ".2 .1 ┌1 ─1 ─1 ┴1 P",
-    "┌2 ─1 ┘p2 ─1 .1 .1 .1",
-    "S2 ├2 ┐1 ┬1 │1 .1 .",
-    ".2 ├2 .1 .1 .1 ├1 ┌"
+    "┘ ┬ . ┌ ┬ P ┤",
+    ". │ P ┤ ┘! ┘! └",
+    "┤ ┌ └ │ │! . .",
+    "─ ├ ┘ │ │! ┌ ─",
+    "┴ ├ ─ │ │! # ┼",
+    "┤ ┴ . ┤ ─! ├ ┬",
+    "┴ ├ # └ S ┌ ."
    ],
    "src": "barrel",
-   "note": "Generated: score 32.5. hills + pump, decoy fill."
+   "cap": 12,
+   "note": "Generated: score 33.2. decoy shortcut (hot), sun-baked patch, junctions, decoy fill, limited barrel."
   },
   {
-   "name": "Quiet Lane",
-   "world": 3,
+   "name": "Sleepy Brook",
+   "world": 2,
    "rows": [
-    "┌2 ─2 ─ ─p1 ─ ─ P",
-    "│2 │2 ┐ ┐ . . .",
-    "│2 .2 ┴2 ┌2 ─ . .",
-    "S2 ─2 ┐2 ├2 ├2 .2 ─",
-    "┌2 .2 └2 ┐1 .1 ┴1 .1",
-    ".2 #2 ┬2 │ . .1 .",
-    ".2 . . │ .1 ┌1 ┘",
-    "─ . # P . . ."
-   ],
-   "src": "river",
-   "note": "Generated: score 33.8. hills + pump, decoy fill."
-  },
-  {
-   "name": "Bumpy Hollow",
-   "world": 3,
-   "rows": [
-    ". ┴ P ┐ C C1 C2 #2",
-    "# . │p1 └ ─ ─1 ─2 ┘2",
-    "┌ ┌ ┴ ─ ─ ─1 ─2 S2",
-    "┌ ┘ . ┬ . .1 ┤2 #2",
-    "│ # ┴ ┴ │ .1 .2 .2",
-    "P ┤ . . ┤1 ─1 ┬1 .2",
-    ". ├ . ┴ # .1 .2 ┌2",
-    ". ┌ # ├ ┐ └1 ┴2 .2"
+    "┤ S └ C │ .",
+    "┬ ├ ┐ ─ ┐ C",
+    "─ └ ┴ ─ P ┌",
+    "─ └ └ ┘ └ ┴",
+    "┐ . . # # ┬"
    ],
    "src": "barrel",
-   "cap": 10,
-   "note": "Generated: score 35.5. decoy shortcut (cows), hills + pump, decoy fill, limited barrel."
-  },
-  {
-   "name": "Windy Ditch",
-   "world": 4,
-   "rows": [
-    ". # . ┤ S",
-    ". . ┤ X │",
-    ". ┤ X ┌ ┘",
-    ". . P ┘ ."
-   ],
-   "src": "pond",
-   "note": "Generated: score 10.4. decoy fill, stay-dry cactus."
+   "cap": 5,
+   "note": "Generated: score 30. decoy shortcut (cows), junctions, decoy fill, limited barrel."
   },
   {
    "name": "Lazy Puddle",
-   "world": 4,
+   "world": 2,
    "rows": [
-    ". . S └ .",
-    ". ┤ │ # .",
-    ". X │ ┬ └",
-    "P ─ ┘ X .",
-    "─ . . . ."
-   ],
-   "src": "pond",
-   "note": "Generated: score 12.6. decoy fill, stay-dry cactus."
-  },
-  {
-   "name": "Misty Brook",
-   "world": 4,
-   "rows": [
-    ". # X X S │",
-    ". . ┌ ─ ┘ ┐",
-    ". ┌ ┤ X ┘ ─",
-    "┌ ┘ P . ─ .",
-    "P . . . . ."
+    ". ┐ P ─ ┐ .",
+    ". C └ ┐ │ ┘",
+    "┴ ┬ ─ │ ┤ │",
+    "# # ┤ │ │ │",
+    ". ┘ ┘ S └ ┼"
    ],
    "src": "barrel",
-   "note": "Generated: score 14.9. decoy fill, stay-dry cactus."
+   "cap": 6,
+   "note": "Generated: score 31.4. decoy shortcut (cows), junctions, decoy fill, limited barrel."
   },
   {
-   "name": "Quiet Puddle",
-   "world": 4,
+   "name": "Pebbly Lane",
+   "world": 2,
    "rows": [
-    ". P ┬ ─ ┐ ┐",
-    "P ─ ┘ ├ └ ┐",
-    ". X ├ # X │",
-    "─ . # │ . S",
-    "# . . . . ┌"
-   ],
-   "src": "well",
-   "note": "Generated: score 18.1. decoy fill, stay-dry cactus."
-  },
-  {
-   "name": "Crooked Ditch",
-   "world": 4,
-   "rows": [
-    "└ P . ┴ ┘ . ┤",
-    "P │ ┴ . . # .",
-    "│ │ X . . . .",
-    "└ ┤ X └ . . .",
-    "┌ └ ┐ │ X ┴ .",
-    "# └ └ ─ ─ S ."
+    "S ─ ┐ ─ # ─ ┼",
+    "─ ┘ └ ┤ ┼ . ┬",
+    "│ C . │ . │ #",
+    "└ ┐ ┤ │ ┼ ├ .",
+    "C └ ─ P │ ┴ ┴"
    ],
    "src": "barrel",
-   "note": "Generated: score 20.1. decoy fill, stay-dry cactus."
+   "cap": 8,
+   "note": "Generated: score 33. decoy shortcut (cows), junctions, decoy fill, limited barrel."
   },
   {
-   "name": "Sleepy Hollow",
-   "world": 4,
+   "name": "Lazy Terrace",
+   "world": 2,
    "rows": [
-    ". P ┘ ┌ ┐ . ┘",
-    "┴ │ └ . ─ ┌ .",
-    "X │ # │ ├ ┌ S",
-    ". └ ┬ ─ ─ ┘ X",
-    "└ P ┘ X # ┐ │",
-    ". ┤ X └ ┘ . ┴"
-   ],
-   "src": "pond",
-   "note": "Generated: score 21.1. decoy fill, stay-dry cactus."
-  },
-  {
-   "name": "Sunny Bend",
-   "world": 5,
-   "rows": [
-    ". . ┤ P",
-    ". ─ ┌ ┘+",
-    ". _ │ .",
-    "└ . S ."
-   ],
-   "src": "barn",
-   "note": "Generated: score 9. decoy fill, tray pieces."
-  },
-  {
-   "name": "Mossy Brook",
-   "world": 5,
-   "rows": [
-    "P . . .",
-    "│+ P . ┘",
-    "└ ┴ ─ ┐",
-    ". . _ S"
+    "│ . # ┤ . ├ ┤",
+    "┴ ├ . . │ ┐ ┴",
+    "S └ C C ┘ ─ ─",
+    "├ └ ─ ┐ ┬ C ─",
+    "│ . # └ ─ ┐ ┐",
+    "└ ─ ─ ─ ─ P #"
    ],
    "src": "barrel",
-   "note": "Generated: score 11.4. decoy fill, tray pieces."
+   "cap": 9,
+   "note": "Generated: score 33.5. decoy shortcut (cows), junctions, decoy fill, limited barrel."
+  },
+  {
+   "name": "Lazy Gully",
+   "world": 2,
+   "rows": [
+    "┤ ┴ . ┘ # │ # #",
+    ". ┴ ┤ ┴ ├ # ├ │",
+    "┬ ─ ─ ┐ ├ . P #",
+    "S │ ┐ └ ─ ─ ┤ ─",
+    "┬ C │ ┴ ┬ . │ ┬",
+    "├ C └ ─ ─ ─ P ─"
+   ],
+   "src": "barrel",
+   "cap": 11,
+   "note": "Generated: score 34.1. decoy shortcut (cows), junctions, decoy fill, limited barrel."
+  },
+  {
+   "name": "Windy Field",
+   "world": 2,
+   "rows": [
+    ". ┘ . ┌ ─ P .",
+    "│ └ P ┤ . │ .",
+    ". # ┬ │ ┌ ┘ C",
+    ". ┬ ┴ │ │ ┌ ┤",
+    "┘ ┤ ─ │ ─ ─ └",
+    "├ ┘ ┼ └ S └ ."
+   ],
+   "src": "barrel",
+   "cap": 7,
+   "note": "Generated: score 34.3. decoy shortcut (cows), junctions, decoy fill, limited barrel."
+  },
+  {
+   "name": "Dewy Patch",
+   "world": 2,
+   "rows": [
+    "# P ┐ ┴ ┐ ┴ ├",
+    "┬ │ │ ┤ ┬ C ┌",
+    "┤ │ └ ─ ─ ─ ┐",
+    "┌ └ ┴ ─ ┬ │ S",
+    "┼ # ┤ ┘ ┘ . ┬",
+    ". ┴ . ┌ ─ ├ └"
+   ],
+   "src": "barrel",
+   "cap": 9,
+   "note": "Generated: score 39.1. decoy shortcut (cows), junctions, decoy fill, limited barrel."
+  },
+  {
+   "name": "Sleepy Ditch",
+   "world": 2,
+   "rows": [
+    "├ ┴ │ S ─ ─ ┐ .",
+    "# ┤ ┬ ─ ┬ ┤ ├ ├",
+    "├ ─ ┤ │ ┘ ┘ │ ├",
+    "┌ ┬ ─ │ . . ├ P",
+    "└ . ┼ └ ┐ ┼ │ │",
+    "┘ ┴ ┤ C │ P ┘ │",
+    ". ─ . . └ ─ ─ ┘"
+   ],
+   "src": "barrel",
+   "cap": 10,
+   "note": "Generated: score 54.9. decoy shortcut (cows), junctions, decoy fill, limited barrel."
+  },
+  {
+   "name": "Windy Ditch",
+   "world": 3,
+   "rows": [
+    ".2 │2 .2 │2 ┌ . ┴",
+    "#2 ─2 ┼2 ─2 ├ ┴ │",
+    "└2 ┬2 ┴2 ┬2 . └ .",
+    "S2 ┐2 ─2 C2 . ┘ .",
+    "─2 └2 ─2 ─1 ─ ┐ C",
+    "└2 ┐2 #2 ├1 . P ┘1",
+    "┘2 ├2 ┬1 ┴1 ─ ┴p1 ┤",
+    "┐2 ├2 └1 .1 . ┘ │"
+   ],
+   "src": "barrel",
+   "cap": 10,
+   "note": "Generated: score 37.5. decoy shortcut (cows), hills + pump, junctions, decoy fill, limited barrel."
+  },
+  {
+   "name": "Mossy Field",
+   "world": 3,
+   "rows": [
+    ".2 ┤2 S2 ┐2 ┐2 ─2",
+    ".2 ┘2 ┌2 │2 ┘2 │2",
+    ".2 ├2 ┴2 │2 └2 .2",
+    ".2 ─2 .2 ├2 .2 ├2",
+    ".1 #1 .1 └p2 P1 .2",
+    ".1 #2 .2 .1 ┌1 ┐2"
+   ],
+   "src": "barrel",
+   "cap": 7,
+   "note": "Generated: score 38.1. hills + pump, junctions, decoy fill, limited barrel."
+  },
+  {
+   "name": "Lazy Gully",
+   "world": 3,
+   "rows": [
+    "#2 .2 ┼2 ┘2 └2 .2",
+    ".2 .2 │2 └2 .2 ├2",
+    "┐2 ┴2 │2 ┌2 │2 #2",
+    "├2 ┴2 ─2 ┬2 ─2 ┘2",
+    "│2 ─2 └2 ┤2 ┌2 S2",
+    "P2 ─2 ─2 ─2 ┘2 C2"
+   ],
+   "src": "barrel",
+   "cap": 7,
+   "note": "Generated: score 38.8. decoy shortcut (cows), hills + pump, junctions, decoy fill, limited barrel."
+  },
+  {
+   "name": "Crooked Patch",
+   "world": 3,
+   "rows": [
+    "┌2 .1 .1 ┴1 ┐1 .1",
+    ".2 ┌1 .1 .1 .1 P1",
+    "┌2 ─1 ┬1 ─1 ─1 ┤1",
+    "S2 └2 ┬1 ├1 #2 │1",
+    ".2 ─2 ┬1 ┌1 │2 │1",
+    "│2 .2 .1 ─1 .2 P1"
+   ],
+   "src": "barrel",
+   "cap": 10,
+   "note": "Generated: score 39.8. hills, junctions, decoy fill, limited barrel."
+  },
+  {
+   "name": "Misty Patch",
+   "world": 3,
+   "rows": [
+    "#1 ┤1 ─1 ┐2 ┌2 ┘2",
+    ".1 ├1 ┌1 ─2 ┤2 S2",
+    "┘1 .1 │1 ├2 ┌2 ┘2",
+    "│2 ┬1 ┘p2 ┌1 ┘2 ┼2",
+    "#2 ┤1 └1 │1 ├2 ┌2",
+    "┤1 └1 P1 ┘1 C2 .2",
+    "┬1 .1 ┌1 #1 ─1 ─1"
+   ],
+   "src": "barrel",
+   "cap": 8,
+   "note": "Generated: score 40.2. decoy shortcut (cows), hills + pump, junctions, decoy fill, limited barrel."
+  },
+  {
+   "name": "Lazy Trickle",
+   "world": 3,
+   "rows": [
+    "─1 P ┬p2 └2 │2 ┐2 ┘2 ┐2",
+    "┼2 │2 └2 ┐2 .2 └2 ┬2 │2",
+    ".2 │2 ─2 ├2 │2 ┴2 ┤2 │2",
+    "┐2 └2 ┐2 ┤2 │2 .2 .2 ─2",
+    "┴2 C2 │2 ├2 ┴2 ┬2 ┐2 ┌2",
+    ".2 C2 │2 │2 ┬2 ┴2 #2 .2",
+    "#2 ┘2 S2 └2 #2 ┤2 .2 │2"
+   ],
+   "src": "barrel",
+   "cap": 10,
+   "note": "Generated: score 42.8. decoy shortcut (cows), hills + pump, junctions, decoy fill, limited barrel."
   },
   {
    "name": "Sleepy Gully",
+   "world": 3,
+   "rows": [
+    ".2 S2 .2 .2 ┌2 #2 .2",
+    "┘2 │2 └2 ├2 ┘2 ─2 ┬2",
+    "┤2 ├2 ─2 ┐2 └2 ─2 ┼2",
+    "└2 ┬2 ─2 └2 ┐2 ├2 │2",
+    "#2 ┐2 ─2 └2 ├2 ┐2 .2",
+    "┤2 ├2 ┼1 ┬1 │1 P .1",
+    "┼ ┌ ┴ # P ┤ ┐1"
+   ],
+   "src": "barrel",
+   "cap": 11,
+   "note": "Generated: score 46.9. hills, junctions, decoy fill, limited barrel."
+  },
+  {
+   "name": "Crooked Brook",
+   "world": 3,
+   "rows": [
+    ".2 .2 ┬2 ┐2 S2 .2 ┬2 ┴2",
+    "├2 ┤2 │2 │2 │2 .2 ┌2 ┼2",
+    ".2 └2 C2 │2 │2 ┤2 .2 └1",
+    "└2 ┼2 └2 │2 │2 ┌2 ┤2 ┼2",
+    "┤2 .2 ─2 │2 │2 ┐2 ┌p2 P1",
+    "│2 .2 .2 │2 │2 ┴2 ┤1 .1",
+    ".1 ┬1 C1 │1 ├1 ─1 ┼1 P1",
+    "└1 ┴1 C1 └1 ─1 ─1 ─1 ┘1"
+   ],
+   "src": "barrel",
+   "cap": 14,
+   "note": "Generated: score 50.5. decoy shortcut (cows), hills + pump, junctions, decoy fill, limited barrel."
+  },
+  {
+   "name": "Twisty Furrow",
+   "world": 4,
+   "rows": [
+    ". ┤ S ├ .",
+    ". . │ ┴ ┤",
+    "│ X │ X ─",
+    ". # └ ┬ P"
+   ],
+   "src": "barrel",
+   "note": "Generated: score 22.2. junctions, decoy fill, stay-dry cactus."
+  },
+  {
+   "name": "Sleepy Puddle",
+   "world": 4,
+   "rows": [
+    "P ┤ ┌ ─ P .",
+    "# └ ┤ X │ ┬",
+    "┴ │ │ X . ┼",
+    ". . S . . ┘"
+   ],
+   "src": "barrel",
+   "cap": 8,
+   "note": "Generated: score 26.3. junctions, decoy fill, stay-dry cactus, limited barrel."
+  },
+  {
+   "name": "Mossy Brook",
+   "world": 4,
+   "rows": [
+    "P ─ ┐ X . .",
+    "└ ┐ │ ─ ┌ .",
+    "C │ │ ┘ . #",
+    ". │ ┤ ├ ├ #",
+    "┐ S └ ┼ . ─"
+   ],
+   "src": "barrel",
+   "cap": 6,
+   "note": "Generated: score 28.8. decoy shortcut (cows), junctions, decoy fill, stay-dry cactus, limited barrel."
+  },
+  {
+   "name": "Muddy Brook",
+   "world": 4,
+   "rows": [
+    "┴ . . ┌ ├ .",
+    "─ └ ┤ X P ┬",
+    "# ┤ ┌ ─ ┘ ┬",
+    "# ─ ├ ├ X ┐",
+    "S ─ ┘ ├ ┼ ┬"
+   ],
+   "src": "barrel",
+   "cap": 8,
+   "note": "Generated: score 30.9. junctions, decoy fill, stay-dry cactus, limited barrel."
+  },
+  {
+   "name": "Sunny Orchard",
+   "world": 4,
+   "rows": [
+    "┼ ┬ ┌ P X X ┐",
+    "─ ┬ ├ ─ ─ ─ P",
+    "# ┌ ┤ ┼ ┐ # ┘",
+    "┌ ┴ ┘ ┼ │ # .",
+    "S ├ ┘ ┼ ┐ ┬ ."
+   ],
+   "src": "barrel",
+   "cap": 10,
+   "note": "Generated: score 34.6. junctions, decoy fill, stay-dry cactus, limited barrel."
+  },
+  {
+   "name": "Sunny Lane",
+   "world": 4,
+   "rows": [
+    "┐ ┘ │ . . ┌ │",
+    "└ ┼ ─ ─ └ ─ ┘",
+    "P ─ ─ ┐ C ─ ┴",
+    "│ X ┘ └ ─ │ S",
+    "├ ─ ─ ─ ─ ─ ┤",
+    "P ┘ ┘ ├ ├ │ ┬"
+   ],
+   "src": "barrel",
+   "cap": 10,
+   "note": "Generated: score 39.7. decoy shortcut (cows), junctions, decoy fill, stay-dry cactus, limited barrel."
+  },
+  {
+   "name": "Sunny Puddle",
    "world": 5,
    "rows": [
-    "P . . P",
-    "│ _ _ │",
-    "│+ # . │",
-    "└ ─ S ┘+"
+    "┌ . P ┘",
+    "┐ │ │ _",
+    ". ┼ ├+ .",
+    "S ┬ ┘ ."
+   ],
+   "src": "barn",
+   "note": "Generated: score 22.1. junctions, decoy fill, tray pieces."
+  },
+  {
+   "name": "Windy Bend",
+   "world": 5,
+   "rows": [
+    "┴ ┘ ┌ S",
+    ". . │+ ┐",
+    "┌ P ┴ #",
+    ". ┤ _ ┐"
+   ],
+   "src": "barrel",
+   "cap": 5,
+   "note": "Generated: score 24.4. junctions, decoy fill, tray pieces, limited barrel."
+  },
+  {
+   "name": "Mossy Lane",
+   "world": 5,
+   "rows": [
+    ". │ . S .",
+    "┐ _ # │ └",
+    "P ┬+ ─+ ┘ ┐",
+    "_ │ │ ┼ .",
+    "P ┘ . . ┼"
    ],
    "src": "barrel",
    "extra": [
     "┘"
    ],
-   "note": "Generated: score 14.6. decoy fill, tray pieces."
+   "cap": 6,
+   "note": "Generated: score 27.5. junctions, decoy fill, tray pieces, limited barrel."
   },
   {
-   "name": "Twisty Ditch",
+   "name": "Crooked Brook",
    "world": 5,
    "rows": [
-    ". ┐ ┌+ S .",
-    "P ─+ ┤ # ┤",
-    "├ _ │ # │",
-    "# P ┘ ├ .",
-    ". ─ _ . ."
+    "P ─ ─ ┐+ │",
+    "# _ P ┤+ _",
+    "├ . # │ ─",
+    ". # . │ .",
+    "┘ . ┼ S ."
    ],
-   "src": "barn",
+   "src": "barrel",
    "extra": [
-    "┌"
+    "┐"
    ],
-   "note": "Generated: score 18.6. decoy fill, tray pieces."
-  },
-  {
-   "name": "Lazy Orchard",
-   "world": 5,
-   "rows": [
-    ". . ─ ┌+ P",
-    "└ P ┬ ┘+ ┘",
-    "# ─ │+ │ .",
-    "┘ _ │+ _ .",
-    ". ┌ │ ┤ ┐",
-    ". # S . └"
-   ],
-   "src": "barn",
-   "extra": [
-    "─"
-   ],
-   "note": "Generated: score 21.9. decoy fill, tray pieces."
+   "cap": 13,
+   "note": "Generated: score 31.1. junctions, decoy fill, tray pieces, limited barrel."
   },
   {
    "name": "Windy Furrow",
    "world": 5,
    "rows": [
-    "─ . S . ┐ #",
-    ". _ └ ─ ┐+ _",
-    ". # . _ ├+ P",
-    "┬ . ─ # │ #",
-    "┘ . ├ _ │ └",
-    ". . . ─ P ┴"
+    ". ─ ┤ P ┬+ P",
+    ". ┌ . ┐ └ ┤",
+    "─ ┐ │ ┐ # │",
+    "┌ . ┐ ┌ _ │",
+    "┘ │ . ─ ┌+ ┘+",
+    ". └ ┐ S ┘ │"
    ],
    "src": "barrel",
    "extra": [
-    "│",
-    "┐",
-    "┐"
+    "┬",
+    "┬"
    ],
-   "note": "Generated: score 24.8. decoy fill, tray pieces."
+   "cap": 8,
+   "note": "Generated: score 33.2. junctions, decoy fill, tray pieces, limited barrel."
   },
   {
-   "name": "Misty Ditch",
-   "world": 6,
+   "name": "Misty Trickle",
+   "world": 5,
    "rows": [
-    "┘ . . . #",
-    "S ─ ─a ─ P",
-    ". . . ┘ .",
-    ". . ┌ ┬a ."
-   ],
-   "src": "barrel",
-   "note": "Generated: score 11.3. decoy fill, linked pieces."
-  },
-  {
-   "name": "Crooked Gully",
-   "world": 6,
-   "rows": [
-    "S ┐ . ├ . ┌",
-    "├a │ . . . .",
-    ". │ . . ┐ ─",
-    "┬ │ │ # . .",
-    ". └ ─ ─a P ."
+    "├ ┼ . _ ┬ .",
+    "┤ ┐ ┐ ┌ ┬+ P",
+    "┬ ┘ ┌+ ┴ P #",
+    ". # │ ├ │ .",
+    ". # │+ # ─ ┌",
+    "┐ S ┘ │ ┤ │"
    ],
    "src": "barrel",
-   "note": "Generated: score 12.3. decoy fill, linked pieces."
-  },
-  {
-   "name": "Sunny Corner",
-   "world": 6,
-   "rows": [
-    ". ┌ ─a ─ S .",
-    ". │a . ┴ ┐ .",
-    "P ┘ . . . .",
-    "─a ─ ┘ # . ."
+   "extra": [
+    "┬",
+    "┬"
    ],
-   "src": "river",
-   "note": "Generated: score 16.1. decoy fill, linked pieces."
+   "cap": 7,
+   "note": "Generated: score 42.1. junctions, decoy fill, tray pieces, limited barrel."
   },
   {
-   "name": "Crooked Orchard",
+   "name": "Dusty Gully",
    "world": 6,
    "rows": [
-    ". ├ P │ ┌b #",
-    ". . │a . ├a .",
-    ". │ ├a ─b ─b P",
-    ". ─ │ ─ . #",
-    ". S ┘ ├ . ."
+    ". │ . . #",
+    "S ─ ─ ┐a #",
+    "┌ │a ├ └ P",
+    "┘ . ─ ┌ ."
+   ],
+   "src": "barrel",
+   "note": "Generated: score 21.1. junctions, decoy fill, linked pieces."
+  },
+  {
+   "name": "Twisty Patch",
+   "world": 6,
+   "rows": [
+    "┌ ┤a . ┬ .",
+    "┌ . . . ┘",
+    "┌a ─ ┬ ─ S",
+    "P ┌ . ┬ .",
+    ". ┼ # │ │"
+   ],
+   "src": "barrel",
+   "cap": 6,
+   "note": "Generated: score 23.9. junctions, decoy fill, linked pieces, limited barrel."
+  },
+  {
+   "name": "Dusty Field",
+   "world": 6,
+   "rows": [
+    "P . ┤ ┐ . .",
+    "┼ ─a ┬ ─ ─a S",
+    "│ │ ─a . ┼ ┬",
+    "P . ┬ ─ ┤ ├",
+    "│ . ┤ ┴ ┘ │"
    ],
    "src": "pond",
-   "note": "Generated: score 17.2. decoy fill, linked pieces."
+   "note": "Generated: score 28.5. junctions, decoy fill, linked pieces."
   },
   {
-   "name": "Bumpy Corner",
+   "name": "Misty Corner",
    "world": 6,
    "rows": [
-    ". . └b ├a ┌ #",
-    "└ P . . ┬ ┐",
-    "─a │b . │b . .",
-    ". │b . . . ┴",
-    "┘ └ ┬ ─ ─ S",
-    "P ─a ┘a . . ."
+    "┼a . S ┐a . .",
+    "┘ . └ ┤b . └",
+    "│ ├ ┌ │b ┼ .",
+    "┘ └ . ┴ ┬a P",
+    "┌ ┴b │ ┤ . ┬"
    ],
-   "src": "river",
-   "note": "Generated: score 21.7. decoy fill, linked pieces."
+   "src": "barrel",
+   "note": "Generated: score 32.6. junctions, decoy fill, linked pieces."
   },
   {
-   "name": "Crooked Corner",
+   "name": "Bumpy Puddle",
    "world": 6,
    "rows": [
-    "└ ┤ # . S . .",
-    "┘a ┌ ─b ─a │a ─ ┬",
-    ". ┤b ┐ ├ │a └ #",
-    "┴ . │ │ │b . #",
-    ". P ─ ─b ┤ ┤ .",
-    ". ├ . ┐ └ P ├"
+    "└ ┼ ─ P ┤ . ┴",
+    "┼ . └ │b ┤ ├a ┤",
+    "┴ ├b # ┤ ┌ # ┌",
+    "┘ ┘b ├b ┤a . ┼ .",
+    "│ S ┘a ├a ├ . ┌"
    ],
-   "src": "river",
-   "note": "Generated: score 24.7. decoy fill, linked pieces."
+   "src": "barrel",
+   "note": "Generated: score 33.5. junctions, decoy fill, linked pieces."
+  },
+  {
+   "name": "Dewy Lane",
+   "world": 6,
+   "rows": [
+    "P ┬b ┬ ┤ ┬b ┼ ┘",
+    "─ P ┼ ┴ ─a ┐b .",
+    "─ ┼ ─ └ # └a S",
+    "┘b │a . ┘ ┤ # ┬",
+    "├ ┬ │ ─ ├a . .",
+    "┬ ┤ ┌ . │ . ┘"
+   ],
+   "src": "barrel",
+   "cap": 12,
+   "note": "Generated: score 37. junctions, decoy fill, linked pieces, limited barrel."
   }
  ]
 };
