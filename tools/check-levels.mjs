@@ -1,8 +1,8 @@
 // Checks every level: solvable as written, and not already solved after the game scrambles it.
 //   node tools/check-levels.mjs
-import { LEVELS } from '../js/data/levels.js';
-import { parse, flow, solved } from '../js/engine/flow.js';
-import { prepare } from '../js/engine/game.js';
+import { LEVELS } from '../web/js/data/levels.js';
+import { parse, flow, solved } from '../web/js/engine/flow.js';
+import { prepare } from '../web/js/engine/game.js';
 let bad = 0;
 for (const L of LEVELS){
   const S0 = parse(L), sol = flow(S0);

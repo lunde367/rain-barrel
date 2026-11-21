@@ -1,5 +1,5 @@
 // Prints a difficulty report for every level in the game:  node tools/levelgen/rate-levels.mjs
-import { LEVELS, WORLDS } from '../../js/data/levels.js';
+import { LEVELS, WORLDS } from '../../web/js/data/levels.js';
 import { rate } from './rate.mjs';
 console.log('#  World           Level             Score  Pieces Decoys Routes Traps Best  Mechanics');
 for (const L of LEVELS){ if (L.lab) continue; const r = rate(L);

@@ -4,34 +4,78 @@ A cozy water-routing puzzle game. Turn the channels to get water from the rain b
 
 ## Play
 
-Open `index.html` through any web server. It uses JavaScript modules, so opening the file directly from disk won't work. For example:
-
 ```
-python3 -m http.server
+npm run dev        # then open http://localhost:5173
 ```
 
-Then go to http://localhost:8000.
+(Or serve the `web/` folder with any web server, e.g. `python3 -m http.server -d web`. It uses JavaScript modules, so opening the file straight from disk won't work.)
 
-**Test mode:** tap the game title 7 times quickly, or add `#dev` to the end of the link. This unlocks every level and adds a Solve button. Tap the title 7 times again to turn it off.
+**Test mode:** tap the game title 7 times quickly, or add `#dev` to the end of the link. This unlocks every level, adds a Solve button and shows the Level Lab. Tap the title 7 times again to turn it off.
 
 ## How the code is laid out
 
 | Folder | What's in it |
 | --- | --- |
-| `kit/` | The shared family kit, copied unchanged from Carrot Patch Defense: styles, sound, effects, save, ads, tutorial bubbles, test mode. Keep it in sync between the games. |
-| `css/game.css` | Rain Barrel's own layout. It uses the same class names as Carrot Patch. |
-| `js/data/levels.js` | Worlds and levels. Levels are written in their solved state, and the game scrambles them. |
-| `js/engine/flow.js` | The water rules: flow, leaks, cows, hills, pumps and barrel size. |
-| `js/engine/game.js` | Playing one level: turning pieces, undo, hints, and the win check. |
-| `js/render/board.js` | Draws the board on a canvas in the family art style. |
-| `js/ui/` | Home screen, controls, results and test mode. |
+| `web/` | Everything the player gets. This folder becomes the app and the website. |
+| `web/kit/` | The shared family kit from Carrot Patch Defense: styles, sound, effects, save, ads, rating question, tutorial bubbles, test mode. Keep it in sync between the games. |
+| `web/css/game.css` | Rain Barrel's own layout. It uses the same class names as Carrot Patch. |
+| `web/js/data/levels.js` | Worlds and levels. Levels are written in their solved state, and the game scrambles them. |
+| `web/js/data/shed.js` | Puzzle Shed bonus levels (made by the generator, part of the real game). |
+| `web/js/data/lab.js` | Levels made by the generator. They show only in test mode, under **Level Lab**. |
+| `web/js/data/config.js` | Version, ad IDs, hints and hint jar settings. |
+| `web/js/engine/flow.js` | The water rules: flow, leaks, cows, hills, pumps, cacti and barrel size. |
+| `web/js/engine/game.js` | Playing one level: turning and placing pieces, undo, hints, and the win check. |
+| `web/js/render/board.js` | Draws the board on a canvas in the family art style. |
+| `web/js/ui/` | Home screen, controls, tray, results and test mode. |
+| `web/privacy.html`, `web/support.html` | The privacy and help pages the stores link to. |
 | `tools/check-levels.mjs` | Checks that every level can be solved and doesn't start out solved. |
 | `tools/levelgen/` | The level generator: solver, difficulty rater, strategy patterns and the difficulty plan. |
-| `js/data/lab.js` | Levels made by the generator. They show only in test mode, under **Level Lab**. |
+| `tools/test/first-play.mjs` | A robot plays the game from a brand-new save, like a first-time player. |
+| `tools/icons/`, `tools/store/` | Draw the app icon and splash screens, and make the store screenshots. |
+| `store/` | Store listing text, publishing checklist, screenshots and feature graphic. |
+| `assets/` | The icon and splash pictures the app build uses. |
+| `capacitor.config.json` | App name and ID for the stores. |
+
+## Put it online (free, for play-testing on any phone)
+
+1. Repo **Settings → Pages → Source: GitHub Actions**.
+2. Every push to `main` publishes the game at https://lunde367.github.io/rain-barrel/ (the workflow downloads the fonts automatically).
+
+## Turn it into an app
+
+The setup matches Carrot Patch Defense: a plain web game wrapped with Capacitor for iPhone and Android.
+
+**Without setting anything up:** the "Build phone apps" workflow (repo → Actions) builds both apps in the cloud on every app-related push, or when you press *Run workflow*. It gives you an installable Android test app (also posted at a plain download link on the repo's "Android test app" release), checks that the iPhone app builds, and makes fresh store screenshots with the real fonts.
+
+**On your own machine** (Node 20+; a Mac with Xcode for iPhone, Android Studio for Android):
+
+```
+npm install
+npx cap add ios               # creates the ios/ project (once)
+npx cap add android           # creates the android/ project (once)
+npm run app:prepare           # fonts, icons and splash screens, portrait lock, version number, sync
+npm run ios                   # copies web/ in and opens Xcode
+npm run android               # copies web/ in and opens Android Studio
+```
+
+After any change in `web/`, run `npm run sync` (or `npm run ios` / `npm run android`).
+
+**Before publishing,** work through [`store/README.md`](store/README.md): the App ID (`com.example.rainbarrel` must change before `npx cap add`), real ad IDs, the listing text, the store forms and the release builds.
+
+To redraw the icon or splash: edit `tools/icons/art.html`, serve the project root (`python3 -m http.server 8767`), run `npm run icons`, then `npm run assets`.
+
+## Checks
+
+```
+npm run levels     # every level solvable, none start solved
+npm test           # the level check, then the first-time player robot (needs Playwright)
+```
+
+Both also run on GitHub on every push.
 
 ## Writing levels
 
-Rows in `js/data/levels.js` use these symbols:
+Rows in `web/js/data/levels.js` use these symbols:
 
 - `S` water source, `P` plant, `X` cactus (must stay dry), `#` rock, `C` cow, `_` empty slot, `.` grass
 - Channel pieces: `─ │ └ ┌ ┐ ┘ ├ ┤ ┬ ┴ ┼`
@@ -75,8 +119,8 @@ Worlds marked `preview` in the plan (Cactus Patch, Potting Shed, Clockwork Garde
 
 ## Stars
 
-- Stars open the next world (see `need` in `js/data/levels.js`).
-- The **Puzzle Shed** holds hard bonus levels, each opening at a total number of stars from the main worlds (`needTotal` in `js/data/shed.js`).
-- The **hint jar**: every level finished with 3 stars for the first time adds a hint, up to 5 (`JAR_MAX` in `js/data/config.js`). Jar hints are used after the free hint and before any ad.
+- Stars open the next world (see `need` in `web/js/data/levels.js`).
+- The **Puzzle Shed** holds hard bonus levels, each opening at a total number of stars from the main worlds (`needTotal` in `web/js/data/shed.js`).
+- The **hint jar**: every level finished with 3 stars for the first time adds a hint, up to 5 (`JAR_MAX` in `web/js/data/config.js`). Jar hints are used after the free hint and before any ad.
 
-`generate.mjs` writes `js/data/lab.js` and `tools/levelgen/report.md`. Play the Lab in test mode, and copy the levels you like into `js/data/levels.js`.
+`generate.mjs` writes `web/js/data/lab.js` and `tools/levelgen/report.md`. Play the Lab in test mode, and copy the levels you like into `web/js/data/levels.js`.

@@ -7,7 +7,7 @@
 //
 // It understands every mechanic: linked pieces are decided together, and an empty slot can stay
 // empty or take any piece still left in the tray.
-import { parse, flow, solved, rotMask, TOK } from '../../js/engine/flow.js';
+import { parse, flow, solved, rotMask, TOK } from '../../web/js/engine/flow.js';
 
 // The directions a piece can face that actually look different (a straight piece has 2, a cross 1).
 export function orientations(base){

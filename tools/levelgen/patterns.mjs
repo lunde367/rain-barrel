@@ -1,7 +1,7 @@
 // Building blocks for generated levels: a blank board, route carving, and the strategy patterns.
 // A board is a grid of cells: { k:'.'|'#'|'S'|'P'|'C'|'pipe', m:connection bits, hot, h, pump, locked }.
 // Connection bits: N=1, E=2, S=4, W=8 (same as the game).
-import { mulberry32 } from '../../js/engine/flow.js';
+import { mulberry32 } from '../../web/js/engine/flow.js';
 
 export const DIRS = [[1,-1,0],[2,0,1],[4,1,0],[8,0,-1]];
 const OPP = {1:4,2:8,4:1,8:2};

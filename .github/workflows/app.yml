@@ -1,0 +1,78 @@
+# Builds the phone apps in the cloud, so the game can be tried as a real app without
+# setting anything up at home.
+#   Android: makes an installable test app (.apk) you can download from the run's page.
+#   iPhone:  checks that the iPhone app builds. Putting it on a phone still needs a Mac
+#            (or an Apple developer account plus signing keys added here later).
+# Run it from the repo's Actions tab → "Build phone apps" → Run workflow.
+name: Build phone apps
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['web/**', 'package.json', 'capacitor.config.json', 'scripts/app-setup.mjs', '.github/workflows/app.yml', 'assets/**', 'tools/store/**', 'tools/icons/**']
+permissions: { contents: read }
+concurrency: { group: app-build, cancel-in-progress: true }
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    permissions: { contents: write }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 21 }
+      - run: npm install
+      - run: node scripts/fetch-fonts.mjs
+      - run: npx cap add android
+      - run: npm run assets -- --android
+      - run: node scripts/app-setup.mjs
+        env: { BUILD_NUMBER: '${{ github.run_number }}' }
+      - run: npx cap sync android
+      # Sign every test build with the same key. Without this each build gets a new random key,
+      # and Android refuses to update an app whose key changed ("App not installed").
+      # This key is for test builds only; the store version is signed with a private one.
+      - run: mkdir -p ~/.android && cp tools/app/test.keystore ~/.android/debug.keystore
+      - run: cd android && ./gradlew assembleDebug --no-daemon
+      # Print who signed the app and its version, so a failed update can be traced.
+      - run: |
+          BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
+          $BT/apksigner verify --print-certs android/app/build/outputs/apk/debug/app-debug.apk | grep -i "SHA-256"
+          $BT/aapt2 dump badging android/app/build/outputs/apk/debug/app-debug.apk | grep -E "^package|sdkVersion|targetSdk"
+          keytool -list -v -keystore ~/.android/debug.keystore -storepass android | grep "SHA256:"
+      - uses: actions/upload-artifact@v4
+        with: { name: rain-barrel-android-test-app, path: android/app/build/outputs/apk/debug/*.apk }
+      # Also post it at a plain download link, so it can be installed straight from a phone:
+      # https://github.com/<owner>/<repo>/releases/download/test-build/rain-barrel-test.apk
+      - if: github.ref == 'refs/heads/main'
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk rain-barrel-test.apk
+          gh release view test-build >/dev/null 2>&1 || gh release create test-build --prerelease --title "Android test app" --notes "The newest test build of Rain Barrel for Android. For testing only: it shows Google's test ads and is not the store version."
+          gh release upload test-build rain-barrel-test.apk --clobber
+  iphone:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm install
+      - run: node scripts/fetch-fonts.mjs
+      - run: npx cap add ios
+      - run: npm run assets -- --ios
+      - run: node scripts/app-setup.mjs
+        env: { BUILD_NUMBER: '${{ github.run_number }}' }
+      - run: npx cap sync ios
+      - run: cd ios/App && xcodebuild -workspace App.xcworkspace -scheme App -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build | tail -n 40
+  # Fresh store screenshots (iPhone, iPad, Android) with the game's real fonts.
+  screenshots:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: node scripts/fetch-fonts.mjs
+      - run: npm install --no-save playwright@1.49.1 && npx playwright install --with-deps chromium
+      - run: (python3 -m http.server 8767 >/dev/null 2>&1 &) && sleep 2 && node tools/store/make.cjs
+      - uses: actions/upload-artifact@v4
+        with: { name: rain-barrel-store-pictures, path: store/ }

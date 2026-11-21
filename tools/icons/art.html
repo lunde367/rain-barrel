@@ -1,0 +1,35 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:transparent}</style></head><body>
+<canvas id="c"></canvas>
+<script type="module">
+// Draws Rain Barrel's app icon and splash art from the game's own pieces:
+// the rain barrel pouring into a dirt channel that runs to a blooming flower.
+// Render with: node tools/icons/render.cjs  (see that file), then npm run assets.
+import { barrel, plant } from '/web/js/render/board.js';
+import { ell, rng } from '/web/kit/js/draw.js';
+const q = new URLSearchParams(location.search), kind = q.get('kind') || 'icon', S = +(q.get('size') || 1024), dark = q.get('dark') === '1';
+const c = document.getElementById('c'); c.width = c.height = S; const g = c.getContext('2d');
+g.lineCap = 'round'; g.lineJoin = 'round';
+function iconScene(){
+  const n = 6, t = S/n;
+  for (let r=0;r<n;r++) for (let k=0;k<n;k++){ g.fillStyle=(r+k)%2?'#a6cf8a':'#9ec781'; g.fillRect(k*t,r*t,t,t); }
+  // the channel: out of the barrel, across, and down to the flower
+  const path = () => { g.beginPath(); g.moveTo(S*.36,S*.4); g.lineTo(S*.7,S*.4); g.lineTo(S*.7,S*.7); };
+  for (const [w,col] of [[.21,'#9c7446'],[.18,'#b48d5a'],[.13,'#dcbd8b'],[.09,'#5aaee0']]){ path(); g.strokeStyle=col; g.lineWidth=S*w; g.lineCap='butt'; g.stroke(); }
+  path(); g.setLineDash([S*.04,S*.06]); g.strokeStyle='rgba(255,255,255,.85)'; g.lineWidth=S*.025; g.stroke(); g.setLineDash([]);
+  const R = rng(4); for (let i=0;i<10;i++) ell(g, S*(.08+R()*.84), S*(.06+R()*.2), S*.01, S*.012, 'rgba(255,255,255,.35)');   // a little rain sparkle
+  barrel(g, S*.27, S*.4, S*.5);
+  plant(g, S*.7, S*.7, S*.62, 1, 0);
+}
+function splashScene(){
+  g.fillStyle = dark ? '#182016' : '#edf2e3'; g.fillRect(0,0,S,S);
+  // a rounded tile of the icon art in the middle; the rest stays plain so any crop of the square works
+  const w=S*.24, x=(S-w)/2, y=(S-w)/2;
+  g.save(); g.beginPath(); g.roundRect(x,y,w,w,w*.22); g.clip();
+  g.translate(x,y); g.scale(w/S,w/S); iconScene(); g.restore();
+}
+// Android adaptive icon: the full picture, edge to edge (the app build shrinks it to fit the launcher's shape).
+function foreground(){ iconScene(); }
+function background(){ g.fillStyle='#a6cf8a'; g.fillRect(0,0,S,S); }
+if (kind === 'icon') iconScene(); else if (kind === 'foreground') foreground(); else if (kind === 'background') background(); else splashScene();
+document.title = 'ready';
+</script></body></html>

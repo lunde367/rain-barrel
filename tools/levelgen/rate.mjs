@@ -1,7 +1,7 @@
 // Difficulty rater: turns a level into numbers that say how hard it is, and one overall score.
 // The weights are a starting point, tuned so the 16 hand-made levels come out in a sensible order.
 // Change them freely as playtesting shows what really makes a level hard.
-import { parse } from '../../js/engine/flow.js';
+import { parse } from '../../web/js/engine/flow.js';
 import { solve, explore, distinct } from './solver.mjs';
 
 export const WEIGHTS = {

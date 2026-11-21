@@ -1,0 +1,12 @@
+{
+  "appId": "com.example.rainbarrel",
+  "appName": "Rain Barrel",
+  "webDir": "web",
+  "backgroundColor": "#edf2e3",
+  "ios": {
+    "contentInset": "never"
+  },
+  "android": {
+    "backgroundColor": "#edf2e3"
+  }
+}
