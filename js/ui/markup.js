@@ -29,6 +29,8 @@ export const MARKUP = `
     <canvas id="cv" aria-label="Garden board"></canvas>
   </div>
 
+  <div class="tray" id="tray" hidden></div>
+
   <div class="msg-row">
     <p class="msg" id="msg" aria-live="polite"></p>
     <button class="btn ghost small dev-solve" id="devSkip" hidden>Solve ★★★</button>

@@ -11,6 +11,9 @@ Audio.register({
   moo:    [.6,  ()=>{ tone(190,.55,{type:'sawtooth',vol:.045,to:150,attack:.08}); tone(95,.55,{type:'triangle',vol:.05,to:80,attack:.08}); }],
   leak:   [.15, ()=>{ tone(1300,.07,{vol:.07,to:520}); tone(900,.06,{vol:.05,to:400,at:.1}); }],
   dry:    [.6,  ()=>tone(440,.45,{type:'triangle',vol:.07,to:220,attack:.02})],
+  place:  [.05, ()=>{ noise(.06,{freq:500,q:.8,vol:.09,type:'lowpass'}); tone(300,.08,{type:'triangle',vol:.08,to:220}); }],
+  pickup: [.05, ()=>{ tone(320,.08,{type:'triangle',vol:.07,to:480}); }],
+  soaked: [.6,  ()=>{ tone(392,.18,{type:'triangle',vol:.07}); tone(311,.3,{type:'triangle',vol:.07,at:.15,to:262}); }],
   uphill: [.6,  ()=>{ tone(330,.12,{type:'triangle',vol:.07}); tone(262,.18,{type:'triangle',vol:.07,at:.1}); }],
 });
 

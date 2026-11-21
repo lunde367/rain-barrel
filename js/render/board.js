@@ -6,6 +6,8 @@ import { DIRS, rotMask } from '../engine/flow.js';
 
 let cv, g, boardEl, tile = 60, W = 0, H = 0, dpr = 1;
 const flashes = {};                 // tile index → time the hint glow ends
+let selected = null;                // tray piece the player picked up, if any
+export const setSelected = k => { selected = k; };
 
 export function initBoard(canvas, el){
   cv = canvas; boardEl = el; g = cv.getContext('2d');
@@ -56,6 +58,7 @@ export function draw(now){
   g.setTransform(dpr,0,0,dpr,0,0);
   g.lineJoin = 'round'; g.lineCap = 'round';
   S.hilly = S.hilly ?? S.tiles.some(T => T.h>0);
+  if (S.hilly && !S.hillLabels) S.hillLabels = hillLabels(S);
 
   for (const T of S.tiles){
     const x=T.c*s, y=T.r*s;
@@ -67,6 +70,7 @@ export function draw(now){
 
   for (const T of S.tiles){
     const x=T.c*s, y=T.r*s, cx=x+s/2, cy=y+s/2;
+    if (T.slot) slotPatch(x, y, s, T.type==='slot' && selected!=null, t);
     if (T.type==='pipe'){
       const target = T.rot*90; if (T.vis==null) T.vis = target;
       T.vis += (target - T.vis) * .35; if (Math.abs(target - T.vis) < .5) T.vis = target;
@@ -74,16 +78,42 @@ export function draw(now){
       pipe(T, cx, cy, s, f.wet.has(T.i), t);
       if (f.wet.has(T.i)) ripples(T, cx, cy, s, f.entry[T.i], t);
       if (T.pump) windmill(x+s*.8, y+s*.2, s, f.wet.has(T.i), t);
+      if (T.link) linkMark(x, y, s, T.link);
     }
     else if (T.type==='src') source(G.LV.src || 'barrel', cx, cy, s, outlets(S, T, f), t);
     else if (T.type==='plant'){ T.bloom = (T.bloom||0) + ((f.watered.has(T.i)?1:0) - (T.bloom||0))*.15; plant(g, cx, cy, s, T.bloom, t); }
     else if (T.type==='rock') rock(g, cx, cy, s, T.i);
     else if (T.type==='cow') cow(g, cx, cy, s, f.drank.has(T.i), t);
-    if (S.hilly && T.h>0) badge(x, y, s, T.h);
+    else if (T.type==='cactus') cactus(g, cx, cy, s, f.soaked.has(T.i), t);
+    if (S.hilly && T.h>0 && S.hillLabels.has(T.i)) badge(x, y, s, T.h);
     const fl = flashes[T.i]; if (fl && fl > now) glow(x, y, s, (fl-now)/1500, t);
   }
   for (const [i,b] of f.leaks) edgeMark(S.tiles[i], b, s, t, 'leak');
   for (const [i,b] of f.blocked) edgeMark(S.tiles[i], b, s, t, 'uphill');
+}
+
+// ---------- tray slots and linked pieces ----------
+// An empty slot is a dug patch of soil; it pulses when a tray piece is ready to be placed.
+function slotPatch(x, y, s, ready, t){
+  g.save(); g.beginPath(); g.roundRect(x+s*.1, y+s*.1, s*.8, s*.8, s*.12);
+  g.fillStyle='#c9a76c'; g.fill();
+  g.setLineDash([s*.07, s*.05]); g.strokeStyle = ready ? '#f0913f' : '#8a6a4a'; g.lineWidth = ready ? 3 + Math.sin(t*6) : 2; g.stroke();
+  g.restore();
+}
+// Linked pieces carry a little flower in their group's color.
+const LINK_COLOR = { a:'#c2456b', b:'#6f5bd4', c:'#e0a21c', d:'#2a9d8f' };
+function linkMark(x, y, s, link){
+  const px = x+s*.82, py = y+s*.82, r = s*.07, col = LINK_COLOR[link] || '#c2456b';
+  for (let k=0;k<5;k++){ const a=k*1.2566-1.57; ell(g, px+Math.cos(a)*r*1.2, py+Math.sin(a)*r*1.2, r, r, col, 'rgba(0,0,0,.35)', 1); }
+  ell(g, px, py, r*.8, r*.8, '#fff3b0', 'rgba(0,0,0,.35)', 1);
+}
+export { LINK_COLOR };
+// A tray piece drawn on its own little canvas.
+export function drawPiece(cnv, base, rot){
+  const save = g, c = cnv.getContext('2d'), s = cnv.width/2; g = c;
+  c.setTransform(2,0,0,2,0,0); c.clearRect(0,0,cnv.width,cnv.height); c.lineJoin='round'; c.lineCap='round';
+  pipe({ base, vis:rot*90, i:base }, s/2, s/2, s*.95, false, 0);
+  g = save;
 }
 
 // ---------- ground details ----------
@@ -108,6 +138,17 @@ function cliffs(S, s){
       const w=3+(T.h-n.h)*2.5; g.fillStyle='#6e5230';
       if (b===1) g.fillRect(x, y, s, w); if (b===4) g.fillRect(x, y+s-w, s, w);
       if (b===8) g.fillRect(x, y, w, s); if (b===2) g.fillRect(x+s-w, y, w, s); } }
+}
+// One ▲ label per hill area (a connected patch of the same height), on its top-left tile,
+// instead of one on every tile. Colors and cliff edges show the rest.
+function hillLabels(S){
+  const at = (r,c) => (r<0||c<0||r>=S.H||c>=S.W) ? null : S.tiles[r*S.W+c], seen = new Set(), out = new Set();
+  for (const T of S.tiles){ if (!T.h || seen.has(T.i)) continue;
+    const q = [T]; seen.add(T.i); let first = T;
+    while (q.length){ const x = q.shift(); if (x.r < first.r || (x.r===first.r && x.c < first.c)) first = x;
+      for (const [,dr,dc] of DIRS){ const n = at(x.r+dr, x.c+dc); if (n && n.h===T.h && !seen.has(n.i)){ seen.add(n.i); q.push(n); } } }
+    out.add(first.i); }
+  return out;
 }
 function badge(x, y, s, h){
   const w=s*.36, hh=s*.2; g.beginPath(); g.roundRect(x+3, y+3, w, hh, hh/2); g.fillStyle='#5a4126'; g.fill();
@@ -294,6 +335,10 @@ const BODY = {
     c.beginPath(); c.roundRect(cx+s*.02, cy-s*.17, s*.08, s*.07, s*.015); c.fillStyle='#a0703f'; c.fill(); c.strokeStyle='#5e3d20'; c.stroke();
   },
 };
+function shedIcon(c, cx, cy, s){
+  cottage(c, cx, cy+s*.02, s*.95, '#c9a76c', '#6f5bd4', '#f3ead8', false);
+  c.fillStyle='#f6c344'; c.font=`800 ${Math.round(s*.22)}px Nunito, sans-serif`; c.textAlign='center'; c.textBaseline='middle'; c.fillText('★', cx, cy-s*.18);
+}
 function cottage(c, cx, cy, s, wall, roof, trim, barn=false){
   ell(c, cx, cy+s*.3, s*.32, s*.07, 'rgba(40,60,20,.25)');
   c.beginPath(); c.rect(cx-s*.26, cy-s*.08, s*.52, s*.38); c.fillStyle=wall; c.fill(); c.strokeStyle='#5e3d20'; c.lineWidth=1.5; c.stroke();
@@ -363,6 +408,20 @@ export function cow(c, cx, cy, s, drinking=false, t=0){
     c.fillText('-2', cx-s*.24, cy-s*.3);
   }
 }
+// A cactus in sandy soil: happy when dry, droopy and dripping when water reaches it.
+export function cactus(c, cx, cy, s, wet=false, t=0){
+  ell(c, cx, cy+s*.3, s*.27, s*.08, '#e5d3a3', '#b8a070', 1.2);
+  const body = wet ? '#7c8f4a' : '#5fa04a', edge = wet ? '#4f5f2a' : '#3f7a2a';
+  c.save(); if (wet){ c.translate(cx, cy+s*.28); c.rotate(.18); c.translate(-cx, -(cy+s*.28)); }
+  c.beginPath(); c.roundRect(cx-s*.08, cy-s*.3, s*.16, s*.6, s*.08); c.fillStyle=body; c.fill(); c.strokeStyle=edge; c.lineWidth=1.5; c.stroke();
+  c.beginPath(); c.roundRect(cx-s*.24, cy-s*.12, s*.1, s*.24, s*.05); c.fill(); c.stroke();
+  c.beginPath(); c.roundRect(cx+s*.14, cy-s*.2, s*.1, s*.22, s*.05); c.fill(); c.stroke();
+  c.strokeStyle='rgba(255,255,255,.55)'; c.lineWidth=1; for (const dy of [-.2,-.05,.1]){ c.beginPath(); c.moveTo(cx-s*.03, cy+dy*s); c.lineTo(cx-s*.06, cy+dy*s-s*.03); c.moveTo(cx+s*.03, cy+dy*s); c.lineTo(cx+s*.06, cy+dy*s-s*.03); c.stroke(); }
+  if (!wet) { for (let k=0;k<5;k++){ const a=k*1.2566-1.57; ell(c, cx+Math.cos(a)*s*.045, cy-s*.33+Math.sin(a)*s*.045, s*.035, s*.035, '#f48fb1', '#c2456b', .8); } ell(c, cx, cy-s*.33, s*.025, s*.025, '#f6c344'); }
+  c.restore();
+  if (wet){ const d = (t*1.2)%1; ell(c, cx+s*.18, cy-s*.05+d*s*.3, s*.035, s*.045, '#5aaee0', '#3a86b8', 1);
+    c.fillStyle='#3a86b8'; c.font=`800 ${Math.round(s*.2)}px Nunito, sans-serif`; c.textAlign='center'; c.textBaseline='middle'; c.fillText('!', cx-s*.25, cy-s*.3); }
+}
 export function sun(c, cx, cy, s){
   c.strokeStyle='#e0a21c'; c.lineWidth=2; for (let k=0;k<8;k++){ const a=k*.785; c.beginPath(); c.moveTo(cx+Math.cos(a)*s*.26, cy+Math.sin(a)*s*.26); c.lineTo(cx+Math.cos(a)*s*.36, cy+Math.sin(a)*s*.36); c.stroke(); }
   ell(c, cx, cy, s*.2, s*.2, '#f6c344', '#a07a10', 1.5); ell(c, cx-s*.06, cy-s*.06, s*.05, s*.05, 'rgba(255,255,255,.7)');
@@ -380,4 +439,9 @@ export function drawIcon(cnv, kind){
   else if (kind==='sun') sun(c, cx, cy, s);
   else if (kind==='cow') cow(c, cx-s*.06, cy, s*.95);
   else if (kind==='hill') { const save=g; g=c; hill(c, cx, cy, s); g=save; }
+  else if (kind==='cactus') cactus(c, cx, cy, s*.95);
+  else if (kind==='tray' || kind==='link'){ const save=g; g=c; c.beginPath(); c.roundRect(s*.12, s*.12, s*.76, s*.76, s*.1); c.fillStyle='#c9a76c'; c.fill();
+    c.setLineDash([s*.07,s*.05]); c.strokeStyle='#8a6a4a'; c.lineWidth=1.5; c.stroke(); c.setLineDash([]);
+    pipe({ base:kind==='tray'?6:10, vis:0, i:1 }, cx, cy, s*.8, kind==='link', 0); if (kind==='link') linkMark(0, 0, s, 'a'); g=save; }
+  else if (kind==='shed') shedIcon(c, cx, cy, s);
 }

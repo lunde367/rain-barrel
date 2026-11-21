@@ -9,23 +9,26 @@ import { devMode, secretTaps } from '../../kit/js/native.js';
 import { createCoach } from '../../kit/js/coach.js';
 import { setHaptics } from '../../kit/js/haptics.js';
 import { Save, starsEarned } from '../save.js';
-import { G, startLevel, turn, undo, applyHint, solveAll } from '../engine/game.js';
+import { G, startLevel, turn, undo, applyHint, solveAll, place, pickUp } from '../engine/game.js';
 import { LEVELS, WORLDS, PARTS, SOURCES } from '../data/levels.js';
-import { FREE_HINTS, HINTS_FROM } from '../data/config.js';
-import { resize, cellAt, flashTile, drawIcon } from '../render/board.js';
+import { FREE_HINTS, HINTS_FROM, JAR_MAX } from '../data/config.js';
+import { resize, cellAt, flashTile, drawIcon, drawPiece, setSelected } from '../render/board.js';
 import { IC_HOME } from './markup.js';
 
 export let screen = 'home';
 // Unlocking: a world opens once you have enough stars from the world before it.
 // Inside an open world every level is playable in any order; only the tutorial (Spring Meadow 1) must come first.
+// The Puzzle Shed sits outside that chain: each bonus level opens at a total number of stars from the main worlds.
 const worldStars = wi => LEVELS.filter(l => l.wi===wi).reduce((a,l) => a+(Save.data.stars[l.gi]||0), 0);
-const worldOpen = wi => devMode || (!WORLDS[wi].lab && (wi===0 || (worldOpen(wi-1) && worldStars(wi-1) >= WORLDS[wi].need)));
+const mainStars = () => LEVELS.filter(l => !l.lab && !l.shed).reduce((a,l) => a+(Save.data.stars[l.gi]||0), 0);
+const worldOpen = wi => devMode || WORLDS[wi].shed || (!WORLDS[wi].lab && (wi===0 || (worldOpen(wi-1) && worldStars(wi-1) >= WORLDS[wi].need)));
 const tutorialDone = () => (Save.data.stars[0]||0) > 0;
 const unlocked = gi => { if (devMode) return true; const L=LEVELS[gi];
+  if (L.shed) return mainStars() >= L.needTotal;
   if (!worldOpen(L.wi)) return false; return !(L.wi===0 && L.li>0 && !tutorialDone()); };
 // The next world that's still closed, and how many more stars it needs.
 function nextGoal(){
-  const wi = WORLDS.findIndex((w,i) => !w.lab && !worldOpen(i)); if (wi < 0) return null;
+  const wi = WORLDS.findIndex((w,i) => !w.lab && !w.shed && !worldOpen(i)); if (wi < 0) return null;
   return { wi, W:WORLDS[wi], prev:WORLDS[wi-1], left:WORLDS[wi].need - worldStars(wi-1) };
 }
 const msg = t => { $('msg').textContent = t; };
@@ -40,7 +43,7 @@ function home(html){
   paintDev();
 }
 function nextLevel(){
-  const i = LEVELS.findIndex(l => !l.lab && unlocked(l.gi) && !(Save.data.stars[l.gi]>0));
+  const i = LEVELS.findIndex(l => !l.lab && !l.shed && unlocked(l.gi) && !(Save.data.stars[l.gi]>0));
   return i < 0 ? null : LEVELS[i];
 }
 export function showMenu(){
@@ -54,16 +57,17 @@ export function showMenu(){
     }
     const lvls = LEVELS.filter(l => l.wi===wi).map(l => { const ok=unlocked(l.gi), st=Save.data.stars[l.gi]||0;
       return `<button class="lv${G.LV&&G.LV.gi===l.gi?' cur':''}" data-lv="${l.gi}" ${ok?'':'disabled'}><b>${l.li+1}. ${l.name}</b>
-        ${ok?`<span class="stars">${starStr(st)}</span>`:`<span class="lv-lock">${l.wi===0?'Play 1 first':'Locked'}</span>`}</button>`; }).join('');
+        ${ok?`<span class="stars">${starStr(st)}</span>`:`<span class="lv-lock">${l.shed?`Opens at ${l.needTotal} ★`:l.wi===0?'Play 1 first':'Locked'}</span>`}</button>`; }).join('');
+    const blurb = Wd.shed ? `${Wd.blurb}. You have ${mainStars()} ★.` : Wd.blurb;
     return `<div class="chap"><header><canvas data-icon="${Wd.icon}" width="88" height="88"></canvas>
-      <span><b>${Wd.name}</b><small>${Wd.blurb}</small></span></header><div class="lvls">${lvls}</div></div>`;
+      <span><b>${Wd.name}</b><small>${blurb}</small></span></header><div class="lvls">${lvls}</div></div>`;
   };
   const parts = PARTS.filter(P => !P.lab || devMode).map(P => {
     const ws = WORLDS.map((w,i) => [w,i]).filter(([w]) => w.part===P.n);
     const lv = LEVELS.filter(l => WORLDS[l.wi].part===P.n), got = lv.reduce((a,l) => a+(Save.data.stars[l.gi]||0), 0);
     const open = Save.data.fold[P.n] !== false;
     return `<section class="part${open?' open':''}" style="--part:${P.tint}">
-      <button class="part-head" data-go="fold" data-part="${P.n}" aria-expanded="${open}"><span class="part-n">Part ${P.n}</span>
+      <button class="part-head" data-go="fold" data-part="${P.n}" aria-expanded="${open}"><span class="part-n">${P.label || `Part ${P.n}`}</span>
         <b>${P.name}</b><span class="part-meta">★ ${got}/${lv.length*3}</span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <div class="part-body">${ws.map(([w,i]) => worldHtml(w,i)).join('')}</div></section>`;
   }).join('');
@@ -73,6 +77,7 @@ export function showMenu(){
     ${nx ? `<button class="btn main continue" data-lv="${nx.gi}">${starsEarned()>0?'Continue':'Start'} · ${nx.W.name} ${nx.li+1}: ${nx.name}</button>`
          : goal ? `<p class="home-note">Collect ${goal.left} more ★ in ${goal.prev.name} to open ${goal.W.name}. Replay levels to earn 3 stars.</p>`
          : `<p class="home-note">Every garden is open. Replay any level to earn more stars.</p>`}
+    <p class="home-note jar-note">💡 Hint jar: ${Save.data.jar||0} of ${JAR_MAX}. Every new 3-star level adds a hint.</p>
     ${parts}
     ${devMode?'<p class="devnote">Test mode is on: every level is unlocked, and each level has a Solve button. Tap the title 7 times to turn it off.</p>':''}`);
   for (const c of $('home').querySelectorAll('canvas[data-icon]')) drawIcon(c, c.dataset.icon);
@@ -100,6 +105,19 @@ export function play(gi){
   msg(`${LV.W.name} ${LV.li+1}: ${LV.name}.${src} ${LV.note}`);
   paintHud(); paintDev();
   requestAnimationFrame(resize);
+  selectTray(null);
+  const has = kind => G.S.tiles.some(t => kind==='cactus' ? t.type==='cactus' : kind==='tray' ? t.slot : t.link);
+  const TIPS = {
+    cactus:['🌵','Keep the cactus dry','Cacti hate water. If any channel pours onto one, the level isn’t solved.'],
+    tray:['🧺','Pieces in the tray','Tap a piece in the tray, then tap an empty dirt patch to place it. Tap a placed piece to turn it; press and hold to put it back.'],
+    linked:['🌸','Linked pieces','Pieces with the same colored flower turn together. Fixing one can turn another the wrong way!'],
+  };
+  for (const k of Object.keys(TIPS)) if (has(k) && !Save.data.seen[k+'Tip']){
+    Save.data.seen[k+'Tip'] = true; Save.commit();
+    const [ic, title, text] = TIPS[k];
+    setTimeout(() => toast(`<span class="t-icon">${ic}</span><span><b>${title}</b><small>${text}</small></span>`, { ms:8000 }), 500);
+    break;
+  }
   if (gi >= HINTS_FROM && !G.LV.lab && !Save.data.seen.hintTip){
     Save.data.seen.hintTip = true; Save.commit();
     setTimeout(() => toast('<span class="t-icon">💡</span><span><b>Hints are here</b><small>Stuck? The Hint button turns one channel the right way. Your first hint in each level is free.</small></span>', { ms:6500 }), 600);
@@ -123,7 +141,9 @@ function paintHud(){
   const hintsHere = G.LV.gi >= HINTS_FROM;
   $('hint').hidden = !hintsHere; $('undo').classList.toggle('grow', !hintsHere);
   const free = S.hints < FREE_HINTS;
-  $('hint').innerHTML = free ? 'Free hint' : 'Hint <small class="ad-tag">ad</small>';
+  const jar = Save.data.jar || 0;
+  $('hint').innerHTML = free ? 'Free hint' : jar > 0 ? `Hint <small class="ad-tag">jar ${jar}</small>` : 'Hint <small class="ad-tag">ad</small>';
+  paintTray();
   $('hint').disabled = S.done;
 }
 export function paintDev(){
@@ -144,14 +164,28 @@ function onSound(){
 
 async function onHint(){
   const S = G.S; if (!S || S.done) return;
+  let fromJar = false;
   if (S.hints >= FREE_HINTS){
-    const ok = await Ads.showRewarded('hint', 'One hint');
-    if (!ok || G.S !== S || S.done) return;
+    if ((Save.data.jar||0) > 0) fromJar = true;   // hints earned with 3-star finishes come first, no ad
+    else { const ok = await Ads.showRewarded('hint', 'One hint'); if (!ok || G.S !== S || S.done) return; }
   }
   const i = applyHint();
   if (i < 0){ msg('The main route is already right. Look for stray pipes that leak or water the wrong way.'); return; }
-  Save.data.stats.hints++; Save.commit();
+  if (fromJar) Save.data.jar--;
+  Save.data.stats.hints++; Save.commit(); paintHud();
   flashTile(i); msg('Hint: the glowing channel is now turned the right way.');
+}
+
+// ---------- the tray ----------
+let selTray = null;
+function selectTray(k){ selTray = k; setSelected(k); paintTray(); }
+function paintTray(){
+  const S = G.S, el = $('tray');
+  if (screen!=='play' || !S || !S.tray || !S.tray.length){ el.hidden = true; return; }
+  el.hidden = false;
+  el.innerHTML = '<span class="tray-lbl">Tray</span>' + S.tray.map((p,k) =>
+    `<button class="tray-item${p.used?' used':''}${selTray===k?' sel':''}" data-tray="${k}" ${p.used?'disabled':''} aria-label="Tray piece"><canvas width="88" height="88"></canvas></button>`).join('');
+  el.querySelectorAll('canvas').forEach((c, k) => drawPiece(c, S.tray[k].base, S.tray[k].rot));
 }
 
 // ---------- results ----------
@@ -179,10 +213,27 @@ function showWin(w){
 // ---------- wiring ----------
 let eraseArmed = false, playerTurned = false;
 export function initUI(){
+  // Tap: turn a piece, or place the selected tray piece on an empty slot.
+  // Press and hold a placed piece to put it back in the tray.
+  let press = null;
   $('board').addEventListener('pointerdown', e => {
     if (screen!=='play' || !$('over').hidden || e.target.closest('button')) return;
-    const i = cellAt(e.clientX, e.clientY); if (i >= 0) turn(i);
+    const i = cellAt(e.clientX, e.clientY); if (i < 0) return;
+    const T = G.S.tiles[i];
+    if (T.type==='slot'){
+      if (selTray!=null){ const k = selTray; selectTray(null); place(k, i); }
+      else msg('Pick a piece from the tray first, then tap an empty dirt patch.');
+      return;
+    }
+    if (T.type==='pipe' && T.from!=null){ press = { i, timer:setTimeout(() => { press = null; pickUp(i); }, 450) }; return; }
+    turn(i);
   });
+  const release = turnIt => { if (!press) return; clearTimeout(press.timer); const i = press.i; press = null; if (turnIt) turn(i); };
+  $('board').addEventListener('pointerup', () => release(true));
+  $('board').addEventListener('pointerleave', () => release(false));
+  $('board').addEventListener('pointercancel', () => release(false));
+  $('tray').addEventListener('click', e => { const b = e.target.closest('[data-tray]'); if (!b || b.disabled) return;
+    const k = +b.dataset.tray; selectTray(selTray===k ? null : k); Audio.play('tap'); });
   $('hint').onclick = onHint;
   $('undo').onclick = () => undo();
   $('restart').onclick = () => { if (G.LV){ Audio.play('tap'); play(G.LV.gi); } };
@@ -222,12 +273,18 @@ export function initUI(){
     Save.data.seen.leakTip = true; Save.commit();
     toast('<span class="t-icon">💧</span><span><b>Leak!</b><small>Water is spilling out where the channels don’t line up. Each leak wastes 2 drops. Turn the pieces so the openings meet.</small></span>', { ms:7000 });
   });
+  on('soaked', () => msg('Oh no, the cactus got wet! Cacti need to stay dry.'));
   on('locked', () => { Audio.play('denied'); msg('That piece has a stone rim: it is stuck in place.'); });
   on('dry', () => msg('The barrel ran dry before the water got there!'));
   on('uphill', () => msg('A red ▲ means water can’t flow uphill there.'));
   on('moo', () => { if (G.S.cap!==Infinity) msg('A cow took a drink: 2 drops gone.'); });
   on('win', w => {
     const before = WORLDS.map((_,i) => worldOpen(i));
+    const L = LEVELS[w.gi];
+    if (!L.lab && w.stars===3 && (Save.data.stars[w.gi]||0) < 3 && (Save.data.jar||0) < JAR_MAX){
+      Save.data.jar = (Save.data.jar||0) + 1;
+      setTimeout(() => toast(`<span class="t-icon">💡</span><span><b>+1 hint in your jar</b><small>You have ${Save.data.jar} saved. They’re used before any ad.</small></span>`), 1400);
+    }
     if ((Save.data.stars[w.gi]||0) < w.stars){ Save.data.stars[w.gi] = w.stars; }
     w.opened = WORLDS.map((_,i) => i).filter(i => !before[i] && worldOpen(i));
     if (w.opened.length) setTimeout(() => toast(`<span class="t-icon">★</span><span><b>${WORLDS[w.opened[0]].name} is open!</b><small>New puzzles are waiting on the home screen.</small></span>`), 900);

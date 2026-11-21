@@ -8,12 +8,15 @@
 // A level is accepted only if it: can be solved; has at most 2 different best answers; doesn't
 // start out solved; and scores within TOLERANCE of its target.
 import { writeFileSync } from 'node:fs';
-import { PLAN, TOLERANCE, TRIES, START_AT } from './curriculum.mjs';
+import { PLAN as LAB_PLAN, SHED, TOLERANCE, TRIES, START_AT } from './curriculum.mjs';
+const PLAN = process.argv.includes('--shed') ? [SHED] : LAB_PLAN;
 import { blank, placeEnds, carvePath, lay, PATTERNS, toRows, rngFrom } from './patterns.mjs';
 import { rate } from './rate.mjs';
-import { parse, flow, mulberry32 } from '../../js/engine/flow.js';
+import { solved } from '../../js/engine/flow.js';
+import { prepare } from '../../js/engine/game.js';
 
-const seed = +(process.argv[2] || 1);
+const SHED_MODE = process.argv.includes('--shed');
+const seed = +(process.argv.slice(2).find(a => /^\d+$/.test(a)) || 1);
 const lerp = (pair, t) => Array.isArray(pair) ? pair[0] + (pair[1]-pair[0])*t : pair;
 const ADJ = ['Muddy','Sunny','Mossy','Quiet','Twisty','Thirsty','Windy','Pebbly','Shady','Dusty','Dewy','Crooked','Lazy','Bumpy','Misty','Sleepy'];
 const NOUN = ['Ditch','Furrow','Trickle','Puddle','Bend','Orchard','Lane','Hollow','Patch','Brook','Meadow','Corner','Gully','Terrace','Field','Spring'];
@@ -42,7 +45,12 @@ function build(W, t, R){
   const dec = lerp(W.decoys, t); if (dec > .05){ PATTERNS.decoyFill(B, R, ends, dec); used.push('decoy fill'); }
   if (W.penalty==='none' && shortcut){   // in the first world a shortcut is simply blocked by a rock later on
     const alt = B.cells.filter(x => x.alt && !x.route && x.k==='pipe'); if (alt.length){ R.pick(alt).k='#'; } }
+  // the newer mechanics (preview worlds)
+  if (W.cactus && PATTERNS.cactus(B, R, ends, Math.round(lerp(W.cactus, t)))) used.push('stay-dry cactus');
+  if (W.tray && PATTERNS.tray(B, R, ends, { pieces:Math.round(lerp(W.tray, t)), slots:Math.round(lerp(W.slots||0, t)), spares:Math.round(lerp(W.spares||0, t)) })) used.push('tray pieces');
+  if (W.linked && PATTERNS.linked(B, R, ends, { groups:Math.round(lerp(W.linked, t)), size:Math.round(lerp(W.linkSize||[2,3], t)) })) used.push('linked pieces');
   const level = { rows: toRows(B), src: R.pick(W.sources) };
+  if (B.extra && B.extra.length) level.extra = B.extra;
   if (ends.srcs.length > 1) level.src = 'barrel';
   return { level, used };
 }
@@ -53,24 +61,23 @@ const no = why => { WHY[why] = (WHY[why]||0)+1; return null; };
 function finish(cand, W, t, R){
   const r0 = rate(cand.level);
   if (!r0.solvable) return no('unsolvable'); if (r0.optimal > 2) return no('too many answers'); if (r0.min < 2) return no('too short'); if (r0.truncated) return no('too big to check');
-  const level = { ...cand.level, rows: r0.rows };
+  const level = { ...cand.level, rows: r0.rows }; if (r0.extra && r0.extra.length) level.extra = r0.extra; else delete level.extra;
   if (W.cap && R.chance(lerp(W.cap, t))){ level.cap = r0.min; level.src = 'barrel'; cand.used.push('limited barrel'); }
   const r = rate(level); if (!r.solvable || r.optimal > 2) return null;
   if ((W.require||[]).some(m => !r.mechanics.includes(m))) return no('missing world mechanic');
   // must not start out solved after the game's own scramble
-  const S = parse(level), rnd = mulberry32(1234); let solvedAtStart = true;
-  for (let k=0; k<60 && solvedAtStart; k++){ S.tiles.forEach(x => { if (x.type==='pipe' && !x.locked) x.rot = Math.floor(rnd()*4); }); solvedAtStart = flow(S).watered.size === S.plants; }
-  if (solvedAtStart) return no('starts solved');
-  return { level:{ ...level, rows:r.rows }, rating:r, used:cand.used };
+  const S = prepare(level, 1234);
+  if (solved(S, S.flow)) return no('starts solved');
+  return { level:{ ...level, rows:r.rows, ...(r.extra && r.extra.length ? { extra:r.extra } : {}) }, rating:r, used:cand.used };
 }
 
 function checkPlan(){
-  const problems = [];
-  PLAN.forEach((W, i) => { if (W.to <= W.from) problems.push(`${W.name}: last level must be harder than the first`);
-    if (i){ const P = PLAN[i-1], low = P.from + (P.to-P.from)*START_AT;
-      if (W.from < low) problems.push(`${W.name} starts too easy: its first level should be at least ${low.toFixed(1)} (${Math.round(START_AT*100)}% of the way up ${P.name})`);
-      if (W.from >= P.to) problems.push(`${W.name} starts too hard: its first level should be easier than ${P.name}'s last (${P.to})`); }
-    if (i && W.to <= PLAN[i-1].to) problems.push(`${W.name} must end harder than ${PLAN[i-1].name}`); });
+  const problems = [], chain = PLAN.filter(W => !W.preview);   // preview worlds skip the ordering rules
+  PLAN.forEach(W => { if (W.to <= W.from) problems.push(`${W.name}: last level must be harder than the first`); });
+  chain.forEach((W, i) => { if (!i) return; const P = chain[i-1], low = P.from + (P.to-P.from)*START_AT;
+    if (W.from < low) problems.push(`${W.name} starts too easy: its first level should be at least ${low.toFixed(1)} (${Math.round(START_AT*100)}% of the way up ${P.name})`);
+    if (W.from >= P.to) problems.push(`${W.name} starts too hard: its first level should be easier than ${P.name}'s last (${P.to})`);
+    if (W.to <= P.to) problems.push(`${W.name} must end harder than ${P.name}`); });
   if (problems.length){ console.error('The difficulty plan breaks the rules:\n  ' + problems.join('\n  ')); process.exit(1); }
 }
 
@@ -102,7 +109,18 @@ PLAN.forEach((W, wi) => {
   });
 });
 
-const worlds = PLAN.map(W => ({ name:W.name, icon:W.icon, grass:W.grass, hot:!!W.hot }));
+if (SHED_MODE){
+  // Bonus levels for the real game. Each opens once the player has enough stars in total.
+  out.forEach((L, i) => { L.needTotal = SHED.needTotal[i]; delete L.world; L.note = `A bonus puzzle for star collectors.`; });
+  writeFileSync(new URL('../../js/data/shed.js', import.meta.url),
+`// Puzzle Shed: bonus levels made by tools/levelgen/generate.mjs --shed (seed ${seed}).
+// These are part of the real game (stars are saved for them), so only regenerate on purpose.
+// needTotal = total stars from the main worlds needed to open the level.
+export const SHED = ${JSON.stringify(out, null, 1)};
+`);
+  console.log(`\nWrote js/data/shed.js (${out.length} levels)`); process.exit(0);
+}
+const worlds = PLAN.map(W => ({ name:W.name + (W.preview ? ' (preview)' : ''), icon:W.icon, grass:W.grass, hot:!!W.hot }));
 writeFileSync(new URL('../../js/data/lab.js', import.meta.url),
 `// Generated by tools/levelgen/generate.mjs (seed ${seed}). Don't edit by hand: change curriculum.mjs and run it again.
 // These levels only show in test mode, under "Level Lab". Copy the ones you like into levels.js.

@@ -15,3 +15,5 @@ export const FREE_HINTS = 1;
 // Hints start at this level (counting from 0, so 3 = Spring Meadow 4). The first levels are so small
 // that one hint would solve them, so there's no Hint button there.
 export const HINTS_FROM = 3;
+// The hint jar: every level you finish with 3 stars for the first time adds a hint, up to this many.
+export const JAR_MAX = 5;

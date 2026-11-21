@@ -13,6 +13,7 @@ export const WEIGHTS = {
   plants: 1,       // per extra plant
   sources: .7,     // per extra water source
   answers: -1.5,   // per doubling of different best answers (more answers = easier)
+  tray: .5,        // per tray piece and empty slot (placing pieces is extra thinking)
 };
 
 export function rate(level, { margin = 8 } = {}){
@@ -25,18 +26,20 @@ export function rate(level, { margin = 8 } = {}){
   const traps = wins.filter(o => o.water > sol.min).length;
   const routes = distinct(loose.outcomes).length;
   const pipes = S.tiles.filter(t => t.type==='pipe'), turnable = pipes.filter(t => !t.locked);
+  const traySize = S.tiles.filter(t => t.tray).length + S.extra.length, slots = S.tiles.filter(t => t.slot).length;
   const onRoute = new Set(sol.best.key.split(',').map(x => +x.split(':')[0]));
   const decoys = turnable.filter(t => !onRoute.has(t.i)).length;
   const mech = {
+    cactus: S.tiles.some(t => t.type==='cactus'), tray: S.tiles.some(t => t.slot), linked: pipes.some(t => t.link),
     locked: pipes.some(t => t.locked), hot: S.tiles.some(t => t.hot), cows: S.tiles.some(t => t.type==='cow'),
     hills: S.tiles.some(t => t.h > 0), pumps: S.tiles.some(t => t.pump), cap: capped,
   };
   const sources = S.tiles.filter(t => t.type==='src').length;
   const w = WEIGHTS, lg = x => Math.log2(1 + x);
-  const score = w.search*lg(routes) + w.pieces*turnable.length + w.decoys*decoys + w.traps*lg(traps)
+  const score = w.search*lg(routes) + w.pieces*turnable.length + w.tray*(traySize + slots) + w.decoys*decoys + w.traps*lg(traps)
     + w.mechanic*Object.values(mech).filter(Boolean).length + w.plants*(S.plants-1) + w.sources*(sources-1)
     + w.answers*Math.log2(sol.optimal);
   return { solvable:true, score:Math.round(score*10)/10, min:sol.min, optimal:sol.optimal, routes, traps,
     pieces:turnable.length, decoys, plants:S.plants, sources, size:`${S.W}x${S.H}`,
-    mechanics:Object.keys(mech).filter(k => mech[k]), truncated:loose.truncated || sol.truncated, rows:sol.rows };
+    mechanics:Object.keys(mech).filter(k => mech[k]), truncated:loose.truncated || sol.truncated, rows:sol.rows, extra:sol.extra };
 }

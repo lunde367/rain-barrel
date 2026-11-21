@@ -92,16 +92,59 @@ export const PATTERNS = {
   },
   // SUN-BAKED PATCH: some decoy pieces cost 3 drops, so routes through them are traps.
   sunPatch(B, R, ends, amount){ for (const x of B.cells) if (x.k==='pipe' && !x.route && R.chance(amount)) x.hot = true; },
-  // HILLS: the real route only ever goes downhill, with a windmill pump where it must climb one step.
-  // Everything else gets random heights, which closes off some wrong routes and opens others.
+  // HILLS: the real route steps downhill in a few big terraces, with a windmill pump where it must
+  // climb. Every other tile takes the height of the nearest route tile, so hills come in large,
+  // readable areas, plus one or two small ridges that block wrong routes.
   hills(B, R, { srcs }, { pumps = false } = {}){
-    const route = B.cells.filter(x => x.route || x.k==='S' || x.k==='P');
-    let h = 2; const order = bfsOrder(B, srcs);
-    for (const x of order){ if (x.k==='S'){ x.h = 2; continue; }
-      if (!x.route && x.k!=='P'){ continue; }
-      x.h = h; if (R.chance(.25) && h>0) h--; }
-    if (pumps){ const climb = order.filter(x => x.route && x.h<2); if (climb.length){ const x = R.pick(climb); x.pump = true; x.h += 1; } }
-    for (const x of B.cells) if (!route.includes(x) && !x.ridge) x.h = R.int(0, 2);
+    const order = bfsOrder(B, srcs);
+    let h = 2, steps = 0;
+    for (const x of order){
+      if (x.k==='S'){ x.h = 2; continue; }
+      if (!x.route && x.k!=='P') continue;
+      x.h = h; if (steps < 2 && h > 0 && R.chance(.18)){ h--; steps++; }
+    }
+    if (pumps){ const climb = order.filter(x => x.route && x.h < 2); if (climb.length){ const x = R.pick(climb); x.pump = true; x.h += 1; } }
+    // spread heights outward from the route, so each terrace becomes one big area
+    const fixed = new Set(order.filter(x => x.k==='S' || x.route || x.k==='P'));
+    const q = [...fixed], seen = new Set(fixed);
+    while (q.length){ const x = q.shift();
+      for (const [,dr,dc] of DIRS){ const n = B.at(x.r+dr, x.c+dc); if (!n || seen.has(n)) continue;
+        seen.add(n); n.h = x.pump ? x.h-1 : x.h; q.push(n); } }
+    // a ridge or two off the route
+    for (let k=R.int(1,2); k>0; k--){
+      const start = R.pick(B.cells.filter(x => !fixed.has(x) && x.h < 2)); if (!start) break;
+      const blob = [start]; for (let i=0;i<R.int(1,3);i++){ const x = R.pick(blob), [,dr,dc] = R.pick(DIRS), n = B.at(x.r+dr, x.c+dc); if (n && !fixed.has(n) && !blob.includes(n)) blob.push(n); }
+      const top = Math.min(2, start.h + 1); blob.forEach(x => { x.h = top; });
+    }
+  },
+  // STAY-DRY CACTUS: cacti on grass right beside the real route. Turn a route piece the wrong way
+  // and it pours onto a cactus, so the player has to think about where every opening points.
+  cactus(B, R, ends, count){
+    const spots = B.cells.filter(x => x.k==='.' && !x.route && !x.alt && DIRS.some(([,dr,dc]) => { const n=B.at(x.r+dr,x.c+dc); return n && n.route; }));
+    let n = 0; for (; n<count && spots.length; n++) spots.splice(Math.floor(R.f()*spots.length),1)[0].k = 'X';
+    return n > 0;
+  },
+  // TRAY: some pieces of the real route start in the tray, their tiles become empty slots, and
+  // a few extra empty slots and spare pieces make the player work out what goes where.
+  tray(B, R, ends, { pieces = 2, slots = 1, spares = 1 } = {}){
+    const route = B.cells.filter(x => x.k==='pipe' && x.route && !x.locked && !x.tray);
+    let n = 0; for (; n<pieces && route.length; n++) route.splice(Math.floor(R.f()*route.length),1)[0].tray = true;
+    const empty = B.cells.filter(x => x.k==='.' && DIRS.some(([,dr,dc]) => { const m=B.at(x.r+dr,x.c+dc); return m && m.route; }));
+    for (let i=0; i<slots && empty.length; i++) empty.splice(Math.floor(R.f()*empty.length),1)[0].k = '_';
+    B.extra = Array.from({ length:spares }, () => R.pick(['─','┐','┌','└','┘','├','┬']));
+    return n > 0;
+  },
+  // LINKED PIECES: a few pieces (some on the route, some not) turn together, so fixing one can
+  // break another. The written solution keeps them all facing the right way at once.
+  linked(B, R, ends, { groups = 1, size = 3 } = {}){
+    const route = B.cells.filter(x => x.k==='pipe' && x.route && !x.locked && !x.tray && !x.link);
+    const other = B.cells.filter(x => x.k==='pipe' && !x.route && !x.link);
+    let made = 0;
+    for (let g=0; g<groups; g++){ const name = 'abcd'[g], pick = [];
+      for (let i=0; i<Math.ceil(size/2) && route.length; i++) pick.push(route.splice(Math.floor(R.f()*route.length),1)[0]);
+      for (let i=pick.length; i<size && other.length; i++) pick.push(other.splice(Math.floor(R.f()*other.length),1)[0]);
+      if (pick.length >= 2){ pick.forEach(x => { x.link = name; }); made++; } }
+    return made > 0;
   },
   // LIMITED BARREL: the barrel holds exactly enough for the best route, so wasteful routes fail outright.
   // Applied after solving (see generate.mjs).
@@ -122,7 +165,7 @@ export function toRows(B){
     for (let c=0;c<B.W;c++){ const x = B.at(r,c);
       let t = x.k==='pipe' ? (TOKEN[x.m] || null) : x.k;
       if (!t){ t = '.'; }   // a one-ended scrap of pipe: leave grass
-      if (x.k==='pipe'){ if (x.locked) t += '*'; if (x.hot) t += '!'; if (x.pump) t += 'p'; }
+      if (x.k==='pipe'){ if (x.locked) t += '*'; if (x.hot) t += '!'; if (x.pump) t += 'p'; if (x.tray) t += '+'; if (x.link) t += x.link; }
       if (x.h) t += x.h;
       row.push(t); }
     rows.push(row.join(' ')); }

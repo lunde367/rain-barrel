@@ -33,9 +33,10 @@ Then go to http://localhost:8000.
 
 Rows in `js/data/levels.js` use these symbols:
 
-- `S` rain barrel, `P` plant, `#` rock, `C` cow, `.` grass
+- `S` water source, `P` plant, `X` cactus (must stay dry), `#` rock, `C` cow, `_` empty slot, `.` grass
 - Channel pieces: `─ │ └ ┌ ┐ ┘ ├ ┤ ┬ ┴ ┼`
-- Marks after a symbol: `*` locked, `!` sun-baked (costs 3 drops), a digit for hill height, `p` windmill pump
+- Marks after a symbol: `*` locked, `!` sun-baked (costs 3 drops), a digit for hill height, `p` windmill pump, `+` the piece starts in the tray (its tile becomes an empty slot), `a`–`d` linked group (turns together)
+- `extra` on a level adds spare pieces to the tray; `src` picks the water source
 - `cap` on a level sets how many drops the barrel holds
 
 After changing levels, run:
@@ -57,6 +58,9 @@ The generator in `tools/levelgen/` makes new levels that follow rules we set, so
   - *Sun-baked patch:* some decoys cost 3 drops.
   - *Hills (+ pump):* the real route only runs downhill, with a windmill pump where it must climb.
   - *Limited barrel:* the barrel holds exactly enough for the best route, so wasteful routes fail outright.
+  - *Stay-dry cactus:* cacti beside the route, so a piece turned the wrong way pours onto one.
+  - *Tray pieces:* some route pieces start in the tray, with extra empty slots and spare pieces.
+  - *Linked pieces:* a few pieces turn together, so fixing one can break another.
 - **`curriculum.mjs`** is the difficulty plan: board size, number of plants, patterns and target score for each world, from its first level to its last. The generator checks the plan's rules: levels get harder within a world; each world ends harder than the one before; a new world starts only moderately easy (its first level at least 60% of the way up the previous world's range, set by `START_AT`); and every level in a world uses that world's mechanic.
 
 Commands:
@@ -64,6 +68,15 @@ Commands:
 ```
 node tools/levelgen/rate-levels.mjs     # difficulty report for every level in the game
 node tools/levelgen/generate.mjs        # make a new Level Lab (add a number for a different batch: generate.mjs 7)
+node tools/levelgen/generate.mjs --shed # remake the Puzzle Shed bonus levels (part of the real game, so only on purpose)
 ```
+
+Worlds marked `preview` in the plan (Cactus Patch, Potting Shed, Clockwork Garden) try out the newer mechanics and skip the ordering rules until we decide where they go.
+
+## Stars
+
+- Stars open the next world (see `need` in `js/data/levels.js`).
+- The **Puzzle Shed** holds hard bonus levels, each opening at a total number of stars from the main worlds (`needTotal` in `js/data/shed.js`).
+- The **hint jar**: every level finished with 3 stars for the first time adds a hint, up to 5 (`JAR_MAX` in `js/data/config.js`). Jar hints are used after the free hint and before any ad.
 
 `generate.mjs` writes `js/data/lab.js` and `tools/levelgen/report.md`. Play the Lab in test mode, and copy the levels you like into `js/data/levels.js`.

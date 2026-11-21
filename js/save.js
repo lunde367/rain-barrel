@@ -9,6 +9,7 @@ const defaults = () => ({
   owned: {},                                   // purchases, e.g. { remove_ads:true }
   stats: { wins:0, hints:0 },
   fold: {},                                    // home screen: parts the player closed
+  jar: 0,                                      // hints saved up from 3-star finishes
   seen: {},                                    // one-time tips already shown, e.g. { leakTip:true }
 });
 
