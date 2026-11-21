@@ -67,6 +67,9 @@ if (await page.locator('.continue').count() !== 1) fail('no Start button on a ne
 await page.click('.continue'); await page.waitForTimeout(800);
 await shot('tutorial');
 if (!await page.locator('.coach').count()) fail('tutorial bubble did not appear'); else ok('tutorial bubble shown');
+// the bubble must never cover the board, or a new player can't reach the pieces
+{ const b = await page.locator('#cv').boundingBox(), c = await page.locator('.coach').boundingBox();
+  if (b && c && c.y < b.y + b.height && c.y + c.height > b.y) fail('tutorial bubble covers the board'); else ok('tutorial bubble clear of the board'); }
 if (await page.locator('#hint').isVisible()) fail('Hint button should be hidden on level 1');
 await winByTapping('level-1');
 await page.click('[data-go="next"]'); await page.waitForTimeout(700);

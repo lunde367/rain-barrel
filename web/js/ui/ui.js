@@ -125,8 +125,9 @@ export function play(gi){
     setTimeout(() => toast('<span class="t-icon">💡</span><span><b>Hints are here</b><small>Stuck? The Hint button turns one channel the right way. Your first hint in each level is free.</small></span>', { ms:6500 }), 600);
   }
   if (gi===0 && !Save.data.tutorialDone) setTimeout(() => coach.start([
-    { text:'Tap a channel to turn it. Water flows when the channels line up.', target:'#board', place:'over-bottom', until:'turn' },
-    { text:'Get water from the rain barrel to the sprout. Use Undo if you make a mistake.', target:'#board', place:'over-bottom', until:'win' },
+    // No target: the bubble sits at the bottom of the screen, so it never covers the pieces (small phones too).
+    { text:'Tap a channel to turn it. Water flows when the channels line up.', until:'turn' },
+    { text:'Get water from the rain barrel to the sprout. Use Undo if you make a mistake.', until:'win' },
   ]), 400);
 }
 
