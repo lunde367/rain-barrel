@@ -165,3 +165,13 @@
 .part.later .part-meta{ display:inline-flex; align-items:center; gap:4px }
 .part.later .part-meta svg{ width:14px; height:14px }
 .part.later .part-head b{ opacity:.75 }
+/* How to play */
+.help-list{ display:grid; gap:8px }
+.help-row{ display:flex; gap:12px; align-items:center; background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:10px 12px }
+.help-row canvas{ width:44px; height:44px; flex:none }
+.help-row b{ display:block; font-family:var(--display); font-size:1rem }
+.help-row small{ display:block; color:var(--muted); font-size:.85rem; line-height:1.35; margin-top:2px }
+.help-stars{ margin-top:12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:12px 14px; font-size:.9rem; line-height:1.45 }
+.help-stars b{ font-family:var(--display); font-size:1rem }
+.help-stars p{ margin:.4em 0 0; color:var(--muted) }
+.lv-lock svg{ width:16px; height:16px; opacity:.7 }

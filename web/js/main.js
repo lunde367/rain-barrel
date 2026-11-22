@@ -12,7 +12,8 @@ import { initLifecycle } from '../kit/js/lifecycle.js';
 import { haptic, setHaptics } from '../kit/js/haptics.js';
 import { initTelemetry, track } from '../kit/js/telemetry.js';
 import { initBoard, resize, draw } from './render/board.js';
-import { initUI, showMenu, screen } from './ui/ui.js';
+import { initUI, showMenu, screen, goBack } from './ui/ui.js';
+import { plugin } from '../kit/js/native.js';
 import { TELEMETRY, VERSION, ADS } from './data/config.js';
 
 const board = () => document.getElementById('board');
@@ -57,7 +58,7 @@ async function boot(){
   initLifecycle({
     onPause(){ Audio.suspend(); Save.flush(); },
     onResume(){ Audio.resume(); },
-    onBack(){ if (screen==='play') showMenu(); },
+    onBack(){ if (!goBack()){ const App = plugin('App'); if (App) (App.minimizeApp || App.exitApp).call(App); } },
   });
   requestAnimationFrame(frame);
   // Offline cache for the website and home-screen versions (the store apps carry their own files).

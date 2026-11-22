@@ -72,7 +72,7 @@ function finish(cand, W, t, R){
   const r0 = solve(cand.level, { nodeLimit:150000 });
   if (!r0.solvable) return no('unsolvable'); if (r0.optimal > 2) return no('too many answers'); if (r0.min < 2) return no('too short'); if (r0.truncated) return no('too big to check');
   const level = { ...cand.level, rows: r0.rows }; if (r0.extra && r0.extra.length) level.extra = r0.extra; else delete level.extra;
-  if (W.cap && R.chance(lerp(W.cap, t))){ level.cap = r0.min; level.src = 'barrel'; cand.used.push('limited barrel'); }
+  if (W.cap && R.chance(lerp(W.cap, t))){ level.cap = r0.min + (W.spare || 0); level.src = 'barrel'; cand.used.push('limited barrel'); }
   const r = rate(level); if (!r.solvable || r.optimal > 2) return null;
   if ((W.require||[]).some(m => !r.mechanics.includes(m))) return no('missing world mechanic');
   // must not start out solved after the game's own scramble

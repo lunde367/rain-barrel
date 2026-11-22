@@ -1,5 +1,6 @@
 // Puzzle Shed: bonus levels made by tools/levelgen/generate.mjs --shed (seed 3).
 // These are part of the real game (stars are saved for them), so only regenerate on purpose.
+// cap = the best route's water plus 2 spare drops (one leak's worth), so a bonus level is tough, not unforgiving.
 // needTotal = total stars from the main worlds needed to open the level.
 export const SHED = [
  {
@@ -16,7 +17,7 @@ export const SHED = [
    "┘ ┤ ├ ┘ ┐ ┬ ┼ ┬"
   ],
   "src": "barrel",
-  "cap": 13,
+  "cap": 15,
   "note": "A bonus puzzle for star collectors.",
   "needTotal": 40
  },
@@ -34,7 +35,7 @@ export const SHED = [
    "┘ S └ │ . ┤ ┴ ├"
   ],
   "src": "barrel",
-  "cap": 13,
+  "cap": 15,
   "note": "A bonus puzzle for star collectors.",
   "needTotal": 80
  },
@@ -69,7 +70,7 @@ export const SHED = [
    "│ ┼ └ └ ├ . ┤ ┘"
   ],
   "src": "barrel",
-  "cap": 13,
+  "cap": 15,
   "note": "A bonus puzzle for star collectors.",
   "needTotal": 160
  },
@@ -88,7 +89,7 @@ export const SHED = [
    "┬ ┼ └ ─ ┘ ┬ . └"
   ],
   "src": "barrel",
-  "cap": 20,
+  "cap": 22,
   "note": "A bonus puzzle for star collectors.",
   "needTotal": 200
  }

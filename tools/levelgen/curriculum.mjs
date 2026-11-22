@@ -44,7 +44,8 @@ export const PLAN = [
 
 // The Puzzle Shed: hard bonus levels for the real game, opened by total stars (needTotal, one per
 // level). Mixes the main game's mechanics on big boards. Made with: node tools/levelgen/generate.mjs --shed
-export const SHED = { name:'Puzzle Shed', icon:'shed', grass:['#a6cf8a','#9ec781'], count:8, from:50, to:60,
+// spare: drops added to a limited barrel beyond the best route's need
+export const SHED = { name:'Puzzle Shed', spare:2, icon:'shed', grass:['#a6cf8a','#9ec781'], count:8, from:50, to:60,
   width:[8,8], height:[9,10], plants:[2,3], wiggle:[2,3], decoys:[.75,.9], rocks:[.08,.05], locked:[0,0],
   shapes:[[.2,.35,.35,.1],[.15,.3,.4,.15]], junctions:[.3,.5],
   patterns:{ decoyShortcut:[1,1], sunPatch:[.15,.25] }, penalty:'cows', cap:[.5,1], require:['cows'],

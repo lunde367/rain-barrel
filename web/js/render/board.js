@@ -77,6 +77,7 @@ export function draw(now){
       if (T.locked) lockedRim(x, y, s);
       pipe(T, cx, cy, s, f.wet.has(T.i), t);
       if (f.wet.has(T.i)) ripples(T, cx, cy, s, f.entry[T.i], t);
+      if (T.from!=null) backBadge(x, y, s);
       if (T.pump) windmill(x+s*.8, y+s*.2, s, f.wet.has(T.i), t);
       if (T.link) linkMark(x, y, s, T.link);
     }
@@ -93,6 +94,16 @@ export function draw(now){
 }
 
 // ---------- tray slots and linked pieces ----------
+// A placed tray piece gets a small "back to the tray" button in its top-right corner.
+export const BADGE = .36;   // size of the corner that counts as tapping it, as part of a tile
+function backBadge(x, y, s){
+  const r = s*.13, bx = x + s - r - s*.05, by = y + r + s*.05;
+  g.save(); g.beginPath(); g.arc(bx, by, r, 0, Math.PI*2); g.fillStyle='#fff'; g.fill(); g.strokeStyle='#8a6a4a'; g.lineWidth=1.5; g.stroke();
+  g.strokeStyle='#5b4330'; g.lineWidth=Math.max(1.5, s*.035); g.lineCap='round'; g.lineJoin='round';
+  g.beginPath(); g.arc(bx + r*.1, by + r*.1, r*.45, Math.PI*1.1, Math.PI*.35, false); g.stroke();      // curved arrow
+  g.beginPath(); g.moveTo(bx - r*.55, by - r*.45); g.lineTo(bx - r*.4, by + r*.15); g.lineTo(bx + r*.15, by - r*.15); g.stroke();
+  g.restore();
+}
 // An empty slot is a dug patch of soil; it pulses when a tray piece is ready to be placed.
 function slotPatch(x, y, s, ready, t){
   g.save(); g.beginPath(); g.roundRect(x+s*.1, y+s*.1, s*.8, s*.8, s*.12);
@@ -447,4 +458,18 @@ export function drawIcon(cnv, kind){
     c.setLineDash([s*.07,s*.05]); c.strokeStyle='#8a6a4a'; c.lineWidth=1.5; c.stroke(); c.setLineDash([]);
     pipe({ base:kind==='tray'?6:10, vis:0, i:1 }, cx, cy, s*.8, kind==='link', 0); if (kind==='link') linkMark(0, 0, s, 'a'); g=save; }
   else if (kind==='shed') shedIcon(c, cx, cy, s);
+  else {   // pictures for the How to play page: one tile on grass
+    const save = g; g = c;
+    c.beginPath(); c.roundRect(s*.06, s*.06, s*.88, s*.88, s*.14); c.fillStyle='#a6cf8a'; c.fill();
+    const P = (base, wet) => pipe({ base, vis:0, i:3 }, cx, cy, s*.88, wet, 0);
+    if (kind==='pipes') P(7, false);
+    else if (kind==='water') P(10, true);
+    else if (kind==='locked'){ lockedRim(s*.06, s*.06, s*.88); P(3, false); }
+    else if (kind==='rock') rock(c, cx, cy, s*.9, 3);
+    else if (kind==='plant') plant(c, cx, cy, s*.9, 1, 0);
+    else if (kind==='leak'){ pipe({ base:10, vis:0, i:3 }, cx - s*.2, cy, s*.7, true, 0); splash(cx + s*.15, cy, 1, 0, s*.7, 0); }
+    else if (kind==='pump'){ hill(c, cx, cy, s); windmill(s*.62, s*.18, s*.9, true, 0); }
+    else if (kind==='hot'){ c.fillStyle = '#e3c98f'; c.beginPath(); c.roundRect(s*.06, s*.06, s*.88, s*.88, s*.14); c.fill(); cracks(s*.06, s*.06, s*.88, 5); sun(c, cx, cy, s*.7); }
+    g = save;
+  }
 }

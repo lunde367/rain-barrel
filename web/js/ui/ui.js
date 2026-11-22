@@ -13,7 +13,7 @@ import { Save, starsEarned } from '../save.js';
 import { G, startLevel, turn, undo, applyHint, solveAll, place, pickUp } from '../engine/game.js';
 import { LEVELS, WORLDS, PARTS, SOURCES } from '../data/levels.js';
 import { FREE_HINTS, HINTS_FROM, JAR_MAX, VERSION } from '../data/config.js';
-import { resize, cellAt, flashTile, drawIcon, drawPiece, setSelected } from '../render/board.js';
+import { resize, cellAt, flashTile, drawIcon, drawPiece, setSelected, tileRect, BADGE } from '../render/board.js';
 import { IC_HOME } from './markup.js';
 
 export let screen = 'home';
@@ -38,8 +38,17 @@ const msg = t => { $('msg').textContent = t; };
 const coach = createCoach({ onFinish(){ Save.data.tutorialDone = true; Save.commit(); } });
 
 // ---------- home screen ----------
+let sub = 'menu';
+// Android's back button: results or a level → home; How to play → Settings; Settings → home.
+// Returns false on the home screen itself, so the app can step aside like any other app.
+export function goBack(){
+  if (screen==='play'){ showMenu(); return true; }
+  if (sub==='help'){ showSettings(); return true; }
+  if (sub==='settings'){ showMenu(); return true; }
+  return false;
+}   // which home page is showing: menu, settings or help (for the back button)
 function home(html){
-  screen = 'home'; coach.stop();
+  screen = 'home'; sub = 'menu'; coach.stop();
   $('app').classList.add('home-mode'); closeOverlay();
   const h = $('home'); h.innerHTML = html; h.hidden = false; window.scrollTo(0,0);
   paintDev();
@@ -59,8 +68,9 @@ export function showMenu(){
     }
     const lvls = LEVELS.filter(l => l.wi===wi).map(l => { const ok=unlocked(l.gi), st=Save.data.stars[l.id]||0;
       return `<button class="lv${G.LV&&G.LV.gi===l.gi?' cur':''}" data-lv="${l.gi}" ${ok?'':'disabled'}><b>${l.li+1}. ${l.name}</b>
-        ${ok?`<span class="stars">${starStr(st)}</span>`:`<span class="lv-lock">${l.shed?`Opens at ${l.needTotal} ★`:l.wi===0?'Play 1 first':'Locked'}</span>`}</button>`; }).join('');
-    const blurb = Wd.shed ? `${Wd.blurb}. You have ${mainStars()} ★.` : Wd.blurb;
+        ${ok?`<span class="stars">${starStr(st)}</span>`:`<span class="lv-lock">${l.shed?`Opens at ${l.needTotal} ★`:ICON.lock}</span>`}</button>`; }).join('');
+    const blurb = Wd.shed ? `${Wd.blurb}. You have ${mainStars()} ★.`
+      : wi===0 && !devMode && !tutorialDone() ? `${Wd.blurb}. Finish ${LEVELS[0].name} to open the rest.` : Wd.blurb;
     return `<div class="chap"><header><canvas data-icon="${Wd.icon}" width="88" height="88"></canvas>
       <span><b>${Wd.name}</b><small>${blurb}</small></span></header><div class="lvls">${lvls}</div></div>`;
   };
@@ -87,10 +97,35 @@ export function showMenu(){
     ${devMode?'<p class="devnote">Test mode is on: every level is unlocked, and each level has a Solve button. Tap the title 7 times to turn it off.</p>':''}`);
   for (const c of $('home').querySelectorAll('canvas[data-icon]')) drawIcon(c, c.dataset.icon);
 }
+// How to play: every piece and rule in one place, since the in-level tips only show once.
+const HELP = [
+  ['pipes','Channels','Tap a piece to turn it a quarter turn. Water flows the moment pieces line up. Pieces come as straights, corners, T-splits and crosses.'],
+  ['plant','Plants','Get water to every plant to finish the level.'],
+  ['barrel','Water','Water starts at the barrel (or a hose, pond, river or well). Each channel tile uses 1 drop. Some barrels hold a set number of drops: the water count at the top shows what’s left.'],
+  ['leak','Leaks','An opening that points at nothing spills 2 drops. Turn pieces so every opening leads somewhere.'],
+  ['locked','Stuck pieces','A stone rim means the piece can’t be turned.'],
+  ['rock','Rocks','Nothing goes through a rock. Find a way around.'],
+  ['hot','Sun-baked ground','Water crossing cracked, sunny ground uses 3 drops instead of 1.'],
+  ['cow','Cows','A cow drinks 2 drops from a channel that runs past it.'],
+  ['pump','Hills and pumps','Water only flows downhill or on level ground; the ▲ numbers show how high the land is. A windmill pump lifts water up one level.'],
+  ['cactus','Cactuses','Keep them dry. If any channel points water at a cactus, the level isn’t solved.'],
+  ['tray','Tray pieces','Tap a piece in the tray, then an empty dirt patch to place it. Tap the arrow in a placed piece’s corner to put it back.'],
+  ['link','Linked pieces','Pieces with the same colored flower turn together.'],
+];
+function showHelp(){
+  home(`<div class="home-head"><button class="btn ghost icon" data-go="settings" aria-label="Back">${ICON.back}</button><h2>How to play</h2></div>
+    <div class="help-list">${HELP.map(([k,t,d]) => `<div class="help-row"><canvas data-icon="${k}" width="88" height="88"></canvas><span><b>${t}</b><small>${d}</small></span></div>`).join('')}</div>
+    <div class="help-stars"><b>Stars</b>
+      <p>★ Water every plant.<br>★ Use no more water than the best route.<br>★ Finish within par: the fewest taps that can win.</p>
+      <p>Hints start at ${WORLDS[0].name} ${HINTS_FROM+1}: one free hint per level, then hints from your hint jar (every new 3-star level adds one), then an optional ad.</p></div>`);
+  for (const c of $('home').querySelectorAll('canvas[data-icon]')) drawIcon(c, c.dataset.icon);
+  sub = 'help';
+}
 function showSettings(){
   const s = Save.data.settings;
   home(`<div class="home-head"><button class="btn ghost icon" data-go="menu" aria-label="Back">${ICON.back}</button><h2>Settings</h2></div>
     <div class="set-list">
+      <div class="set-row"><span><b>How to play</b><small>Every piece and rule, with pictures</small></span><button class="btn ghost small" data-go="help">Open</button></div>
       <div class="set-row"><span><b>Sound effects</b></span><button class="btn ghost small" data-go="set" data-k="sfx">${s.sfx?'On':'Off'}</button></div>
       <div class="set-row"><span><b>Music</b></span><button class="btn ghost small" data-go="set" data-k="music">${s.music?'On':'Off'}</button></div>
       <div class="set-row"><span><b>Vibration</b></span><button class="btn ghost small" data-go="set" data-k="haptics">${s.haptics!==false?'On':'Off'}</button></div>
@@ -98,6 +133,7 @@ function showSettings(){
       <div class="set-row"><span><b>Erase progress</b><small>Clears every star. Tap twice to confirm.</small></span><button class="btn ghost small" data-go="erase" id="eraseBtn">Erase</button></div>
     </div>
     <p class="devnote"><a href="support.html">Help</a> · <a href="privacy.html">Privacy</a> · Rain Barrel ${VERSION}</p>`);
+  sub = 'settings';
 }
 
 // ---------- playing a level ----------
@@ -115,7 +151,7 @@ export function play(gi){
   const has = kind => G.S.tiles.some(t => kind==='cactus' ? t.type==='cactus' : kind==='tray' ? t.slot : t.link);
   const TIPS = {
     cactus:['🌵','Keep the cactus dry','Cacti hate water. If any channel pours onto one, the level isn’t solved.'],
-    tray:['🧺','Pieces in the tray','Tap a piece in the tray, then tap an empty dirt patch to place it. Tap a placed piece to turn it; press and hold to put it back.'],
+    tray:['🧺','Pieces in the tray','Tap a piece in the tray, then tap an empty dirt patch to place it. Tap a placed piece to turn it; tap the little arrow in its corner to put it back.'],
     linked:['🌸','Linked pieces','Pieces with the same colored flower turn together. Fixing one can turn another the wrong way!'],
   };
   for (const k of Object.keys(TIPS)) if (has(k) && !Save.data.seen[k+'Tip']){
@@ -223,7 +259,7 @@ function showWin(w){
 let eraseArmed = false, playerTurned = false;
 export function initUI(){
   // Tap: turn a piece, or place the selected tray piece on an empty slot.
-  // Press and hold a placed piece to put it back in the tray.
+  // Tap the arrow in a placed piece's corner (or press and hold it) to put it back in the tray.
   let press = null;
   $('board').addEventListener('pointerdown', e => {
     if (screen!=='play' || !$('over').hidden || e.target.closest('button')) return;
@@ -234,7 +270,11 @@ export function initUI(){
       else msg('Pick a piece from the tray first, then tap an empty dirt patch.');
       return;
     }
-    if (T.type==='pipe' && T.from!=null){ press = { i, timer:setTimeout(() => { press = null; pickUp(i); }, 450) }; return; }
+    if (T.type==='pipe' && T.from!=null){
+      // the little arrow in the corner puts the piece back; press and hold anywhere on it works too
+      const R = tileRect(i), lx = (e.clientX - R.x)/R.s, ly = (e.clientY - R.y)/R.s;
+      if (lx > 1-BADGE && ly < BADGE){ pickUp(i); Audio.play('tap'); return; }
+      press = { i, timer:setTimeout(() => { press = null; pickUp(i); }, 450) }; return; }
     turn(i);
   });
   const release = turnIt => { if (!press) return; clearTimeout(press.timer); const i = press.i; press = null; if (turnIt) turn(i); };
@@ -256,6 +296,7 @@ export function initUI(){
     const go = b.dataset.go;
     if (go==='menu') showMenu();
     else if (go==='settings') showSettings();
+    else if (go==='help') showHelp();
     else if (go==='retry') play(G.LV.gi);
     else if (go==='next') play(G.LV.gi+1);
     else if (go==='fold'){ const n=+b.dataset.part, part=b.closest('.part'); const open=!part.classList.contains('open'); part.classList.toggle('open', open); b.setAttribute('aria-expanded', open); if (b.dataset.later) peek[n]=open; else { Save.data.fold[n]=open; Save.commit(); } }
@@ -286,7 +327,12 @@ export function initUI(){
   });
   on('soaked', () => msg('Oh no, the cactus got wet! Cacti need to stay dry.'));
   on('locked', () => { Audio.play('denied'); msg('That piece has a stone rim: it is stuck in place.'); });
-  on('dry', () => msg('The barrel ran dry before the water got there!'));
+  on('dry', () => {   // say where the water went, so the player knows what to fix
+    const S = G.S, f = S.flow, dry = S.plants - f.watered.size, cows = f.drank.size, leaks = f.leaks.length;
+    const went = [cows && `${cows===1?'a cow':`${cows} cows`} drank ${cows*2}`, leaks && `${leaks===1?'a leak':`${leaks} leaks`} spilled ${leaks*2}`].filter(Boolean);
+    const plants = dry===1 ? '1 plant is' : `${dry} plants are`;
+    msg(`The barrel ran dry and ${plants} still thirsty.${went.length ? ` Of ${S.cap} drops, ${went.join(' and ')}.` : ' Try a shorter route.'}`);
+  });
   on('uphill', () => msg('A red ▲ means water can’t flow uphill there.'));
   on('moo', () => { if (G.S.cap!==Infinity) msg('A cow took a drink: 2 drops gone.'); });
   on('win', w => {
