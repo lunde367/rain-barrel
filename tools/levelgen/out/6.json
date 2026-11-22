@@ -1,0 +1,227 @@
+[
+ {
+  "rows": [
+   "├ ┼ . P ─ ┘ ┬ .",
+   "┌a ─b ─ ┴b ─a ─c ┐ ┴",
+   "│ ┼ │ . ┼ ┌ P └",
+   "│c ┌ ─ ─ ─ ┘ ┌ ┬a",
+   "S └ C ┤ ┐ ─ ┌ │",
+   ". C ┤ ┘ # ┤ ─ ┌",
+   "└b ├ ┼ ┴ ┐ . . ┼",
+   ". ┴ │c ┼ ┴ . . ."
+  ],
+  "src": "barrel",
+  "cap": 9,
+  "score": 27.8,
+  "effort": 83,
+  "size": "8x8",
+  "used": [
+   "decoy shortcut (cows)",
+   "junctions",
+   "decoy fill",
+   "linked pieces",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   ". ┌ S . ┴ ┌ ┐",
+   "│b ├b ┼ # ┼ ┘ ┴",
+   ". │ ┬ # ┴ ┼ ┴",
+   "┌ ┼ ─ ─ ┴a ┬ ┐a",
+   "│b ┬ . ┌ ┼a P │",
+   "│ . │ # . . │",
+   "P │ ┬ ┤ │ ┼ P"
+  ],
+  "src": "pond",
+  "score": 45.5,
+  "effort": 1762,
+  "size": "7x7",
+  "used": [
+   "junctions",
+   "decoy fill",
+   "linked pieces"
+  ]
+ },
+ {
+  "rows": [
+   "└ ┐ S ─ ─ ┐ . .",
+   "┌a ┼ ─ ┴ ┤ │a ┼ ┤",
+   "# ┼ ┼ │ . │ └ ┘",
+   "┤ ┴ . │ . │a ─ ┤",
+   "┌ ┘ ─ # ┌ ┴ ┐ └",
+   "P ─ ─b ─ ┤b ┼ P ├",
+   "┼ . ┘ ─ ┌ ┘ ─ ┘",
+   "┼ ┤ │b # ┴ . . ┘"
+  ],
+  "src": "barrel",
+  "score": 46.2,
+  "effort": 3690,
+  "size": "8x8",
+  "used": [
+   "junctions",
+   "decoy fill",
+   "linked pieces"
+  ]
+ },
+ {
+  "rows": [
+   ". ┐ . ┌ P ┘ .",
+   "┼ ┬ . ┐ │ ├ ┴",
+   "┐a │ . ─ │ │ ─",
+   ". . ┌ │ │ ┤ │",
+   "┴ │ ┘b ┬ │b . .",
+   "S ─ ─ ─ ┼a ─ ┬",
+   "┬ ┌ ┌ ├ ─ ├ │",
+   "┴ . ┼ ┴ └ . P"
+  ],
+  "src": "barrel",
+  "score": 49.4,
+  "effort": 6791,
+  "size": "7x8",
+  "used": [
+   "junctions",
+   "decoy fill",
+   "linked pieces"
+  ]
+ },
+ {
+  "rows": [
+   "# ├ ┤ # ┬ │b ┤",
+   "└ ┴ P ┬ ┬ . ┬",
+   "┼ . │ . ┘ ┴ ┘",
+   "┘ ├ ┴a ┴ ─ ─ S",
+   "┌ ┘ ─ ├a . ┌ ─",
+   "│b # ┌ ┼ ┌ ┌ ┘",
+   "P ─ ─ ─ ─ ┘ C"
+  ],
+  "src": "barrel",
+  "score": 49.8,
+  "effort": 3664,
+  "size": "7x7",
+  "used": [
+   "decoy shortcut (cows)",
+   "junctions",
+   "decoy fill",
+   "linked pieces"
+  ]
+ },
+ {
+  "rows": [
+   "┐ S ├ . . ├ #",
+   "┐ │ . ┐ . . ┼",
+   "┤b ├b ├ ┘ │ ├ └",
+   "┼ │ . ┤ . ┌ #",
+   "├ └ ┐ ┐a . ┘ ┌",
+   "│ . ┼ ─ ┬a P ┬",
+   "┌ ─ └ ┐ # ┘ ─",
+   "┐ ┐ ┬ P ─ ┐ ┴"
+  ],
+  "src": "barrel",
+  "cap": 16,
+  "score": 53.3,
+  "effort": 5290,
+  "size": "7x8",
+  "used": [
+   "junctions",
+   "decoy fill",
+   "linked pieces",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "┴ │ ┘ # ┼ ─ P",
+   "┌a ─ ─ ┐ ┬b . │",
+   "S # ┬ └ ┬ ─a ┴b",
+   "└a └ ┐ ┴ │ ┘ ┼",
+   "C └ ─ ┐ ├b ┐ ┐",
+   "┬ ┘ │ └ P │ ┤",
+   "│ └ ┌ ┬ │ P .",
+   "┘ ─ ┬ # ┌ ┌ ┘"
+  ],
+  "src": "barrel",
+  "cap": 20,
+  "score": 60.6,
+  "effort": 6813,
+  "size": "7x8",
+  "used": [
+   "decoy shortcut (cows)",
+   "junctions",
+   "decoy fill",
+   "linked pieces",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "S ┬a ┌ ─ ┐ . . .",
+   ". └c ┐ ┴ ┼ # │ ┘",
+   "─ ┐ ┴ ─ ─b ┼b ─c P",
+   "┬ ┼ ┬b ─ . ┤ ┼a │",
+   "┬ ─ # ┼ ┐ │a ┐ .",
+   "└ │ ─ # . P ─ └",
+   "│ ┤ ─c ┼ . ┐ ┘ .",
+   "┘ ┌ │ ├ ┌ ├ ┼ ."
+  ],
+  "src": "barrel",
+  "cap": 18,
+  "score": 60.8,
+  "effort": 13584,
+  "size": "8x8",
+  "used": [
+   "junctions",
+   "decoy fill",
+   "linked pieces",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "│ ┐c │ P ┼ ┬ ─",
+   "# ┬b ┴a ├ P C ┤",
+   ". . ┼ ├ └a ┐ .",
+   "│ ├ . │b ┘ │ ┬",
+   "┌ ─ ─b ┤ └ └ ┐",
+   "P . ┴b │ ├ ┴ │",
+   "├ # │c │c ┴ ┼ ─",
+   "┤ . ─ └a ─a ┬c S"
+  ],
+  "src": "barrel",
+  "cap": 16,
+  "score": 64.7,
+  "effort": 44062,
+  "size": "7x8",
+  "used": [
+   "decoy shortcut (cows)",
+   "junctions",
+   "decoy fill",
+   "linked pieces",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "┬ ─ ┌ ┐ ├ ├ P │",
+   "P ─ ┴a ┴ ┬ ┬ ┤ ┴a",
+   "│ │c ┼ ┼c P ┘ ├a └",
+   "└ ┐ └ ┤ ─ ─b │b ┬",
+   "C │ C . . ┼ ├ ┐c",
+   "┘ └ ─ ─ ┐ # ┐b │c",
+   "┼ ┤ ┤ ┤ └ ┐ ┼ │b",
+   "┴ # ┌ └ . └a │ S"
+  ],
+  "src": "barrel",
+  "cap": 19,
+  "score": 67.3,
+  "effort": 60001,
+  "size": "8x8",
+  "used": [
+   "decoy shortcut (cows)",
+   "junctions",
+   "decoy fill",
+   "linked pieces",
+   "limited barrel"
+  ]
+ }
+]

@@ -154,3 +154,10 @@
 .rate-box{ background:rgba(0,0,0,.05); border-radius:var(--r-md); padding:10px 12px; display:flex; flex-direction:column; gap:4px; align-items:center; font-size:.9rem; width:100%; box-sizing:border-box }
 .rate-box .row{ display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin-top:4px }
 .devnote a{ color:inherit }
+/* Small phones (iPhone SE): let Hint take the spare room so its label fits */
+@media (max-width:360px){
+  .controls{ gap:4px }
+  .controls .btn.icon{ min-width:38px; padding-inline:6px }
+  .controls .btn.ghost:not(.icon){ padding-inline:8px }
+  .controls .btn.main{ padding-inline:8px }
+}

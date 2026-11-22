@@ -1,0 +1,239 @@
+[
+ {
+  "rows": [
+   "┬ ┴ ─ P ┐ ┘ .",
+   "┤ ─ . X │ ┤ ┐",
+   "└ . ┬ ┬ │ P ┤",
+   "# ├ ┼ ─ └ ┤ │",
+   "┐ │ │ └ │ │ X",
+   "│ # ─ ─ ┬ │ │",
+   "# ┴ ┼ ┌ ─ ┴ ├",
+   ". S ─ ┘ ┴ X └"
+  ],
+  "src": "barrel",
+  "cap": 14,
+  "score": 36.6,
+  "effort": 586,
+  "size": "7x8",
+  "used": [
+   "sun-baked patch",
+   "junctions",
+   "decoy fill",
+   "stay-dry cactus",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "└ ┐ # ┬ ─ S │",
+   "┘ X ┌ ┘ ┼ ─ C",
+   "┤ ┬ ┘ ─ ─ │ ┴",
+   "X │ ┼ . ┌ ┘ ├",
+   "┌ │ │ │ │ . .",
+   "┼ ├ ─ P │ . ─",
+   "┐ └ P ─ ┘! │ ."
+  ],
+  "src": "barrel",
+  "score": 43.4,
+  "effort": 956,
+  "size": "7x7",
+  "used": [
+   "decoy shortcut (cows)",
+   "sun-baked patch",
+   "junctions",
+   "decoy fill",
+   "stay-dry cactus"
+  ]
+ },
+ {
+  "rows": [
+   "│ . # ┐ ┘ ┬ .",
+   "└ ┬ # P ─ ┴ ┴",
+   "┤ ┌ P ┴ ─ ┤ X",
+   "│ └ . │ │ ├ ┐",
+   "┴ ┘ ┐ . ┘ └ ┤",
+   "┬ ┬ # ┴ └ . S",
+   "┼ ┘ . ─ . ┴ ┐",
+   "┌ └ ┘ └ ├ ┬ ┬"
+  ],
+  "src": "barrel",
+  "cap": 9,
+  "score": 43.9,
+  "effort": 1629,
+  "size": "7x8",
+  "used": [
+   "sun-baked patch",
+   "junctions",
+   "decoy fill",
+   "stay-dry cactus",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "│ └ ├ . ┤ ┴ ┬",
+   ". . . P ┬ P #",
+   "│ ┌! ─ ┘ │ ┴ └",
+   "├ │ ┤ ┤ │ X ┐",
+   "# │! C ┤ ┤ ├ ─",
+   "C ─ ┤ ┌ ┘ ┴ │",
+   "┐ S ─ ┘ X ├ └"
+  ],
+  "src": "barrel",
+  "cap": 10,
+  "score": 46.2,
+  "effort": 1671,
+  "size": "7x7",
+  "used": [
+   "decoy shortcut (cows)",
+   "sun-baked patch",
+   "junctions",
+   "decoy fill",
+   "stay-dry cactus",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "┘ ┘ ├ ┤ ┤ # ─",
+   "├ . . ┼ P ┼ ┘",
+   "┴ ┤ . └ │ ┼ │",
+   "X X ┴ ┬ │ # ┐",
+   "┌ ─ ┴ ─ ┼ ┐ ┌",
+   "S │! ─! ┐ ┌ └ ┐",
+   "┬ ─ . └ ─ ─ P",
+   "│ . . │ C C ┼"
+  ],
+  "src": "pond",
+  "score": 46.6,
+  "effort": 1900,
+  "size": "7x8",
+  "used": [
+   "decoy shortcut (cows)",
+   "sun-baked patch",
+   "junctions",
+   "decoy fill",
+   "stay-dry cactus"
+  ]
+ },
+ {
+  "rows": [
+   "┼ ├ ┐ S ┬ ┐ │ ┤",
+   "┴ ┼ ┐ . ┴ ┤ ┼ ┤",
+   "│ ┼ ┼ ┼ ┼ │ ┘ ┴",
+   "┘ ┤ ┼ └ # └ ┐ ┌",
+   "┘ ─ . ├ . ├ ├ ┐",
+   "└ # ┘ ┘ ┬ │ ┼ P",
+   "┘ # P ─ ─ ─ ┘ X"
+  ],
+  "src": "barrel",
+  "cap": 18,
+  "score": 46.7,
+  "effort": 2892,
+  "size": "8x7",
+  "used": [
+   "sun-baked patch",
+   "junctions",
+   "decoy fill",
+   "stay-dry cactus",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "# X ┼ # ┼ ┼ ┐",
+   "┌ ┼ ┴ ├ ─ ─ ┐",
+   "P ┬ ┴ ┘ ┤ └ │",
+   "└ ┤ X ┌ ┌ │ S",
+   "│ │ X ┬ . . ┬",
+   "P │ ┤ ─ ┼ ┘ ┌",
+   "└ ┤ X ┴ ┤ ┼ ├",
+   "P ┘ ┴ ─ . . ┘"
+  ],
+  "src": "barrel",
+  "cap": 19,
+  "score": 46.9,
+  "effort": 1848,
+  "size": "7x8",
+  "used": [
+   "sun-baked patch",
+   "junctions",
+   "decoy fill",
+   "stay-dry cactus",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "┤ ┘ ─ ─ ┌ P .",
+   ". └ ┼ ├ ┴ ─ P",
+   ". ├ X │ ┘ ┘ .",
+   ". ├ X │ ┤ │ ┤",
+   "├ ┤ ┐ │ ┼ # .",
+   "─ # # ┤ ┌ ┴ ┬",
+   "─ │ X │ ┴ . └",
+   "┐ ┌ ┤ └ S # ."
+  ],
+  "src": "barrel",
+  "cap": 14,
+  "score": 47.6,
+  "effort": 3269,
+  "size": "7x8",
+  "used": [
+   "sun-baked patch",
+   "junctions",
+   "decoy fill",
+   "stay-dry cactus",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "C ┌ ─ ─ ─ ─ ┐ C",
+   "┌ P ┬ ┐ ┼ ┐ │! └",
+   "┤ X ├ ┼ ─ ┐ │! ┬",
+   "P ┬ ┴ ┘ ┴ │ └ ┐!",
+   "─ P ┬ ┌ X ├ ┐ │",
+   "┬ ┼ ┴ # ┐ ┬ │ │",
+   "┐ ├ ┬ ┼ ┬ ┤ ┤ │",
+   "┬ ┼ . ┌ ┼ . S └"
+  ],
+  "src": "barrel",
+  "cap": 18,
+  "score": 62.4,
+  "effort": 60001,
+  "size": "8x8",
+  "used": [
+   "decoy shortcut (cows)",
+   "sun-baked patch",
+   "junctions",
+   "decoy fill",
+   "stay-dry cactus",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "┴ ┴ X X ┘ ┘ P ┘",
+   "┌ ┴ ┬ ─ ┴ ─ ┼ ├",
+   "S │ # X ┼ └ └ ┐",
+   "─! C ┐ ┘ ┐ ┘ ┬ │",
+   "│ ┤ ┤ ├ ┼ ┬ ┌ ┤",
+   "└ ┐ │ ┴ ┼ ┼ │ P",
+   "┌ └ ─ ┐ ┌ ┬ │ │!",
+   "└ ┬ C └! ┐! . P │",
+   "┼ │ └ ┼ └ ─! ─ ┘"
+  ],
+  "src": "pond",
+  "score": 70.9,
+  "effort": 60001,
+  "size": "8x9",
+  "used": [
+   "decoy shortcut (cows)",
+   "sun-baked patch",
+   "junctions",
+   "decoy fill",
+   "stay-dry cactus"
+  ]
+ }
+]

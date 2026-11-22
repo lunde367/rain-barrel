@@ -1,0 +1,157 @@
+[
+ {
+  "rows": [
+   "┴ ┐ ┴ ┌ ─ P",
+   "├ ┌ # ├ P │",
+   "┘ ├ ┌ ┘ ─ │",
+   ". ┌ ┤ ┼ ┌ ┘",
+   "# ├ ┘ C │ C",
+   "┼ │ ┘ ─ ┘ .",
+   "┘ └ S C ─ ."
+  ],
+  "src": "barrel",
+  "cap": 13,
+  "score": 32.4,
+  "effort": 357,
+  "size": "6x7",
+  "used": [
+   "decoy shortcut (cows)",
+   "junctions",
+   "decoy fill",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   ". . │ └ ├ #",
+   "P ─ ┐ C ─ .",
+   "│ . │ C ┤ ┼",
+   "│ ├ │ C ┴ ┌",
+   "└ ┐ └ ─ ┘ ─",
+   ". ┴ ─ ─ S ."
+  ],
+  "src": "barrel",
+  "cap": 9,
+  "score": 32.5,
+  "effort": 247,
+  "size": "6x6",
+  "used": [
+   "decoy shortcut (cows)",
+   "junctions",
+   "decoy fill",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "┌ ┐ . └ . ├",
+   "└ ┼ . ─ │ ─",
+   "─ ┤ ─ . ┬ .",
+   "P ─ ┐ ┌ . ┤",
+   "│ ┴ │ C ┬ └",
+   "│ ─ └ ─ ┘ C",
+   "└ ─ ┬ ─ S ."
+  ],
+  "src": "barrel",
+  "cap": 8,
+  "score": 34.7,
+  "effort": 321,
+  "size": "6x7",
+  "used": [
+   "decoy shortcut (cows)",
+   "junctions",
+   "decoy fill",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "# ┴ ├ # P ┐",
+   "┴ . . ┴ │ ┬",
+   "│ ┌ ─ ┴ ┴ P",
+   "┌ │ ─ # ┌ │",
+   ". │ . C C │",
+   "┬ │ ┌ ─ ─ ┘",
+   "│ S └ . └ │"
+  ],
+  "src": "barrel",
+  "cap": 10,
+  "score": 38.7,
+  "effort": 583,
+  "size": "6x7",
+  "used": [
+   "decoy shortcut (cows)",
+   "junctions",
+   "decoy fill",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "┴ ┌ ─ ─ ─ ─ ┐",
+   "┐ P ┌ P C # │",
+   "┼ ├ ┘ . . ├ │",
+   ". ├ P # . ┼ │",
+   "┌ │ ┴ │ │ C │",
+   "┴ └ ┐ ┤ . ├ ─",
+   "┬ ┬ └ ─ ┴ ─ S",
+   "┐ ┴ │ ┼ ┴ ┌ ┬"
+  ],
+  "src": "barrel",
+  "cap": 13,
+  "score": 44.4,
+  "effort": 2200,
+  "size": "7x8",
+  "used": [
+   "decoy shortcut (cows)",
+   "junctions",
+   "decoy fill",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "┐ S ┐ ┼ ┬ . . .",
+   "│ ─ └ ┐ ┐ ┴ ┼ .",
+   "│ │ ┤ │ ┤ ┬ . ┴",
+   "│ │ ┼ ├ ─ P ┐ ┤",
+   "│ │ ┐ └ ┐ ┘ ┤ ┬",
+   "│ └ ┬ ─ ├ P ┤ ─",
+   "│ │ ├ ┴ P ┤ ┬ ┤",
+   "└ ─ ─ ─ ┘ C ├ ┴"
+  ],
+  "src": "barrel",
+  "cap": 9,
+  "score": 46.9,
+  "effort": 2111,
+  "size": "8x8",
+  "used": [
+   "decoy shortcut (cows)",
+   "junctions",
+   "decoy fill",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "│ ├ │ └ P . .",
+   "# ┴ ┬ ┴ ├ P ┬",
+   ". ┬ │ ┌ ┘ ┘ C",
+   "┐ ┴ ┌ ┘ │ ┬ ┘",
+   "┌ ├ ┘ ┐ │ C ┼",
+   "# │ ┴ C │ ─ ─",
+   "# S │ ─ ┘ ┴ ├"
+  ],
+  "src": "barrel",
+  "cap": 10,
+  "score": 61.7,
+  "effort": 60001,
+  "size": "7x7",
+  "used": [
+   "decoy shortcut (cows)",
+   "junctions",
+   "decoy fill",
+   "limited barrel"
+  ]
+ }
+]

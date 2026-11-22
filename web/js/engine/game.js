@@ -24,6 +24,16 @@ export function prepare(LV, seed){
   S.tray = [];
   for (const t of S.tiles) if (t.tray){ S.tray.push({ base:t.base, rot:0, used:false, home:t.i }); t.type='slot'; t.base=0; }
   for (const b of S.extra) S.tray.push({ base:b, rot:0, used:false, home:-1 });
+  // A baked start (data/starts.js, made by tools/bake-starts.mjs) skips the scramble and the par
+  // search, which can take a while on big boards on a phone.
+  if (LV.start){
+    S.tiles.forEach((t, i) => { if (t.type==='pipe' && !t.locked && LV.start.rot[i] != null) t.rot = LV.start.rot[i]; });
+    S.tray = LV.start.tray.map(([base, rot, home]) => ({ base, rot, used:false, home }));
+    S.par = LV.start.par;
+    S.taps = 0; S.history = []; S.done = false; S.hints = 0;
+    S.flow = flow(S);
+    return S;
+  }
   const scramble = () => { for (let tries=0; tries<60; tries++){
     const groups = {};
     S.tiles.forEach(t => { if (t.type!=='pipe' || t.locked) return;
@@ -61,8 +71,11 @@ export function prepare(LV, seed){
   return S;
 }
 
+// The scramble's seed comes from the level's id, so moving a level doesn't change its start.
+export const seedOf = LV => [...(LV.id || LV.name)].reduce((h, ch) => (h*31 + ch.charCodeAt(0)) >>> 0, 7);
+
 export function startLevel(gi){
-  const LV = LEVELS[gi], S = prepare(LV, gi*9973+7);
+  const LV = LEVELS[gi], S = prepare(LV, seedOf(LV));
   G.LV = LV; G.S = S;
   emit('levelStart', LV);
   return S;

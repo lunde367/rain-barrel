@@ -20,10 +20,10 @@ export let screen = 'home';
 // Unlocking: a world opens once you have enough stars from the world before it.
 // Inside an open world every level is playable in any order; only the tutorial (Spring Meadow 1) must come first.
 // The Puzzle Shed sits outside that chain: each bonus level opens at a total number of stars from the main worlds.
-const worldStars = wi => LEVELS.filter(l => l.wi===wi).reduce((a,l) => a+(Save.data.stars[l.gi]||0), 0);
-const mainStars = () => LEVELS.filter(l => !l.lab && !l.shed).reduce((a,l) => a+(Save.data.stars[l.gi]||0), 0);
+const worldStars = wi => LEVELS.filter(l => l.wi===wi).reduce((a,l) => a+(Save.data.stars[l.id]||0), 0);
+const mainStars = () => LEVELS.filter(l => !l.lab && !l.shed).reduce((a,l) => a+(Save.data.stars[l.id]||0), 0);
 const worldOpen = wi => devMode || WORLDS[wi].shed || (!WORLDS[wi].lab && (wi===0 || (worldOpen(wi-1) && worldStars(wi-1) >= WORLDS[wi].need)));
-const tutorialDone = () => (Save.data.stars[0]||0) > 0;
+const tutorialDone = () => (Save.data.stars[LEVELS[0].id]||0) > 0;
 const unlocked = gi => { if (devMode) return true; const L=LEVELS[gi];
   if (L.shed) return mainStars() >= L.needTotal;
   if (!worldOpen(L.wi)) return false; return !(L.wi===0 && L.li>0 && !tutorialDone()); };
@@ -44,7 +44,7 @@ function home(html){
   paintDev();
 }
 function nextLevel(){
-  const i = LEVELS.findIndex(l => !l.lab && !l.shed && unlocked(l.gi) && !(Save.data.stars[l.gi]>0));
+  const i = LEVELS.findIndex(l => !l.lab && !l.shed && unlocked(l.gi) && !((Save.data.stars[l.id]||0)>0));
   return i < 0 ? null : LEVELS[i];
 }
 export function showMenu(){
@@ -56,16 +56,16 @@ export function showMenu(){
         <span><b>${Wd.name}</b><small>${reach ? `Collect ${Wd.need} ★ in ${prev.name} to open` : `Open ${prev.name} first`}</small></span></header>
         ${reach ? `<div class="need"><div class="need-bar"><i style="width:${Math.round(have/Wd.need*100)}%"></i></div><span>★ ${have}/${Wd.need}</span></div>` : ''}</div>`;
     }
-    const lvls = LEVELS.filter(l => l.wi===wi).map(l => { const ok=unlocked(l.gi), st=Save.data.stars[l.gi]||0;
+    const lvls = LEVELS.filter(l => l.wi===wi).map(l => { const ok=unlocked(l.gi), st=Save.data.stars[l.id]||0;
       return `<button class="lv${G.LV&&G.LV.gi===l.gi?' cur':''}" data-lv="${l.gi}" ${ok?'':'disabled'}><b>${l.li+1}. ${l.name}</b>
         ${ok?`<span class="stars">${starStr(st)}</span>`:`<span class="lv-lock">${l.shed?`Opens at ${l.needTotal} ★`:l.wi===0?'Play 1 first':'Locked'}</span>`}</button>`; }).join('');
     const blurb = Wd.shed ? `${Wd.blurb}. You have ${mainStars()} ★.` : Wd.blurb;
     return `<div class="chap"><header><canvas data-icon="${Wd.icon}" width="88" height="88"></canvas>
       <span><b>${Wd.name}</b><small>${blurb}</small></span></header><div class="lvls">${lvls}</div></div>`;
   };
-  const parts = PARTS.filter(P => !P.lab || devMode).map(P => {
+  const parts = PARTS.filter(P => (!P.lab || devMode) && WORLDS.some(w => w.part===P.n)).map(P => {
     const ws = WORLDS.map((w,i) => [w,i]).filter(([w]) => w.part===P.n);
-    const lv = LEVELS.filter(l => WORLDS[l.wi].part===P.n), got = lv.reduce((a,l) => a+(Save.data.stars[l.gi]||0), 0);
+    const lv = LEVELS.filter(l => WORLDS[l.wi].part===P.n), got = lv.reduce((a,l) => a+(Save.data.stars[l.id]||0), 0);
     const open = Save.data.fold[P.n] !== false;
     return `<section class="part${open?' open':''}" style="--part:${P.tint}">
       <button class="part-head" data-go="fold" data-part="${P.n}" aria-expanded="${open}"><span class="part-n">${P.label || `Part ${P.n}`}</span>
@@ -145,7 +145,7 @@ function paintHud(){
   $('hint').hidden = !hintsHere; $('undo').classList.toggle('grow', !hintsHere);
   const free = S.hints < FREE_HINTS;
   const jar = Save.data.jar || 0;
-  $('hint').innerHTML = free ? 'Free hint' : jar > 0 ? `Hint <small class="ad-tag">jar ${jar}</small>` : 'Hint <small class="ad-tag">ad</small>';
+  $('hint').innerHTML = free ? 'Hint <small class="ad-tag">free</small>' : jar > 0 ? `Hint <small class="ad-tag">jar ${jar}</small>` : 'Hint <small class="ad-tag">ad</small>';
   paintTray();
   $('hint').disabled = S.done;
 }
@@ -288,11 +288,11 @@ export function initUI(){
   on('win', w => {
     const before = WORLDS.map((_,i) => worldOpen(i));
     const L = LEVELS[w.gi];
-    if (!L.lab && w.stars===3 && (Save.data.stars[w.gi]||0) < 3 && (Save.data.jar||0) < JAR_MAX){
+    if (!L.lab && w.stars===3 && (Save.data.stars[LEVELS[w.gi].id]||0) < 3 && (Save.data.jar||0) < JAR_MAX){
       Save.data.jar = (Save.data.jar||0) + 1;
       setTimeout(() => toast(`<span class="t-icon">💡</span><span><b>+1 hint in your jar</b><small>You have ${Save.data.jar} saved. They’re used before any ad.</small></span>`), 1400);
     }
-    if ((Save.data.stars[w.gi]||0) < w.stars){ Save.data.stars[w.gi] = w.stars; }
+    if ((Save.data.stars[LEVELS[w.gi].id]||0) < w.stars){ Save.data.stars[LEVELS[w.gi].id] = w.stars; }
     w.opened = WORLDS.map((_,i) => i).filter(i => !before[i] && worldOpen(i));
     if (w.opened.length) setTimeout(() => toast(`<span class="t-icon">★</span><span><b>${WORLDS[w.opened[0]].name} is open!</b><small>New puzzles are waiting on the home screen.</small></span>`), 900);
     Save.data.stats.wins++; Save.commit();

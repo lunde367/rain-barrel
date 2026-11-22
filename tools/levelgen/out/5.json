@@ -1,0 +1,201 @@
+[
+ {
+  "rows": [
+   "# ┴ ┐ . ┘ P .",
+   "S ┴ ─ ┐ . │+ .",
+   "─ ┬ ┘ ├+ ─ ┘ ┼",
+   "│ C ┴ │ ─ │ │",
+   "└ ┐ │ │ _ ┬ ┌",
+   "C │ . │ ┘ . ┬",
+   "C └ ─ P └ . ."
+  ],
+  "src": "barrel",
+  "extra": [
+   "┐"
+  ],
+  "score": 37.3,
+  "effort": 793,
+  "size": "7x7",
+  "used": [
+   "decoy shortcut (cows)",
+   "junctions",
+   "decoy fill",
+   "tray pieces"
+  ]
+ },
+ {
+  "rows": [
+   "P ─ ─ ┬ ┬ P ┤",
+   "┤ ┼ ─ │ │ ┼ ┴",
+   "┤ ├ P ┴+ ┴+ ┐ ├",
+   "┤ ├ │ ─ └ └ ┐",
+   "# ┌ │ ├ ┌ ┼ │",
+   "┤ C └ ─ ─ ┘ │",
+   "┬ ├ ┬ C ┤ S ┘"
+  ],
+  "src": "barrel",
+  "extra": [
+   "┐"
+  ],
+  "cap": 14,
+  "score": 37.9,
+  "effort": 640,
+  "size": "7x7",
+  "used": [
+   "decoy shortcut (cows)",
+   "junctions",
+   "decoy fill",
+   "tray pieces",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "┤ S . . ┘ ┘",
+   "│ │ ┴ . │ ┼",
+   "┼ │ _ │ _ ┴",
+   "# ├ ─+ ┬+ ─ P",
+   "┬ ┬ ─ P # .",
+   "# ┼ ├ # . ┴",
+   "┐ └ ┌ ─ ┐ ┐"
+  ],
+  "src": "barrel",
+  "extra": [
+   "└"
+  ],
+  "cap": 8,
+  "score": 45.8,
+  "effort": 1731,
+  "size": "6x7",
+  "used": [
+   "junctions",
+   "decoy fill",
+   "tray pieces",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "┐ # S ┼ . .",
+   ". ┐ └ ┐ ─ ┬",
+   "┼ │ ┬ │ . ┌",
+   ". └ ┐ ┼ ┬ .",
+   ". . _ │+ P #",
+   ". ─ ┼ │+ _ ┌",
+   ". . ┼ └ P ┴"
+  ],
+  "src": "barn",
+  "extra": [
+   "┘"
+  ],
+  "score": 47.4,
+  "effort": 1754,
+  "size": "6x7",
+  "used": [
+   "junctions",
+   "decoy fill",
+   "tray pieces"
+  ]
+ },
+ {
+  "rows": [
+   "┌ ┌ ─ ─ S └",
+   "┬ │+ ┬ ┐ ─ ┌",
+   "┌ ┤+ └ │ │ ┼",
+   "├ ┘ ┌ ┌ │ ┐",
+   "│ ┐ ─ ┌ ┘ ┘",
+   "│ ┬ C │ ┘ .",
+   "├ P ┌ ┘ │ ┴",
+   "P ─ ┘ ┤ . ├"
+  ],
+  "src": "barrel",
+  "extra": [
+   "┘"
+  ],
+  "cap": 11,
+  "score": 52.6,
+  "effort": 4030,
+  "size": "6x8",
+  "used": [
+   "decoy shortcut (cows)",
+   "junctions",
+   "decoy fill",
+   "tray pieces",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "┤ P ┬ . ┼ ┼",
+   ". │ ┤ └ ┬ ┴",
+   "├ └ ┬ ┴ ─ S",
+   "┌ ┬ ┘+ ┬ _ ┌",
+   "│ P ┤ └ . ┴",
+   "P └ ┘ ┼ # ─"
+  ],
+  "src": "barrel",
+  "cap": 11,
+  "score": 52.7,
+  "effort": 5023,
+  "size": "6x6",
+  "used": [
+   "junctions",
+   "decoy fill",
+   "tray pieces",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "S ┬ ┐ ┐ ┌ . .",
+   "┬ ┬ └ ┐ # ┤ ┤",
+   "┴ ┤ │ └ ┐ ┤ ┘",
+   "┼ ─ _ _ ├ P ┴",
+   "│ ┐ ┬ ┘ └+ ─ P",
+   "─ ┐ ├ # ┬ ┴ ┼",
+   "┘ # │ ┌ ┘ │ ─",
+   ". # . └ ┘ └ ┐"
+  ],
+  "src": "barrel",
+  "extra": [
+   "└",
+   "┘",
+   "─"
+  ],
+  "cap": 11,
+  "score": 53.3,
+  "effort": 8268,
+  "size": "7x8",
+  "used": [
+   "junctions",
+   "decoy fill",
+   "tray pieces",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "┐ # ┤ │ ┴ │ S",
+   "┐ ┘ # . _ ┬ ┘",
+   "│ ─ │ . # ├ ┌",
+   "┴ ┼ ┬ ┼ ┼ │+ #",
+   ". ┘ ┬ ┤ ┌+ ┘ ┴",
+   "┘ ┴ ┼ ┌+ ┤ _ ┬",
+   "├ ┴ P ┘ P . │"
+  ],
+  "src": "barrel",
+  "extra": [
+   "┘"
+  ],
+  "cap": 13,
+  "score": 53.9,
+  "effort": 7794,
+  "size": "7x7",
+  "used": [
+   "junctions",
+   "decoy fill",
+   "tray pieces",
+   "limited barrel"
+  ]
+ }
+]

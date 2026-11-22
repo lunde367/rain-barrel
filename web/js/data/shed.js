@@ -3,96 +3,93 @@
 // needTotal = total stars from the main worlds needed to open the level.
 export const SHED = [
  {
-  "name": "Shady Patch",
+  "name": "Twisty Lane",
   "rows": [
-   ". ┌ ─ ─ ─ ┬ P",
-   ". │ ├ . . │ │",
-   ". │ . . . │ │",
-   ". │ . . . P │",
-   "└ │ ├ C C C │",
-   ". S │ ─ ─ ─! ┘"
+   "┌ ┌ ─ ─ ─ S . .",
+   "┬ ┼ ├ # │ ─! ─ .",
+   "│ │ ┬ └ . │ . ┴",
+   "P │ └ ─ # │ . ├",
+   "│ P . ─ │ │! . #",
+   "└ ─ ─! ─ ─ ┘ C └",
+   "C ├ C # ┬ ┤ ┬ .",
+   "# │ . . └ │ ┐ ─",
+   "┘ ┤ ├ ┘ ┐ ┬ ┼ ┬"
   ],
   "src": "barrel",
-  "cap": 11,
+  "cap": 13,
   "note": "A bonus puzzle for star collectors.",
-  "needTotal": 18
+  "needTotal": 40
  },
  {
-  "name": "Sleepy Ditch",
+  "name": "Quiet Hollow",
   "rows": [
-   ". # │ . . # #",
-   "# . . ─ ┌ . ┐",
-   "┬ . . . P . .",
-   "┌ ─ ─ ─ ┴ P #",
-   "│ ┌! ─! ─ ─ ┘ C",
-   "S └ ─ . . ┐ ┐"
+   "├ P ┌ ─ ─ P └ ┴",
+   ". ├ ┘ . . │ └ .",
+   "┬ │ # ┼ . │ . ┤",
+   "├ │ ┌ ─ # │ └ ┤",
+   "│ │ ┐ ┌ ─ ┘ ┬ ┬",
+   "┌ │ ┌ ┘ C ┼ └ ┌",
+   "─ ├ │ ┬ . └ ┴ ─",
+   ". │ │ │ . ┐ ┤ ┼",
+   "┘ S └ │ . ┤ ┴ ├"
   ],
   "src": "barrel",
-  "cap": 6,
+  "cap": 13,
   "note": "A bonus puzzle for star collectors.",
-  "needTotal": 24
+  "needTotal": 80
  },
  {
-  "name": "Quiet Ditch",
+  "name": "Mossy Lane",
   "rows": [
-   "┬ P ─ ─ ┬ ─ P ┘",
-   "┐ . ┌ . │ ├ │ .",
-   "┌ # . ┤ │ . │! C",
-   ". . ┘ ─ │ . │ C",
-   ". . . . │ . │ C",
-   "┘ ├ . ┴ └ S └ ."
+   "┘ S ─ ─ ┐ . ┼ ┼",
+   "└ ─ # ┬ └ ─ ┬ ├",
+   "┐ │ ┴ . # ┴ │ .",
+   "┌ │ ┐ ─ └ ├ ┼ ├",
+   ". │ ┼ ─ │ │ P ─",
+   "┤ └! ┐ ┌ ├ │ │ .",
+   ". . │ C P ┘ │ .",
+   "│ . └ ─ ─ ─! ┘ ┤",
+   "└ ├ ├ ┬ ┐ ├ ┌ ┤"
   ],
   "src": "barrel",
-  "cap": 9,
   "note": "A bonus puzzle for star collectors.",
-  "needTotal": 30
+  "needTotal": 120
  },
  {
-  "name": "Windy Corner",
+  "name": "Lazy Terrace",
   "rows": [
-   ". . # ┐ S ┐ . .",
-   "┴ ─ ┬ │ . │ ┴ .",
-   ". . C │ . │ ┴ ┐",
-   "┌ ─ ─ ┘ . │ . .",
-   "P ─ ┬ ─ ─ ┘ . #",
-   "┐ ┬ │ ─ ├ ├ . .",
-   "┐ ├ P . . │ . └"
+   ". . ┌ ┬ P ┴ └ └",
+   "┤ ┼ ├ . │ ─ . #",
+   "┌ ─ ┬ ┬ ┴ P │ ┴",
+   "│ │ └ ┘ ┌ ┘ C ├",
+   "│ ┌ ─ ─! ┘ C . .",
+   "┤ │! ├ . C ┼ . ┬",
+   "S └! ┤ ├ . │ ┤ ┘",
+   "─ ┐ . . . ┼ ┬ └",
+   "│ ┼ └ └ ├ . ┤ ┘"
   ],
   "src": "barrel",
+  "cap": 13,
   "note": "A bonus puzzle for star collectors.",
-  "needTotal": 36
+  "needTotal": 160
  },
  {
-  "name": "Twisty Ditch",
+  "name": "Thirsty Spring",
   "rows": [
-   ". . ┌ ─! ─ ─ ┐!",
-   ". ┌ ┘ P ─ ┐ │!",
-   ". │ ├ . P ┤ │!",
-   "C │! C . ├ │ P",
-   ". │ . . └ └ ┤",
-   "# ─ │ # ─ ┬ │",
-   ". S ─ ─ ─ ─ ┘"
+   "┼ ├ S │ │ └ ┼ │",
+   "┤ │ ─ └ ┬ ─ . ┤",
+   "├ │ │! ├ ┘ ┐ ┼ ├",
+   "│ │ │ ┴ ┌ ┼ ─ ┬",
+   "┐ ├ │! C ┐ ┼ ─ ┘",
+   "┌ │ │ C ┐ └ # │",
+   ". │ └ ┐ ─ │ ├ #",
+   "┤ │ . │ ┐ . ┌ ┼",
+   "─ └ ┼ P ┌ P ┤ ┘",
+   "┬ ┼ └ ─ ┘ ┬ . └"
   ],
   "src": "barrel",
-  "cap": 12,
+  "cap": 20,
   "note": "A bonus puzzle for star collectors.",
-  "needTotal": 42
- },
- {
-  "name": "Mossy Field",
-  "rows": [
-   ". . ┴ ┌ # ┬ . #",
-   ". ┘ . ─ . . . .",
-   "P ─ ┬ ─ ─ ─ ─ S",
-   "├ # │ └ . ┌ ─ ┌",
-   ". . │ . C │! . C",
-   ". . │ ┬ . │ ┬ │",
-   "P ─ ┤ ─ ┌ ┘! ┴ ┴",
-   "┐ ┴ P ─! ┘ . . ."
-  ],
-  "src": "barrel",
-  "cap": 11,
-  "note": "A bonus puzzle for star collectors.",
-  "needTotal": 48
+  "needTotal": 200
  }
 ];

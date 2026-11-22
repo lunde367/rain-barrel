@@ -2,11 +2,11 @@
 //   node tools/check-levels.mjs
 import { LEVELS } from '../web/js/data/levels.js';
 import { parse, flow, solved } from '../web/js/engine/flow.js';
-import { prepare } from '../web/js/engine/game.js';
+import { prepare, seedOf } from '../web/js/engine/game.js';
 let bad = 0;
 for (const L of LEVELS){
   const S0 = parse(L), sol = flow(S0);
-  const S = prepare(L, L.gi*9973+7);
+  const S = prepare(L, seedOf(L));
   // (the barrel may run dry on a side branch after every plant has its water; that still counts)
   const ok = solved(S0, sol) && !solved(S, S.flow);
   if (!ok) bad++;

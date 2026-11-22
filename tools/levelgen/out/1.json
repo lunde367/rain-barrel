@@ -1,0 +1,202 @@
+[
+ {
+  "rows": [
+   "│ │ . ┼ . └",
+   ". ├ │ ┌ ─ S",
+   "┐ # ┌ ┘ . ─!",
+   "┬ . │ ┌! ─! ┘!",
+   ". ─ │ │! ┤ .",
+   ". . P ┘! ├ ."
+  ],
+  "src": "barrel",
+  "cap": 6,
+  "score": 24.7,
+  "effort": 75,
+  "size": "6x6",
+  "used": [
+   "decoy shortcut (hot)",
+   "sun-baked patch",
+   "junctions",
+   "decoy fill",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "# # └ ┤ ┬ .",
+   "┌! ─! ─! P ┐ ┤",
+   "│! ┐ ┼ ┘ │ ├",
+   "│! ┴ ┐ │ │ │",
+   "─! ┐ └ ─ │ ├",
+   "S ─ ─ ┬ ┘ ┘"
+  ],
+  "src": "barn",
+  "score": 26.9,
+  "effort": 191,
+  "size": "6x6",
+  "used": [
+   "decoy shortcut (hot)",
+   "sun-baked patch",
+   "junctions",
+   "decoy fill"
+  ]
+ },
+ {
+  "rows": [
+   "│ ┌ . . ┬ ┴ .",
+   "┐ │ . ┌! ─! ─! ┐!",
+   "┐ # ┴ │! P ┐ P",
+   "┴ ┴ # │! ┤ └ ┤",
+   "# ┌! ─! ┘! ┤ . │",
+   ". │! ┬ ┬ └ ┐ │",
+   "# ─! │ ┼ . ─ │",
+   "┐ S ─ ─ ─ ─ ┘"
+  ],
+  "src": "barrel",
+  "cap": 11,
+  "score": 27.2,
+  "effort": 91,
+  "size": "7x8",
+  "used": [
+   "decoy shortcut (hot)",
+   "sun-baked patch",
+   "junctions",
+   "decoy fill",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "┌! ─! P . ─ ┐",
+   "│! ┬ │ # ┘ .",
+   "│! ┌ │ ┬ # #",
+   "─! . │ ─ . ┌",
+   "S ┬ ┘ . . │",
+   ". ┬ . . ┘ #"
+  ],
+  "src": "barrel",
+  "cap": 7,
+  "score": 27.3,
+  "effort": 149,
+  "size": "6x6",
+  "used": [
+   "decoy shortcut (hot)",
+   "sun-baked patch",
+   "junctions",
+   "decoy fill",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "┤ ┼ ┌ ─ ─ S",
+   "┌ ─ ┘ ┌! ─! ┌!",
+   "│ ┬ ┌! ┘! ┴ ┐",
+   "├ │ │! ┴ ┘ ┼",
+   "P ─! ┘! # └ #",
+   "├ . └ ┘ ┤ ┬"
+  ],
+  "src": "well",
+  "score": 29.9,
+  "effort": 191,
+  "size": "6x6",
+  "used": [
+   "decoy shortcut (hot)",
+   "sun-baked patch",
+   "junctions",
+   "decoy fill"
+  ]
+ },
+ {
+  "rows": [
+   "┬ . ┌ . ┼ ┬ .",
+   "┴ ┴ . ┼ ┘ ┼ ┐",
+   "┌ ┴ ─ ─ ─ ─ ┐",
+   "S │! ─! ┐! # ├ │",
+   "┌ ┼ . │! ┌ ┴ │",
+   "─ ┐ . └! ─! ─! P",
+   ". ┤ └ ─ . ┤ ┐"
+  ],
+  "src": "barrel",
+  "score": 32.1,
+  "effort": 307,
+  "size": "7x7",
+  "used": [
+   "decoy shortcut (hot)",
+   "sun-baked patch",
+   "junctions",
+   "decoy fill"
+  ]
+ },
+ {
+  "rows": [
+   "# S ─ ┐ ─ ┬ # ┴",
+   "┘ ─! ┤ └ ┐ ┐ ┼ ─",
+   "# │! ┐ ┤ └ ┐ ┘ │",
+   "┼ │! . │ ┬ └ ┐ ┘",
+   "│ │! ┼ . ┘ │ ├ ┐",
+   "─ └! ─! ─! ─! ─! ┌! ┤",
+   "│ ┬ ┴ ┐ └ │ │! │",
+   "└ . ─ ─ ┐ ─ └! P"
+  ],
+  "src": "barrel",
+  "cap": 15,
+  "score": 39.5,
+  "effort": 835,
+  "size": "8x8",
+  "used": [
+   "decoy shortcut (hot)",
+   "sun-baked patch",
+   "junctions",
+   "decoy fill",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "└ ┤ # # ┘ │ ┤ ┤",
+   "┴ ─ ┬ ┬ . ┤ ─ ├",
+   "┘ . │ . ├ ┘ . └",
+   "├ ┼ ┌ ─ ┬ P ─! ┐!",
+   ". ┌ ┤ ┼ └ ─ P │!",
+   "┴ │ ┌ ┴ ┼ ┌ ┌! ┘!",
+   "# │ ├ ┌! ─! ─! ┘! └",
+   "┤ S │! ┘! ┤ ┴ ┬ └"
+  ],
+  "src": "barrel",
+  "cap": 11,
+  "score": 53.9,
+  "effort": 8824,
+  "size": "8x8",
+  "used": [
+   "decoy shortcut (hot)",
+   "sun-baked patch",
+   "junctions",
+   "decoy fill",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "├ ┴ P ─! ─! ┐! ┤",
+   "┼ . │ # ┘ │! ┤",
+   "┬ . │ # ┬ └! ┘!",
+   "┼ . │ ─ ┐ ┘ S",
+   "┼ ┌ ┼ ┴ ─ ─ ┘",
+   "│ P ┬ . . . ─",
+   "┴ # ┬ ├ ─ │ ─"
+  ],
+  "src": "barrel",
+  "cap": 13,
+  "score": 57.8,
+  "effort": 9702,
+  "size": "7x7",
+  "used": [
+   "decoy shortcut (hot)",
+   "sun-baked patch",
+   "junctions",
+   "decoy fill",
+   "limited barrel"
+  ]
+ }
+]

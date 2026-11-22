@@ -1,0 +1,154 @@
+[
+ {
+  "rows": [
+   ". . P . .",
+   ". . │* . .",
+   "│ . └ ─ ┐",
+   "# . ┌ . S"
+  ],
+  "src": "barrel",
+  "score": 14.7,
+  "effort": 15,
+  "size": "5x4",
+  "used": [
+   "locked anchor",
+   "junctions",
+   "decoy fill"
+  ]
+ },
+ {
+  "rows": [
+   ". . ┌ ┌ ├",
+   ". ┐ ┴ . .",
+   "┴ ┌* ─ ─ S",
+   "# │ ┌ ─ ┌",
+   "─ P # C C"
+  ],
+  "src": "house",
+  "score": 16.3,
+  "effort": 17,
+  "size": "5x5",
+  "used": [
+   "decoy shortcut (rocks)",
+   "locked anchor",
+   "junctions",
+   "decoy fill"
+  ]
+ },
+ {
+  "rows": [
+   "┌ ┬ # # . ─",
+   ". ┌ ─ ─ ─* S",
+   "┘ │ ─ ┴ ┐ ┌",
+   "# │ # . ┬ └",
+   ". P . . . ."
+  ],
+  "src": "barrel",
+  "cap": 6,
+  "score": 17.1,
+  "effort": 33,
+  "size": "6x5",
+  "used": [
+   "locked anchor",
+   "junctions",
+   "decoy fill",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "# ┴ # . ┤ S",
+   "┘ ─ ┌ ─ ─* ┘",
+   "P ┴ ┘ . . .",
+   "# . . . . ─",
+   "# # ├ ─ . ┤"
+  ],
+  "src": "house",
+  "score": 20.2,
+  "effort": 31,
+  "size": "6x5",
+  "used": [
+   "locked anchor",
+   "junctions",
+   "decoy fill"
+  ]
+ },
+ {
+  "rows": [
+   "# ┌ ─ S . ┴",
+   "─ │ . ─ C ─",
+   "P ┤ . │ ┘ └",
+   "# │ . │ └ .",
+   "┴ │ └ │ ├ ┐",
+   "┌ └ P # ─ ."
+  ],
+  "src": "barrel",
+  "cap": 7,
+  "score": 23.5,
+  "effort": 45,
+  "size": "6x6",
+  "used": [
+   "decoy shortcut (rocks)",
+   "junctions",
+   "decoy fill",
+   "limited barrel"
+  ]
+ },
+ {
+  "rows": [
+   "┴ └ └ │ ┴ ┌ P",
+   "├ ├ ─ . ├ ├ ┘",
+   "┌ ─ ─ ─ ─ ┘ │",
+   "S └ . ─ . ┴ .",
+   "─ ┴ ─ ┬ ─ . ─",
+   ". ┐ . ┘ . ┤ │"
+  ],
+  "src": "house",
+  "score": 25.3,
+  "effort": 219,
+  "size": "7x6",
+  "used": [
+   "junctions",
+   "decoy fill"
+  ]
+ },
+ {
+  "rows": [
+   ". S └ ┐ ┴ . ┐",
+   "┐ ├ ┐ ┌ ├ ─ .",
+   "# └ ┴ ─ ─ ┬ P",
+   "┬ # ┐ ├ ┘ P └",
+   "─ ┴ ┐ └ ─ . #",
+   ". . ┬ ┼ ─ ┬ │"
+  ],
+  "src": "pond",
+  "score": 27.3,
+  "effort": 275,
+  "size": "7x6",
+  "used": [
+   "junctions",
+   "decoy fill"
+  ]
+ },
+ {
+  "rows": [
+   "┼ │ ┌ # ┼ P ┌",
+   "│ └ ┴ ─ . ┼ P",
+   "┴ ┼ ─ # . │ └",
+   "┘ ┤ # ┤ └ │ ┘",
+   "┤ ─ ┴ ┼ ┐ │ .",
+   "┬ ┬ ┐ . ┌ ┘ ┬",
+   "┴ # ┘ ┐ S ├ ─"
+  ],
+  "src": "barrel",
+  "cap": 8,
+  "score": 35.8,
+  "effort": 426,
+  "size": "7x7",
+  "used": [
+   "junctions",
+   "decoy fill",
+   "limited barrel"
+  ]
+ }
+]

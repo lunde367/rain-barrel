@@ -6,24 +6,38 @@
 // Levels with a cap always use barrels, since a barrel is what holds a set number of drops.
 
 // Worlds are the "gardens" on the home screen; parts group them like Carrot Patch's story parts.
+// Stars are saved by level id (made from the name), so levels can be reordered or added freely.
 // need = stars you must collect in the world before it to open this one (about two thirds of them).
 // Every level in an open world can be played in any order, except that Spring Meadow 1 (the tutorial) comes first.
 import { LAB } from './lab.js';
 import { SHED } from './shed.js';
+import { GENERATED } from './generated.js';
+import { levelId } from './ids.js';
+import { STARTS } from './starts.js';
 
 export const PARTS = [
   { n:1, name:'The Meadow', tint:'#4f8a3c' },
-  { n:2, name:'New ideas to test', tint:'#3a9cc4' },
-  { n:3, name:'Puzzle Shed', label:'Bonus', tint:'#6f5bd4' },   // bonus levels opened by total stars
-  { n:4, name:'Level Lab', label:'Test', tint:'#8a5aa8', lab:true },   // generated levels, test mode only
+  { n:2, name:'The Farm', tint:'#3a9cc4' },
+  { n:3, name:'The Wild Garden', tint:'#c07a2c' },
+  { n:4, name:'Puzzle Shed', label:'Bonus', tint:'#6f5bd4' },   // bonus levels opened by total stars
+  { n:5, name:'Level Lab', label:'Test', tint:'#8a5aa8', lab:true },   // generated levels to try out, test mode only
 ];
 export const WORLDS = [
   { name:'Spring Meadow', blurb:'Rocks, corners and stuck pieces', icon:'barrel', part:1, grass:['#a6cf8a','#9ec781'] },
-  { name:'Summer Heat', need:16, blurb:'Sun-baked tiles soak up water', icon:'sun', part:1, grass:['#c3cb88','#b9c17e'], hot:true },
-  { name:'Thirsty Cows', need:4, blurb:'Cows drink, barrels run dry', icon:'cow', part:2, grass:['#9ccc8f','#93c386'] },
-  { name:'Hill Country', need:6, blurb:'Water only flows downhill', icon:'hill', part:2, grass:['#a6cf8a','#9ec781'] },
+  { name:'Summer Heat', need:24, blurb:'Sun-baked tiles soak up water', icon:'sun', part:1, grass:['#c3cb88','#b9c17e'], hot:true },
+  { name:'Thirsty Cows', need:20, blurb:'Cows drink, barrels run dry', icon:'cow', part:2, grass:['#9ccc8f','#93c386'] },
+  { name:'Hill Country', need:20, blurb:'Water only flows downhill', icon:'hill', part:2, grass:['#a6cf8a','#9ec781'] },
+  { name:'Cactus Patch', need:20, blurb:'Keep every drop off the cactus', icon:'cactus', part:3, grass:['#c9cf8e','#bfc684'] },
+  { name:'Potting Shed', need:20, blurb:'Place pieces from the tray', icon:'tray', part:3, grass:['#a6cf8a','#9ec781'] },
+  { name:'Clockwork Garden', need:16, blurb:'Linked pieces turn together', icon:'link', part:3, grass:['#9ccc8f','#93c386'] },
 ];
-const DATA = [
+// Teaching notes for worlds with no hand-made level: shown on the world's first generated level.
+const INTRO = {
+  4:'Cactuses must stay dry: no channel may point water at one.',
+  5:'Some pieces start in the tray. Tap one, then tap an empty dirt slot to place it. Press and hold a placed piece to put it back.',
+  6:'Pieces with the same colored flower turn together.',
+};
+const HAND = [
  {name:"First Sip",world:0,note:"Tap a channel to turn it. Get water from the barrel to the sprout.",rows:[
   ". . . .",
   "S ─ ─ P",
@@ -32,10 +46,6 @@ const DATA = [
   "S ─ ┐ .",
   ". . │ .",
   ". . └ P"]},
- {name:"Rock Garden",src:"house",world:0,note:"Rocks block water. Find a way around them.",rows:[
-  "S ┐ # .",
-  ". │ # P",
-  ". └ ─ ┘"]},
  {name:"Two Sprouts",src:"pond",world:0,note:"A T-split sends water two ways at once.",rows:[
   ". . P . .",
   "S ─ ┴ ─ ┐",
@@ -45,34 +55,10 @@ const DATA = [
   ". ├* ─ ┐ .",
   ". │ # │ .",
   ". └ P └ P"]},
- {name:"Stray Pipes",src:"river",world:0,note:"Not every pipe is needed. Watch for leaks: they waste water.",rows:[
-  "S ─ ┐ ┘ .",
-  "┌ . │ ─ .",
-  "└ ┐ └ ─ P"]},
- {name:"Twin Barrels",world:0,note:"Two barrels, three thirsty plants.",rows:[
-  "S ─ ┐ . P",
-  ". . │ . │",
-  "P ─ ┤ . │",
-  ". . │ . S",
-  ". . P . ."]},
- {name:"Long Way Round",src:"barn",world:0,note:"The meadow's last puzzle. Sometimes the long way is the only way.",rows:[
-  "S ─ ─ ┐ # .",
-  "# # └ │ # .",
-  "┌ ─ ─ ┘* ─ .",
-  "│ # # # # .",
-  "└ ─ ┬* ─ ─ P",
-  ". . P . ┐ ."]},
  {name:"Hot Afternoon",src:"well",world:1,note:"Sun-baked tiles dry out water: each costs 3 drops. The shortest path isn't the cheapest.",rows:[
   "┌ ─ ─ ─ ─ ─ ┐",
   "│ . . . . . │",
   "S │ │! │! │! │ P"]},
- {name:"Dry Spell",src:"well",world:1,note:"Three plants and scorching ground. Make every drop count.",rows:[
-  ". . P . . .",
-  ". . │ . . .",
-  "S ─ ┴ ┐ # .",
-  "# └ . │ # .",
-  ". ┌ ─ ┴* ─! P",
-  ". P . . . ."]},
  // --- New mechanics: C = cow, cap = barrel size, digits = hill height, p = windmill pump ---
  {name:"Moo-ving Water",src:"pond",world:2,note:"Cows drink 2 drops from any channel that runs past them. Can you keep the water away from the cow?",rows:[
   "S │ ─ ┐",
@@ -105,14 +91,21 @@ const DATA = [
   "└0 ─0 ─0 ─0 ┘0"]}
 ];
 
-// The Puzzle Shed: bonus levels, each opened by total stars from the main worlds (needTotal).
-WORLDS.push({ name:'Puzzle Shed', blurb:'Hard bonus puzzles for star collectors', icon:'shed', part:3, shed:true, grass:['#a6cf8a','#9ec781'] });
-for (const L of SHED) DATA.push({ ...L, world:WORLDS.length-1, shed:true });
+// Each main world: its hand-made teaching levels first, then the generated levels (easiest first).
+const DATA = [];
+WORLDS.forEach((W, wi) => {
+  DATA.push(...HAND.filter(L => L.world===wi));
+  (GENERATED[wi] ? GENERATED[wi].levels : []).forEach((L, k) => DATA.push({ ...L, world:wi, note: L.note || (k===0 && INTRO[wi]) || '' }));
+});
 
-// Generated levels (tools/levelgen) go last, so they never shift the stars saved for real levels.
+// The Puzzle Shed: bonus levels, each opened by total stars from the main worlds (needTotal).
+WORLDS.push({ name:'Puzzle Shed', blurb:'Huge bonus puzzles for star collectors', icon:'shed', part:4, shed:true, grass:['#a6cf8a','#9ec781'] });
+for (const L of SHED) DATA.push({ ...L, world:WORLDS.length-1, shed:true, id:'shed-' + levelId(L.name) });
+
+// Level Lab: generated levels being tried out (tools/levelgen, test mode only).
 const BASE = WORLDS.length;
-for (const w of LAB.worlds) WORLDS.push({ ...w, name:`Lab: ${w.name}`, blurb:'Generated levels to try out', part:4, lab:true });
-for (const L of LAB.levels) DATA.push({ ...L, world:BASE + L.world, lab:true });
+for (const w of LAB.worlds) WORLDS.push({ ...w, name:`Lab: ${w.name}`, blurb:'Generated levels to try out', part:5, lab:true });
+for (const L of LAB.levels) DATA.push({ ...L, world:BASE + L.world, lab:true, id:'lab-' + levelId(L.name) + '-' + L.world });
 
 // Flat list with handy indexes: gi = position in the whole game, li = position in its world.
 export const SOURCES = {
@@ -120,4 +113,4 @@ export const SOURCES = {
   pond:{ name:'pond' }, river:{ name:'river' }, well:{ name:'old well' },
 };
 
-export const LEVELS = DATA.map((L, gi) => ({ ...L, gi, wi:L.world, li:DATA.slice(0, gi).filter(x => x.world===L.world).length, W:WORLDS[L.world] }));
+export const LEVELS = DATA.map((L, gi) => ({ ...L, id: L.id || levelId(L.name), start: STARTS[L.id || levelId(L.name)], gi, wi:L.world, li:DATA.slice(0, gi).filter(x => x.world===L.world).length, W:WORLDS[L.world] }));

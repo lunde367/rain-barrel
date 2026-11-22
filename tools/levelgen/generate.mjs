@@ -7,11 +7,17 @@
 //
 // A level is accepted only if it: can be solved; has at most 2 different best answers; doesn't
 // start out solved; and scores within TOLERANCE of its target.
-import { writeFileSync } from 'node:fs';
+import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'node:fs';
 import { solve } from './solver.mjs';
 import { PLAN as LAB_PLAN, SHED, TOLERANCE, TRIES, START_AT } from './curriculum.mjs';
-const ONLY = process.argv.find(a => a.startsWith('--only='));
 const PLAN = process.argv.includes('--shed') ? [SHED] : LAB_PLAN;
+// --only=0,1  make just these worlds (to run several copies side by side); each world is saved to
+// tools/levelgen/out/<n>.json. --write  then gathers every saved world into js/data/generated.js.
+const ONLY = (process.argv.find(a => a.startsWith('--only=')) || '').slice(7).split(',').filter(Boolean).map(Number);
+const WRITE = process.argv.includes('--write');
+// --more  with --only: top up worlds that came out short (the biggest boards can be too slow to
+// check), making the missing levels on boards of at most 8x8, then add them to the saved world.
+const MORE = process.argv.includes('--more'), SMALL = process.argv.includes('--small');
 import { blank, placeEnds, carvePath, lay, PATTERNS, toRows, rngFrom } from './patterns.mjs';
 import { rate } from './rate.mjs';
 import { solved } from '../../web/js/engine/flow.js';
@@ -63,7 +69,7 @@ function build(W, t, R){
 export const WHY = {};
 const no = why => { WHY[why] = (WHY[why]||0)+1; return null; };
 function finish(cand, W, t, R){
-  const r0 = solve(cand.level, { nodeLimit:60000 });
+  const r0 = solve(cand.level, { nodeLimit:150000 });
   if (!r0.solvable) return no('unsolvable'); if (r0.optimal > 2) return no('too many answers'); if (r0.min < 2) return no('too short'); if (r0.truncated) return no('too big to check');
   const level = { ...cand.level, rows: r0.rows }; if (r0.extra && r0.extra.length) level.extra = r0.extra; else delete level.extra;
   if (W.cap && R.chance(lerp(W.cap, t))){ level.cap = r0.min; level.src = 'barrel'; cand.used.push('limited barrel'); }
@@ -73,6 +79,23 @@ function finish(cand, W, t, R){
   const S = prepare(level, 1234);
   if (solved(S, S.flow)) return no('starts solved');
   return { level:{ ...level, rows:r.rows, ...(r.extra && r.extra.length ? { extra:r.extra } : {}) }, rating:r, used:cand.used };
+}
+
+// Gather the saved worlds into the real game's generated levels, with unique names.
+function writeGame(){
+  const R = rngFrom(seed), taken = new Set(), worlds = [];
+  const nameOf = () => { for (;;){ const n = `${R.pick(ADJ)} ${R.pick(NOUN)}`; if (!taken.has(n)){ taken.add(n); return n; } } };
+  PLAN.forEach((W, wi) => { const f = new URL(`${wi}.json`, OUT); if (!existsSync(f)){ console.error(`Missing world ${wi} (${W.name}): run --only=${wi} first`); process.exit(1); }
+    worlds.push({ name:W.name, levels: JSON.parse(readFileSync(f, 'utf8')).map(L => { const { score, effort, size, used, ...level } = L;
+      return { name:nameOf(), ...level, note:'', score }; }) }); });
+  writeFileSync(new URL('../../web/js/data/generated.js', import.meta.url),
+`// The real game's generated levels, made by tools/levelgen/generate.mjs from curriculum.mjs.
+// levels.js puts each world's hand-made teaching levels first, then these.
+// They're part of the real game, so only regenerate on purpose (stars are saved by level name).
+// score = difficulty from rate.mjs.
+export const GENERATED = ${JSON.stringify(worlds, null, 1)};
+`);
+  console.log(`Wrote js/data/generated.js (${worlds.reduce((a,w) => a+w.levels.length, 0)} levels)`); process.exit(0);
 }
 
 function checkPlan(){
@@ -86,11 +109,19 @@ function checkPlan(){
 }
 
 checkPlan();
-const R = rngFrom(seed), out = [], report = [];
-PLAN.forEach((W, wi) => {
-  const found = [];
-  for (let li=0; li<W.count; li++){
-    const t = W.count > 1 ? li/(W.count-1) : 0, target = W.from + (W.to-W.from)*t;
+const OUT = new URL('./out/', import.meta.url);
+if (WRITE) writeGame();
+const R = rngFrom(seed + 101*(ONLY[0] || 0)), out = [], report = [];
+PLAN.forEach((W0, wi) => { let W = W0;
+  if (ONLY.length && !ONLY.includes(wi)) return;
+  const found = [], have = MORE ? JSON.parse(readFileSync(new URL(`${wi}.json`, OUT), 'utf8')) : [];
+  const missing = W.count - have.length;
+  if (MORE){ W = { ...W, width:[W.width[0], Math.min(8, W.width[1])], height:[W.height[0], Math.min(8, W.height[1])],
+    ...(W.tray ? { tray:[2,3], slots:[1,2], spares:[1,1] } : {}) };
+    if (SMALL) W = { ...W, width:[6,7], height:[6,7], ...(W.tray ? { tray:[1,2], slots:[1,1], spares:[0,1] } : {}) }; }
+  for (let li=0; li<(MORE ? missing : W.count); li++){
+    // topping up: spread the missing levels over the harder half of the world
+    const t = MORE ? (missing > 1 ? .45 + .5*li/(missing-1) : .8) : (W.count > 1 ? li/(W.count-1) : 0), target = W.from + (W.to-W.from)*t;
     let best = null; const t0 = Date.now();
     for (let k=0; k<TRIES && Date.now()-t0 < 45000; k++){   // at most 45 seconds per level
       const c = build(W, t, R); if (!c) continue;
@@ -113,7 +144,12 @@ PLAN.forEach((W, wi) => {
     report.push(`| ${W.name} | ${li+1} | ${name} | ${best.target.toFixed(1)} | ${r.score}${best.off > TOLERANCE ? ' ⚠' : ''} | ${r.size} | ${r.pieces} | ${r.decoys} | ${r.traps} | ${r.min}${best.level.cap?` (cap ${best.level.cap})`:''} | ${best.used.join(', ') || '-'} |`);
     console.log(`${W.name} ${li+1}: ${name.padEnd(16)} score ${String(r.score).padStart(4)}  ${r.size}  ${best.used.join(', ')}`);
   });
+  if (ONLY.length && !SHED_MODE){ mkdirSync(OUT, { recursive:true });
+    const all = have.concat(found.map(b => ({ ...b.level, score:b.rating.score, effort:b.rating.effort, size:b.rating.size, used:b.used })))
+      .sort((a, b) => a.score - b.score);
+    writeFileSync(new URL(`${wi}.json`, OUT), JSON.stringify(all, null, 1)); }
 });
+if (ONLY.length && !SHED_MODE){ console.log('\nSaved worlds', ONLY.join(', '), 'to tools/levelgen/out/'); process.exit(0); }
 
 if (SHED_MODE){
   // Bonus levels for the real game. Each opens once the player has enough stars in total.

@@ -9,50 +9,49 @@
 //
 // Every number with two values is [first level, last level]; levels in between get a blend.
 // Scores come from rate.mjs (the hand-made levels score from 9 for First Sip to about 41 for Last Drops).
+// The real game's worlds, in order. Each world opens with a few hand-made teaching levels
+// (in levels.js); these generated levels follow them. `count` = generated levels in the world.
 export const PLAN = [
-  { name:'Spring Meadow', icon:'barrel', grass:['#a6cf8a','#9ec781'], count:10, from:10, to:28,
-    width:[4,7], height:[3,6], plants:[1,2], wiggle:[.5,2], decoys:[.3,.8], rocks:[.2,.08], locked:[1,0],
-    shapes:[[.4,.45,.15,0],[.25,.4,.3,.05]], junctions:[0,.3], cap:[0,.7],
-    patterns:{ decoyShortcut:[0,.3] }, penalty:'none', sources:['barrel','house','pond'] },
-  { name:'Summer Heat', icon:'sun', grass:['#c3cb88','#b9c17e'], hot:true, count:8, from:22, to:34,
-    width:[5,7], height:[5,7], plants:[1,2], wiggle:[1,2], decoys:[.6,.85], rocks:[.12,.06], locked:[0,0],
-    shapes:[[.3,.4,.25,.05],[.2,.35,.35,.1]], junctions:[.2,.4], cap:[.5,1],
-    patterns:{ decoyShortcut:[.7,1], sunPatch:[.2,.4] }, penalty:'hot', require:['hot'], sources:['well','barrel','barn'] },
-  { name:'Thirsty Cows', icon:'cow', grass:['#9ccc8f','#93c386'], count:8, from:30, to:40,
-    width:[6,8], height:[5,7], plants:[1,2], wiggle:[1,2.5], decoys:[.7,.85], rocks:[.1,.06], locked:[0,0],
-    shapes:[[.25,.4,.3,.05],[.2,.3,.4,.1]], junctions:[.25,.45], cap:[1,1],
+  { name:'Spring Meadow', icon:'barrel', grass:['#a6cf8a','#9ec781'], count:8, from:14, to:30,
+    width:[5,7], height:[4,7], plants:[1,2], wiggle:[1,2], decoys:[.5,.85], rocks:[.15,.08], locked:[1,0],
+    shapes:[[.35,.45,.2,0],[.25,.35,.35,.05]], junctions:[.1,.35], cap:[.2,.8],
+    patterns:{ decoyShortcut:[.2,.4] }, penalty:'none', sources:['barrel','house','pond'] },
+  { name:'Summer Heat', icon:'sun', grass:['#c3cb88','#b9c17e'], hot:true, count:9, from:24, to:38,
+    width:[6,8], height:[6,8], plants:[1,2], wiggle:[1,2.5], decoys:[.7,.88], rocks:[.1,.06], locked:[0,0],
+    shapes:[[.25,.4,.3,.05],[.2,.3,.4,.1]], junctions:[.25,.45], cap:[.6,1],
+    patterns:{ decoyShortcut:[.8,1], sunPatch:[.25,.4] }, penalty:'hot', require:['hot'], sources:['well','barrel','barn'] },
+  { name:'Thirsty Cows', icon:'cow', grass:['#9ccc8f','#93c386'], count:8, from:32, to:44,
+    width:[6,8], height:[6,9], plants:[1,3], wiggle:[1.5,2.5], decoys:[.75,.9], rocks:[.08,.05], locked:[0,0],
+    shapes:[[.2,.35,.35,.1],[.15,.3,.4,.15]], junctions:[.3,.5], cap:[1,1],
     patterns:{ decoyShortcut:[1,1] }, penalty:'cows', require:['cows'], sources:['barrel'] },
-  { name:'Hill Country', icon:'hill', grass:['#a6cf8a','#9ec781'], count:8, from:37, to:48,
-    width:[6,8], height:[6,8], plants:[1,2], wiggle:[1,2.5], decoys:[.7,.85], rocks:[.08,.05], locked:[0,0],
-    shapes:[[.25,.4,.3,.05],[.2,.3,.4,.1]], junctions:[.3,.45], cap:[.6,1],
-    patterns:{ decoyShortcut:[.5,.8], hills:[1,1] }, penalty:'cows', require:['hills'], pumps:[.3,.8], sources:['river','pond','barrel'] },
-
-  // Previews of the newer mechanics. `preview` worlds skip the ordering rules until we decide
-  // where they go in the real game; they still get easier-to-harder levels inside.
-  { name:'Cactus Patch', preview:true, icon:'cactus', grass:['#c9cf8e','#bfc684'], count:6, from:22, to:38,
-    width:[5,7], height:[4,6], plants:[1,2], wiggle:[1,2], decoys:[.6,.85], rocks:[.1,.06], locked:[0,0],
-    shapes:[[.3,.4,.25,.05],[.2,.35,.35,.1]], junctions:[.2,.4], cap:[.5,1],
-    patterns:{ decoyShortcut:[.3,.6] }, penalty:'cows', cactus:[2,4], require:['cactus'], sources:['well','pond','barrel'] },
-  { name:'Potting Shed', preview:true, icon:'tray', grass:['#a6cf8a','#9ec781'], count:6, from:22, to:38,
-    width:[4,6], height:[4,6], plants:[1,2], wiggle:[1,2], decoys:[.5,.8], rocks:[.12,.08], locked:[0,0],
-    shapes:[[.3,.4,.25,.05],[.2,.35,.35,.1]], junctions:[.1,.3], cap:[.5,1],
-    patterns:{}, penalty:'none', tray:[1,3], slots:[1,3], spares:[0,2], require:['tray'], sources:['barrel','house','barn'] },
-  { name:'Clockwork Garden', preview:true, icon:'link', grass:['#9ccc8f','#93c386'], count:6, from:22, to:38,
-    width:[5,7], height:[4,6], plants:[1,2], wiggle:[1,2], decoys:[.6,.85], rocks:[.1,.06], locked:[0,0],
-    shapes:[[.3,.4,.25,.05],[.2,.35,.35,.1]], junctions:[.2,.4], cap:[.5,1],
-    patterns:{}, penalty:'none', linked:[1,2], linkSize:[2,4], require:['linked'], sources:['barrel','pond','river'] },
+  { name:'Hill Country', icon:'hill', grass:['#a6cf8a','#9ec781'], count:8, from:38, to:50,
+    width:[7,8], height:[7,9], plants:[1,3], wiggle:[1.5,2.5], decoys:[.75,.9], rocks:[.06,.04], locked:[0,0],
+    shapes:[[.2,.35,.35,.1],[.15,.3,.4,.15]], junctions:[.3,.5], cap:[.7,1],
+    patterns:{ decoyShortcut:[.6,.9], hills:[1,1] }, penalty:'cows', require:['hills'], pumps:[.4,.8], sources:['river','pond','barrel'] },
+  { name:'Cactus Patch', icon:'cactus', grass:['#c9cf8e','#bfc684'], count:10, from:44, to:52,
+    width:[7,8], height:[7,9], plants:[2,3], wiggle:[1.5,2.5], decoys:[.75,.9], rocks:[.06,.04], locked:[0,0],
+    shapes:[[.2,.35,.35,.1],[.15,.3,.4,.15]], junctions:[.3,.5], cap:[.7,1],
+    patterns:{ decoyShortcut:[.6,.9], sunPatch:[.1,.2] }, penalty:'cows', cactus:[3,5], require:['cactus'], sources:['well','pond','barrel'] },
+  { name:'Potting Shed', icon:'tray', grass:['#a6cf8a','#9ec781'], count:8, from:48, to:54,
+    width:[6,8], height:[7,9], plants:[2,3], wiggle:[1.5,2.5], decoys:[.7,.88], rocks:[.08,.05], locked:[0,0],
+    shapes:[[.2,.35,.35,.1],[.15,.3,.4,.15]], junctions:[.25,.45], cap:[.7,1],
+    patterns:{ decoyShortcut:[.5,.8] }, penalty:'cows', tray:[2,4], slots:[2,3], spares:[1,2], require:['tray'], sources:['barrel','house','barn'] },
+  { name:'Clockwork Garden', icon:'link', grass:['#9ccc8f','#93c386'], count:10, from:51, to:56,
+    width:[7,8], height:[7,9], plants:[2,3], wiggle:[1.5,2.5], decoys:[.75,.9], rocks:[.06,.04], locked:[0,0],
+    shapes:[[.2,.35,.35,.1],[.15,.3,.4,.15]], junctions:[.3,.5], cap:[.7,1],
+    patterns:{ decoyShortcut:[.5,.8] }, penalty:'cows', linked:[2,3], linkSize:[2,4], require:['linked'], sources:['barrel','pond','river'] },
 ];
 
 // The Puzzle Shed: hard bonus levels for the real game, opened by total stars (needTotal, one per
 // level). Mixes the main game's mechanics on big boards. Made with: node tools/levelgen/generate.mjs --shed
-export const SHED = { name:'Puzzle Shed', icon:'shed', grass:['#a6cf8a','#9ec781'], count:6, from:40, to:52,
-  width:[7,8], height:[6,8], plants:[2,3], wiggle:[2,3], decoys:[.75,.9], rocks:[.08,.05], locked:[0,0],
+export const SHED = { name:'Puzzle Shed', icon:'shed', grass:['#a6cf8a','#9ec781'], count:8, from:50, to:60,
+  width:[8,8], height:[9,10], plants:[2,3], wiggle:[2,3], decoys:[.75,.9], rocks:[.08,.05], locked:[0,0],
   shapes:[[.2,.35,.35,.1],[.15,.3,.4,.15]], junctions:[.3,.5],
   patterns:{ decoyShortcut:[1,1], sunPatch:[.15,.25] }, penalty:'cows', cap:[.5,1], require:['cows'],
-  sources:['barrel'], needTotal:[18, 24, 30, 36, 42, 48] };
+  sources:['barrel'], needTotal:[40, 80, 120, 160, 200, 210, 215, 216] };
 
 // How close a level's score must be to its target, and how hard the generator tries.
 // A new world's first level must be at least this far up the previous world's range (0 = its first level, 1 = its last).
-export const START_AT = .6;
+export const START_AT = .5;
 export const TOLERANCE = 1.5;
 export const TRIES = 300;

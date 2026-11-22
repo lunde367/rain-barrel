@@ -14,25 +14,29 @@ const DEVICES = [
   ['android', { width:360, height:640 }, 3],
 ];
 // A well-played save: most levels have 3 stars, so every garden and the Puzzle Shed show.
-const SAVE = () => ({ v:1, stars:Array.from({ length:22 }, (_, i) => (i % 5 === 3 ? 2 : 3)), tutorialDone:true, jar:3,
+let IDS = [];   // every real level's id, filled in from levels.js below
+const SAVE = () => ({ v:2, stars:Object.fromEntries(IDS.map((id, i) => [id, i % 5 === 3 ? 2 : 3])), tutorialDone:true, jar:3,
   settings:{ sfx:false, music:false, haptics:true, calm:true }, fold:{},
   seen:{ leakTip:true, hintTip:true, cactusTip:true, trayTip:true, linkedTip:true }, stats:{ wins:40, hints:6 } });
 // Open a level and turn some of its pieces the right way (through the game, like taps), so the
 // screenshot shows water on its way. Done levels get their results card hidden for the picture.
-const midway = async (p, gi, fixes) => p.evaluate(async ({ gi, fixes }) => {
-  const ui = await import('/web/js/ui/ui.js'), g = await import('/web/js/engine/game.js');
-  ui.play(gi); const S = g.G.S;
+// `which` = a level's name, or 'world:N' for the middle level of world N.
+const midway = async (p, which, fixes) => p.evaluate(async ({ which, fixes }) => {
+  const ui = await import('/web/js/ui/ui.js'), g = await import('/web/js/engine/game.js'), { LEVELS } = await import('/web/js/data/levels.js');
+  const inWorld = which.startsWith('world:') ? LEVELS.filter(l => l.wi === +which.slice(6)) : null;
+  ui.play((inWorld ? inWorld[Math.floor(inWorld.length/2)] : LEVELS.find(l => l.name === which)).gi); const S = g.G.S;
   let n = 0; for (const i of S.solOrder){ if (n >= fixes || S.done) break; const t = S.tiles[i];
     if (t.type==='pipe' && !t.locked){ const k = g.needed(S, t); if (k){ for (let j=0; j<k; j++) g.turn(i); n++; } } }
-}, { gi, fixes });
+}, { which, fixes });
 const SCENES = [
-  ['1-pasture', async p => midway(p, 12, 99)],                 // Pasture Problem, solved: cows and the long way round
-  ['2-long-way', async p => midway(p, 7, 5)],                  // Long Way Round, halfway there
-  ['3-hills', async p => midway(p, 15, 99)],                   // High Pasture solved: hills, a pump, cows
+  ['1-pasture', async p => midway(p, 'Pasture Problem', 99)],  // solved: cows and the long way round
+  ['2-summer', async p => midway(p, 'world:1', 5)],            // a big Summer Heat board, halfway there
+  ['3-hills', async p => midway(p, 'High Pasture', 99)],       // solved: hills, a pump, cows
   ['4-gardens', async p => { await p.evaluate(async () => (await import('/web/js/ui/ui.js')).showMenu()); }],
-  ['5-shed', async p => midway(p, 16, 99)],                    // Puzzle Shed: a big bonus board
+  ['5-shed', async p => midway(p, 'world:7', 99)],             // Puzzle Shed: a huge bonus board
 ];
 (async () => {
+  IDS = (await import('../../web/js/data/levels.js')).LEVELS.filter(l => !l.lab).map(l => l.id);
   const b = await chromium.launch(process.env.CHROME_PATH ? { executablePath:process.env.CHROME_PATH } : {});
   for (const [name, viewport, scale] of DEVICES){
     const ctx = await b.newContext({ viewport, deviceScaleFactor:scale, isMobile:true, hasTouch:true });
