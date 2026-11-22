@@ -22,6 +22,7 @@ export let screen = 'home';
 // The Puzzle Shed sits outside that chain: each bonus level opens at a total number of stars from the main worlds.
 const worldStars = wi => LEVELS.filter(l => l.wi===wi).reduce((a,l) => a+(Save.data.stars[l.id]||0), 0);
 const mainStars = () => LEVELS.filter(l => !l.lab && !l.shed).reduce((a,l) => a+(Save.data.stars[l.id]||0), 0);
+const peek = {};   // locked parts the player has unfolded to look at (not saved)
 const worldOpen = wi => devMode || WORLDS[wi].shed || (!WORLDS[wi].lab && (wi===0 || (worldOpen(wi-1) && worldStars(wi-1) >= WORLDS[wi].need)));
 const tutorialDone = () => (Save.data.stars[LEVELS[0].id]||0) > 0;
 const unlocked = gi => { if (devMode) return true; const L=LEVELS[gi];
@@ -66,10 +67,13 @@ export function showMenu(){
   const parts = PARTS.filter(P => (!P.lab || devMode) && WORLDS.some(w => w.part===P.n)).map(P => {
     const ws = WORLDS.map((w,i) => [w,i]).filter(([w]) => w.part===P.n);
     const lv = LEVELS.filter(l => WORLDS[l.wi].part===P.n), got = lv.reduce((a,l) => a+(Save.data.stars[l.id]||0), 0);
-    const open = Save.data.fold[P.n] !== false;
-    return `<section class="part${open?' open':''}" style="--part:${P.tint}">
-      <button class="part-head" data-go="fold" data-part="${P.n}" aria-expanded="${open}"><span class="part-n">${P.label || `Part ${P.n}`}</span>
-        <b>${P.name}</b><span class="part-meta">★ ${got}/${lv.length*3}</span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    // A part with nothing playable yet starts folded, with a lock. Tapping it still peeks inside
+    // (just for now: the fold is only saved for parts you can play).
+    const later = !devMode && ws.every(([w,i]) => w.shed ? lv.every(l => starsEarned() < l.needTotal) : !worldOpen(i));
+    const open = later ? !!peek[P.n] : Save.data.fold[P.n] !== false;
+    return `<section class="part${open?' open':''}${later?' later':''}" style="--part:${P.tint}">
+      <button class="part-head" data-go="fold" data-part="${P.n}" data-later="${later?1:''}" aria-expanded="${open}"><span class="part-n">${P.label || `Part ${P.n}`}</span>
+        <b>${P.name}</b><span class="part-meta">${later ? `${ICON.lock} Locked` : `★ ${got}/${lv.length*3}`}</span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <div class="part-body">${ws.map(([w,i]) => worldHtml(w,i)).join('')}</div></section>`;
   }).join('');
   const nx = nextLevel(), goal = nextGoal();
@@ -254,7 +258,7 @@ export function initUI(){
     else if (go==='settings') showSettings();
     else if (go==='retry') play(G.LV.gi);
     else if (go==='next') play(G.LV.gi+1);
-    else if (go==='fold'){ const n=+b.dataset.part, part=b.closest('.part'); const open=!part.classList.contains('open'); part.classList.toggle('open', open); b.setAttribute('aria-expanded', open); Save.data.fold[n]=open; Save.commit(); }
+    else if (go==='fold'){ const n=+b.dataset.part, part=b.closest('.part'); const open=!part.classList.contains('open'); part.classList.toggle('open', open); b.setAttribute('aria-expanded', open); if (b.dataset.later) peek[n]=open; else { Save.data.fold[n]=open; Save.commit(); } }
     else if (go==='set'){ const s=Save.data.settings, k=b.dataset.k; s[k] = k==='haptics' ? s[k]===false : !s[k]; Save.commit(); Audio.setSettings(s); setHaptics(s.haptics!==false);
       document.documentElement.classList.toggle('reduce-motion', !!s.calm); paintSound(); showSettings(); }
     else if (go==='rate'){ const a=b.dataset.a; answerRating(Save, a); const box=$('rateBox'); if (box) box.innerHTML = a==='ok' ? '<b>Thank you!</b>' : '<span>No problem.</span>'; return; }

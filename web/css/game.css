@@ -161,3 +161,7 @@
   .controls .btn.ghost:not(.icon){ padding-inline:8px }
   .controls .btn.main{ padding-inline:8px }
 }
+/* Parts you can't play yet: folded by default, with a lock instead of the star count */
+.part.later .part-meta{ display:inline-flex; align-items:center; gap:4px }
+.part.later .part-meta svg{ width:14px; height:14px }
+.part.later .part-head b{ opacity:.75 }
