@@ -100,7 +100,7 @@ WORLDS.forEach((W, wi) => {
 
 // The Puzzle Shed: bonus levels, each opened by total stars from the main worlds (needTotal).
 WORLDS.push({ name:'Puzzle Shed', blurb:'Huge bonus puzzles for star collectors', icon:'shed', part:4, shed:true, grass:['#a6cf8a','#9ec781'] });
-for (const L of SHED) DATA.push({ ...L, world:WORLDS.length-1, shed:true, id:'shed-' + levelId(L.name) });
+for (const L of SHED) DATA.push({ ...L, world:WORLDS.length-1, shed:true, id: L.id || 'shed-' + levelId(L.name) });
 
 // Level Lab: generated levels being tried out (tools/levelgen, test mode only).
 const BASE = WORLDS.length;

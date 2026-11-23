@@ -175,3 +175,12 @@
 .help-stars b{ font-family:var(--display); font-size:1rem }
 .help-stars p{ margin:.4em 0 0; color:var(--muted) }
 .lv-lock svg{ width:16px; height:16px; opacity:.7 }
+/* While playing, tips pop up at the bottom so they never cover the board or the buttons */
+body.playing .toasts{ top:auto; bottom:calc(env(safe-area-inset-bottom,0px) + 12px) }
+/* HUD pills keep their label on one line; on small phones they shrink a little instead */
+.chip small{ white-space:nowrap }
+@media (max-width:360px){
+  .app:not(.home-mode) .chip{ gap:4px; padding-inline:8px }
+  .app:not(.home-mode) .chip small{ font-size:.6rem; letter-spacing:.03em }
+  .app:not(.home-mode) .chip .dot{ width:10px; height:10px }
+}

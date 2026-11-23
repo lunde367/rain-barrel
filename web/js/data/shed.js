@@ -4,7 +4,8 @@
 // needTotal = total stars from the main worlds needed to open the level.
 export const SHED = [
  {
-  "name": "Twisty Lane",
+  "name": "Toolbox",
+  "id": "shed-twisty-lane",
   "rows": [
    "┌ ┌ ─ ─ ─ S . .",
    "┬ ┼ ├ # │ ─! ─ .",
@@ -22,7 +23,8 @@ export const SHED = [
   "needTotal": 40
  },
  {
-  "name": "Quiet Hollow",
+  "name": "Rusty Hinges",
+  "id": "shed-quiet-hollow",
   "rows": [
    "├ P ┌ ─ ─ P └ ┴",
    ". ├ ┘ . . │ └ .",
@@ -40,7 +42,8 @@ export const SHED = [
   "needTotal": 80
  },
  {
-  "name": "Mossy Lane",
+  "name": "Cobweb Corner",
+  "id": "shed-mossy-lane",
   "rows": [
    "┘ S ─ ─ ┐ . ┼ ┼",
    "└ ─ # ┬ └ ─ ┬ ├",
@@ -57,7 +60,8 @@ export const SHED = [
   "needTotal": 120
  },
  {
-  "name": "Lazy Terrace",
+  "name": "Potting Bench",
+  "id": "shed-lazy-terrace",
   "rows": [
    ". . ┌ ┬ P ┴ └ └",
    "┤ ┼ ├ . │ ─ . #",
@@ -75,7 +79,8 @@ export const SHED = [
   "needTotal": 160
  },
  {
-  "name": "Thirsty Spring",
+  "name": "Lantern Light",
+  "id": "shed-thirsty-spring",
   "rows": [
    "┼ ├ S │ │ └ ┼ │",
    "┤ │ ─ └ ┬ ─ . ┤",

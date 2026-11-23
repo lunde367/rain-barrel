@@ -1,13 +1,15 @@
 // The real game's generated levels, made by tools/levelgen/generate.mjs from curriculum.mjs.
 // levels.js puts each world's hand-made teaching levels first, then these.
-// They're part of the real game, so only regenerate on purpose (stars are saved by level name).
+// They're part of the real game, so only regenerate on purpose. Stars are saved by `id`, which
+// stays fixed even if a level is renamed.
 // score = difficulty from rate.mjs.
 export const GENERATED = [
  {
   "name": "Spring Meadow",
   "levels": [
    {
-    "name": "Muddy Ditch",
+    "name": "Dandelion Dip",
+    "id": "muddy-ditch",
     "rows": [
      ". . P . .",
      ". . │* . .",
@@ -19,7 +21,8 @@ export const GENERATED = [
     "score": 14.7
    },
    {
-    "name": "Sleepy Corner",
+    "name": "Robin’s Rest",
+    "id": "sleepy-corner",
     "rows": [
      ". . ┌ ┌ ├",
      ". ┐ ┴ . .",
@@ -32,7 +35,8 @@ export const GENERATED = [
     "score": 16.3
    },
    {
-    "name": "Shady Lane",
+    "name": "Puddle Jump",
+    "id": "shady-lane",
     "rows": [
      "┌ ┬ # # . ─",
      ". ┌ ─ ─ ─* S",
@@ -46,7 +50,8 @@ export const GENERATED = [
     "score": 17.1
    },
    {
-    "name": "Pebbly Puddle",
+    "name": "Clover Corner",
+    "id": "pebbly-puddle",
     "rows": [
      "# ┴ # . ┤ S",
      "┘ ─ ┌ ─ ─* ┘",
@@ -59,7 +64,8 @@ export const GENERATED = [
     "score": 20.2
    },
    {
-    "name": "Shady Corner",
+    "name": "Tadpole Pond",
+    "id": "shady-corner",
     "rows": [
      "# ┌ ─ S . ┴",
      "─ │ . ─ C ─",
@@ -74,7 +80,8 @@ export const GENERATED = [
     "score": 23.5
    },
    {
-    "name": "Twisty Trickle",
+    "name": "Daisy Chain",
+    "id": "twisty-trickle",
     "rows": [
      "┴ └ └ │ ┴ ┌ P",
      "├ ├ ─ . ├ ├ ┘",
@@ -88,7 +95,8 @@ export const GENERATED = [
     "score": 25.3
    },
    {
-    "name": "Lazy Patch",
+    "name": "Bluebell Bend",
+    "id": "lazy-patch",
     "rows": [
      ". S └ ┐ ┴ . ┐",
      "┐ ├ ┐ ┌ ├ ─ .",
@@ -102,7 +110,8 @@ export const GENERATED = [
     "score": 27.3
    },
    {
-    "name": "Quiet Orchard",
+    "name": "April Showers",
+    "id": "quiet-orchard",
     "rows": [
      "┼ │ ┌ # ┼ P ┌",
      "│ └ ┴ ─ . ┼ P",
@@ -123,7 +132,8 @@ export const GENERATED = [
   "name": "Summer Heat",
   "levels": [
    {
-    "name": "Twisty Patch",
+    "name": "Hot Pavement",
+    "id": "twisty-patch",
     "rows": [
      "│ │ . ┼ . └",
      ". ├ │ ┌ ─ S",
@@ -138,7 +148,8 @@ export const GENERATED = [
     "score": 24.7
    },
    {
-    "name": "Twisty Spring",
+    "name": "Dry Creek",
+    "id": "twisty-spring",
     "rows": [
      "# # └ ┤ ┬ .",
      "┌! ─! ─! P ┐ ┤",
@@ -152,7 +163,8 @@ export const GENERATED = [
     "score": 26.9
    },
    {
-    "name": "Quiet Field",
+    "name": "Sunflower Row",
+    "id": "quiet-field",
     "rows": [
      "│ ┌ . . ┬ ┴ .",
      "┐ │ . ┌! ─! ─! ┐!",
@@ -169,7 +181,8 @@ export const GENERATED = [
     "score": 27.2
    },
    {
-    "name": "Quiet Trickle",
+    "name": "Lemonade Stand",
+    "id": "quiet-trickle",
     "rows": [
      "┌! ─! P . ─ ┐",
      "│! ┬ │ # ┘ .",
@@ -184,7 +197,8 @@ export const GENERATED = [
     "score": 27.3
    },
    {
-    "name": "Mossy Bend",
+    "name": "Heat Haze",
+    "id": "mossy-bend",
     "rows": [
      "┤ ┼ ┌ ─ ─ S",
      "┌ ─ ┘ ┌! ─! ┌!",
@@ -198,7 +212,8 @@ export const GENERATED = [
     "score": 29.9
    },
    {
-    "name": "Shady Gully",
+    "name": "Cracked Clay",
+    "id": "shady-gully",
     "rows": [
      "┬ . ┌ . ┼ ┬ .",
      "┴ ┴ . ┼ ┘ ┼ ┐",
@@ -213,7 +228,8 @@ export const GENERATED = [
     "score": 32.1
    },
    {
-    "name": "Sunny Field",
+    "name": "Firefly Field",
+    "id": "sunny-field",
     "rows": [
      "# S ─ ┐ ─ ┬ # ┴",
      "┘ ─! ┤ └ ┐ ┐ ┼ ─",
@@ -230,7 +246,8 @@ export const GENERATED = [
     "score": 39.5
    },
    {
-    "name": "Shady Brook",
+    "name": "Dog Days",
+    "id": "shady-brook",
     "rows": [
      "└ ┤ # # ┘ │ ┤ ┤",
      "┴ ─ ┬ ┬ . ┤ ─ ├",
@@ -247,7 +264,8 @@ export const GENERATED = [
     "score": 53.9
    },
    {
-    "name": "Dewy Spring",
+    "name": "Golden Hour",
+    "id": "dewy-spring",
     "rows": [
      "├ ┴ P ─! ─! ┐! ┤",
      "┼ . │ # ┘ │! ┤",
@@ -268,7 +286,8 @@ export const GENERATED = [
   "name": "Thirsty Cows",
   "levels": [
    {
-    "name": "Dusty Field",
+    "name": "Milking Time",
+    "id": "dusty-field",
     "rows": [
      "┴ ┐ ┴ ┌ ─ P",
      "├ ┌ # ├ P │",
@@ -284,7 +303,8 @@ export const GENERATED = [
     "score": 32.4
    },
    {
-    "name": "Bumpy Ditch",
+    "name": "Hay Bale Maze",
+    "id": "bumpy-ditch",
     "rows": [
      ". . │ └ ├ #",
      "P ─ ┐ C ─ .",
@@ -299,7 +319,8 @@ export const GENERATED = [
     "score": 32.5
    },
    {
-    "name": "Mossy Orchard",
+    "name": "Muddy Pasture",
+    "id": "mossy-orchard",
     "rows": [
      "┌ ┐ . └ . ├",
      "└ ┼ . ─ │ ─",
@@ -315,7 +336,8 @@ export const GENERATED = [
     "score": 34.7
    },
    {
-    "name": "Windy Ditch",
+    "name": "Cowbell Crossing",
+    "id": "windy-ditch",
     "rows": [
      "# ┴ ├ # P ┐",
      "┴ . . ┴ │ ┬",
@@ -331,7 +353,8 @@ export const GENERATED = [
     "score": 38.7
    },
    {
-    "name": "Sunny Gully",
+    "name": "Barnyard Gate",
+    "id": "sunny-gully",
     "rows": [
      "┴ ┌ ─ ─ ─ ─ ┐",
      "┐ P ┌ P C # │",
@@ -348,7 +371,8 @@ export const GENERATED = [
     "score": 44.4
    },
    {
-    "name": "Thirsty Lane",
+    "name": "Grazing Ground",
+    "id": "thirsty-lane",
     "rows": [
      "┐ S ┐ ┼ ┬ . . .",
      "│ ─ └ ┐ ┐ ┴ ┼ .",
@@ -365,7 +389,8 @@ export const GENERATED = [
     "score": 46.9
    },
    {
-    "name": "Pebbly Spring",
+    "name": "Fence Line",
+    "id": "pebbly-spring",
     "rows": [
      "│ ├ │ └ P . .",
      "# ┴ ┬ ┴ ├ P ┬",
@@ -386,7 +411,8 @@ export const GENERATED = [
   "name": "Hill Country",
   "levels": [
    {
-    "name": "Crooked Corner",
+    "name": "Switchback",
+    "id": "crooked-corner",
     "rows": [
      "┌2 ┼2 ─2 ─2 ┬2 ┘2 #2",
      "┴2 ┤2 ┴2 ┬2 .2 .2 ├2",
@@ -401,7 +427,8 @@ export const GENERATED = [
     "score": 35.9
    },
    {
-    "name": "Thirsty Orchard",
+    "name": "Terrace Steps",
+    "id": "thirsty-orchard",
     "rows": [
      "│2 S2 ─2 ─1 ┐1 ┌1 ┐",
      "┼2 ┌2 ─2 ┐1 └1 ┴p2 ┤",
@@ -419,7 +446,8 @@ export const GENERATED = [
     "score": 38.6
    },
    {
-    "name": "Mossy Trickle",
+    "name": "Windy Ridge",
+    "id": "mossy-trickle",
     "rows": [
      "┤2 ┌2 ┐2 ┤2 S2 └2 .2",
      "├2 ├2 ┤2 ┴2 │2 │2 ┘2",
@@ -435,7 +463,8 @@ export const GENERATED = [
     "score": 38.9
    },
    {
-    "name": "Misty Orchard",
+    "name": "Lookout Point",
+    "id": "misty-orchard",
     "rows": [
      "┐2 .2 P2 ┌2 ─2 ─2 P2",
      "┬2 ┌2 ┼2 ┘2 ┐2 .2 │2",
@@ -451,7 +480,8 @@ export const GENERATED = [
     "score": 40.3
    },
    {
-    "name": "Quiet Meadow",
+    "name": "Sheep Trail",
+    "id": "quiet-meadow",
     "rows": [
      ".2 ┼2 .2 .2 ┬2 ─2 └2",
      "┘2 C2 ├2 ┼2 ┘2 ┴2 ┼2",
@@ -467,7 +497,8 @@ export const GENERATED = [
     "score": 40.4
    },
    {
-    "name": "Thirsty Ditch",
+    "name": "Rolling Downs",
+    "id": "thirsty-ditch",
     "rows": [
      "┐2 ─2 ┘2 .2 ┬2 ┐2 ┼1",
      ".2 ┘2 .2 ┴2 ├2 ┼1 ┼1",
@@ -485,7 +516,8 @@ export const GENERATED = [
     "score": 41.6
    },
    {
-    "name": "Dewy Field",
+    "name": "Summit Spring",
+    "id": "dewy-field",
     "rows": [
      "┤2 S2 │2 ─2 ─2 ┐2 ┘2 C1",
      "├2 │2 ─2 ┤2 C2 └2 ─2 ┐1",
@@ -507,7 +539,8 @@ export const GENERATED = [
   "name": "Cactus Patch",
   "levels": [
    {
-    "name": "Shady Terrace",
+    "name": "Prickly Path",
+    "id": "shady-terrace",
     "rows": [
      "┬ ┴ ─ P ┐ ┘ .",
      "┤ ─ . X │ ┤ ┐",
@@ -524,7 +557,8 @@ export const GENERATED = [
     "score": 36.6
    },
    {
-    "name": "Sunny Patch",
+    "name": "Tumbleweed",
+    "id": "sunny-patch",
     "rows": [
      "└ ┐ # ┬ ─ S │",
      "┘ X ┌ ┘ ┼ ─ C",
@@ -539,7 +573,8 @@ export const GENERATED = [
     "score": 43.4
    },
    {
-    "name": "Sleepy Terrace",
+    "name": "Desert Bloom",
+    "id": "sleepy-terrace",
     "rows": [
      "│ . # ┐ ┘ ┬ .",
      "└ ┬ # P ─ ┴ ┴",
@@ -556,7 +591,8 @@ export const GENERATED = [
     "score": 43.9
    },
    {
-    "name": "Dusty Spring",
+    "name": "Dry Wash",
+    "id": "dusty-spring",
     "rows": [
      "│ └ ├ . ┤ ┴ ┬",
      ". . . P ┬ P #",
@@ -572,7 +608,8 @@ export const GENERATED = [
     "score": 46.2
    },
    {
-    "name": "Sleepy Patch",
+    "name": "Mesa Top",
+    "id": "sleepy-patch",
     "rows": [
      "┘ ┘ ├ ┤ ┤ # ─",
      "├ . . ┼ P ┼ ┘",
@@ -588,7 +625,8 @@ export const GENERATED = [
     "score": 46.6
    },
    {
-    "name": "Shady Orchard",
+    "name": "Roadrunner Run",
+    "id": "shady-orchard",
     "rows": [
      "┼ ├ ┐ S ┬ ┐ │ ┤",
      "┴ ┼ ┐ . ┴ ┤ ┼ ┤",
@@ -604,7 +642,8 @@ export const GENERATED = [
     "score": 46.7
    },
    {
-    "name": "Crooked Patch",
+    "name": "Sandy Spines",
+    "id": "crooked-patch",
     "rows": [
      "# X ┼ # ┼ ┼ ┐",
      "┌ ┼ ┴ ├ ─ ─ ┐",
@@ -621,7 +660,8 @@ export const GENERATED = [
     "score": 46.9
    },
    {
-    "name": "Lazy Spring",
+    "name": "Agave Alley",
+    "id": "lazy-spring",
     "rows": [
      "┤ ┘ ─ ─ ┌ P .",
      ". └ ┼ ├ ┴ ─ P",
@@ -638,7 +678,8 @@ export const GENERATED = [
     "score": 47.6
    },
    {
-    "name": "Windy Meadow",
+    "name": "Coyote Creek",
+    "id": "windy-meadow",
     "rows": [
      "C ┌ ─ ─ ─ ─ ┐ C",
      "┌ P ┬ ┐ ┼ ┐ │! └",
@@ -655,7 +696,8 @@ export const GENERATED = [
     "score": 62.4
    },
    {
-    "name": "Twisty Puddle",
+    "name": "Painted Rock",
+    "id": "twisty-puddle",
     "rows": [
      "┴ ┴ X X ┘ ┘ P ┘",
      "┌ ┴ ┬ ─ ┴ ─ ┼ ├",
@@ -677,7 +719,8 @@ export const GENERATED = [
   "name": "Potting Shed",
   "levels": [
    {
-    "name": "Dewy Ditch",
+    "name": "Seed Trays",
+    "id": "dewy-ditch",
     "rows": [
      "# ┴ ┐ . ┘ P .",
      "S ┴ ─ ┐ . │+ .",
@@ -695,7 +738,8 @@ export const GENERATED = [
     "score": 37.3
    },
    {
-    "name": "Dusty Brook",
+    "name": "Clay Pots",
+    "id": "dusty-brook",
     "rows": [
      "P ─ ─ ┬ ┬ P ┤",
      "┤ ┼ ─ │ │ ┼ ┴",
@@ -714,7 +758,8 @@ export const GENERATED = [
     "score": 37.9
    },
    {
-    "name": "Crooked Spring",
+    "name": "Garden Gloves",
+    "id": "crooked-spring",
     "rows": [
      "┤ S . . ┘ ┘",
      "│ │ ┴ . │ ┼",
@@ -733,7 +778,8 @@ export const GENERATED = [
     "score": 45.8
    },
    {
-    "name": "Dewy Gully",
+    "name": "Trowel and Twine",
+    "id": "dewy-gully",
     "rows": [
      "┐ # S ┼ . .",
      ". ┐ └ ┐ ─ ┬",
@@ -751,7 +797,8 @@ export const GENERATED = [
     "score": 47.4
    },
    {
-    "name": "Dusty Terrace",
+    "name": "Watering Can",
+    "id": "dusty-terrace",
     "rows": [
      "┌ ┌ ─ ─ S └",
      "┬ │+ ┬ ┐ ─ ┌",
@@ -771,7 +818,8 @@ export const GENERATED = [
     "score": 52.6
    },
    {
-    "name": "Mossy Spring",
+    "name": "Seedling Shelf",
+    "id": "mossy-spring",
     "rows": [
      "┤ P ┬ . ┼ ┼",
      ". │ ┤ └ ┬ ┴",
@@ -786,7 +834,8 @@ export const GENERATED = [
     "score": 52.7
    },
    {
-    "name": "Mossy Lane",
+    "name": "Compost Corner",
+    "id": "mossy-lane",
     "rows": [
      "S ┬ ┐ ┐ ┌ . .",
      "┬ ┬ └ ┐ # ┤ ┤",
@@ -808,7 +857,8 @@ export const GENERATED = [
     "score": 53.3
    },
    {
-    "name": "Quiet Terrace",
+    "name": "Bulb Box",
+    "id": "quiet-terrace",
     "rows": [
      "┐ # ┤ │ ┴ │ S",
      "┐ ┘ # . _ ┬ ┘",
@@ -832,7 +882,8 @@ export const GENERATED = [
   "name": "Clockwork Garden",
   "levels": [
    {
-    "name": "Bumpy Corner",
+    "name": "Tick Tock",
+    "id": "bumpy-corner",
     "rows": [
      "├ ┼ . P ─ ┘ ┬ .",
      "┌a ─b ─ ┴b ─a ─c ┐ ┴",
@@ -849,7 +900,8 @@ export const GENERATED = [
     "score": 27.8
    },
    {
-    "name": "Dusty Corner",
+    "name": "Gear Garden",
+    "id": "dusty-corner",
     "rows": [
      ". ┌ S . ┴ ┌ ┐",
      "│b ├b ┼ # ┼ ┘ ┴",
@@ -864,7 +916,8 @@ export const GENERATED = [
     "score": 45.5
    },
    {
-    "name": "Sleepy Hollow",
+    "name": "Cuckoo Clock",
+    "id": "sleepy-hollow",
     "rows": [
      "└ ┐ S ─ ─ ┐ . .",
      "┌a ┼ ─ ┴ ┤ │a ┼ ┤",
@@ -880,7 +933,8 @@ export const GENERATED = [
     "score": 46.2
    },
    {
-    "name": "Quiet Brook",
+    "name": "Sundial",
+    "id": "quiet-brook",
     "rows": [
      ". ┐ . ┌ P ┘ .",
      "┼ ┬ . ┐ │ ├ ┴",
@@ -896,7 +950,8 @@ export const GENERATED = [
     "score": 49.4
    },
    {
-    "name": "Lazy Terrace",
+    "name": "Wind-Up Way",
+    "id": "lazy-terrace",
     "rows": [
      "# ├ ┤ # ┬ │b ┤",
      "└ ┴ P ┬ ┬ . ┬",
@@ -911,7 +966,8 @@ export const GENERATED = [
     "score": 49.8
    },
    {
-    "name": "Quiet Patch",
+    "name": "Pendulum Path",
+    "id": "quiet-patch",
     "rows": [
      "┐ S ├ . . ├ #",
      "┐ │ . ┐ . . ┼",
@@ -928,7 +984,8 @@ export const GENERATED = [
     "score": 53.3
    },
    {
-    "name": "Pebbly Patch",
+    "name": "Cogwheel Court",
+    "id": "pebbly-patch",
     "rows": [
      "┴ │ ┘ # ┼ ─ P",
      "┌a ─ ─ ┐ ┬b . │",
@@ -945,7 +1002,8 @@ export const GENERATED = [
     "score": 60.6
    },
    {
-    "name": "Pebbly Hollow",
+    "name": "Spring Loaded",
+    "id": "pebbly-hollow",
     "rows": [
      "S ┬a ┌ ─ ┐ . . .",
      ". └c ┐ ┴ ┼ # │ ┘",
@@ -962,7 +1020,8 @@ export const GENERATED = [
     "score": 60.8
    },
    {
-    "name": "Mossy Ditch",
+    "name": "Clock Tower",
+    "id": "mossy-ditch",
     "rows": [
      "│ ┐c │ P ┼ ┬ ─",
      "# ┬b ┴a ├ P C ┤",
@@ -979,7 +1038,8 @@ export const GENERATED = [
     "score": 64.7
    },
    {
-    "name": "Sleepy Ditch",
+    "name": "Midnight Chime",
+    "id": "sleepy-ditch",
     "rows": [
      "┬ ─ ┌ ┐ ├ ├ P │",
      "P ─ ┴a ┴ ┬ ┬ ┤ ┴a",

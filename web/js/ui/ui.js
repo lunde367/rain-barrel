@@ -38,7 +38,9 @@ const msg = t => { $('msg').textContent = t; };
 const coach = createCoach({ onFinish(){ Save.data.tutorialDone = true; Save.commit(); } });
 
 // ---------- home screen ----------
-let sub = 'menu';
+let sub = 'menu', nextUp = -1;
+// The hint jar shows on the home screen once hints are reachable (the first levels are played).
+const hintsOpen = () => devMode || LEVELS.slice(0, HINTS_FROM).every(l => (Save.data.stars[l.id]||0) > 0);
 // Android's back button: results or a level → home; How to play → Settings; Settings → home.
 // Returns false on the home screen itself, so the app can step aside like any other app.
 export function goBack(){
@@ -48,7 +50,7 @@ export function goBack(){
   return false;
 }   // which home page is showing: menu, settings or help (for the back button)
 function home(html){
-  screen = 'home'; sub = 'menu'; coach.stop();
+  screen = 'home'; sub = 'menu'; coach.stop(); document.body.classList.remove('playing');
   $('app').classList.add('home-mode'); closeOverlay();
   const h = $('home'); h.innerHTML = html; h.hidden = false; window.scrollTo(0,0);
   paintDev();
@@ -58,6 +60,7 @@ function nextLevel(){
   return i < 0 ? null : LEVELS[i];
 }
 export function showMenu(){
+  nextUp = nextLevel()?.gi ?? -1;
   const worldHtml = (Wd, wi) => {
     if (!worldOpen(wi)){
       const prev = WORLDS[wi-1];
@@ -67,7 +70,7 @@ export function showMenu(){
         ${reach ? `<div class="need"><div class="need-bar"><i style="width:${Math.round(have/Wd.need*100)}%"></i></div><span>★ ${have}/${Wd.need}</span></div>` : ''}</div>`;
     }
     const lvls = LEVELS.filter(l => l.wi===wi).map(l => { const ok=unlocked(l.gi), st=Save.data.stars[l.id]||0;
-      return `<button class="lv${G.LV&&G.LV.gi===l.gi?' cur':''}" data-lv="${l.gi}" ${ok?'':'disabled'}><b>${l.li+1}. ${l.name}</b>
+      return `<button class="lv${nextUp===l.gi?' cur':''}" data-lv="${l.gi}" ${ok?'':'disabled'}><b>${l.li+1}. ${l.name}</b>
         ${ok?`<span class="stars">${starStr(st)}</span>`:`<span class="lv-lock">${l.shed?`Opens at ${l.needTotal} ★`:ICON.lock}</span>`}</button>`; }).join('');
     const blurb = Wd.shed ? `${Wd.blurb}. You have ${mainStars()} ★.`
       : wi===0 && !devMode && !tutorialDone() ? `${Wd.blurb}. Finish ${LEVELS[0].name} to open the rest.` : Wd.blurb;
@@ -92,7 +95,7 @@ export function showMenu(){
     ${nx ? `<button class="btn main continue" data-lv="${nx.gi}">${starsEarned()>0?'Continue':'Start'} · ${nx.W.name} ${nx.li+1}: ${nx.name}</button>`
          : goal ? `<p class="home-note">Collect ${goal.left} more ★ in ${goal.prev.name} to open ${goal.W.name}. Replay levels to earn 3 stars.</p>`
          : `<p class="home-note">Every garden is open. Replay any level to earn more stars.</p>`}
-    <p class="home-note jar-note">💡 Hint jar: ${Save.data.jar||0} of ${JAR_MAX}. Every new 3-star level adds a hint.</p>
+    ${hintsOpen() ? `<p class="home-note jar-note">💡 Hint jar: ${Save.data.jar||0} of ${JAR_MAX}. Every new 3-star level adds a hint.</p>` : ''}
     ${parts}
     ${devMode?'<p class="devnote">Test mode is on: every level is unlocked, and each level has a Solve button. Tap the title 7 times to turn it off.</p>':''}`);
   for (const c of $('home').querySelectorAll('canvas[data-icon]')) drawIcon(c, c.dataset.icon);
@@ -139,7 +142,7 @@ function showSettings(){
 // ---------- playing a level ----------
 export function play(gi){
   if (!unlocked(gi)) return;
-  screen = 'play'; coach.stop();
+  screen = 'play'; coach.stop(); document.body.classList.add('playing');
   $('home').hidden = true; closeOverlay(); $('app').classList.remove('home-mode');
   startLevel(gi);
   const LV = G.LV;
@@ -174,8 +177,8 @@ export function play(gi){
 function paintHud(){
   const S = G.S; if (!S) return;
   const f = S.flow, capped = S.cap !== Infinity;
-  $('water').textContent = capped ? `${f.left}` : `${f.water}/${S.budget}`;
-  $('waterLbl').textContent = capped ? `of ${S.cap} left` : 'water';
+  $('water').textContent = capped ? `${f.left}` : `${f.water}`;
+  $('waterLbl').textContent = capped ? `of ${S.cap} left` : `best ${S.budget}`;
   $('waterChip').classList.toggle('warn', capped ? f.ranOut : f.water > S.budget);
   $('taps').textContent = S.taps; $('tapsLbl').textContent = `par ${S.par}`;
   $('tapsChip').classList.toggle('warn', S.taps > S.par);
@@ -239,6 +242,8 @@ const resultIcons = () => `<div class="res-icons">
 function overlay(html){ const o=$('over'); o.innerHTML=html; o.hidden=false; o.scrollTop=0; }
 function closeOverlay(){ $('over').hidden = true; }
 function showWin(w){
+  coach.stop();   // the tutorial bubble must not sit over the results card
+  if (w.gi===0 && !Save.data.tutorialDone){ Save.data.tutorialDone = true; Save.commit(); }
   const S = G.S, LV = G.LV, after = LEVELS[LV.gi+1], next = after && unlocked(after.gi) ? after : null, goal = nextGoal();
   const chips = (w.opened||[]).map(i => `<span>${WORLDS[i].name} is open!</span>`).join('')
     + (!next && goal && goal.wi===LV.wi+1 ? `<span class="plain">${goal.left} more ★ to open ${goal.W.name}</span>` : '');
@@ -338,7 +343,7 @@ export function initUI(){
   on('win', w => {
     const before = WORLDS.map((_,i) => worldOpen(i));
     const L = LEVELS[w.gi];
-    if (!L.lab && w.stars===3 && (Save.data.stars[LEVELS[w.gi].id]||0) < 3 && (Save.data.jar||0) < JAR_MAX){
+    if (!L.lab && L.gi >= HINTS_FROM && w.stars===3 && (Save.data.stars[LEVELS[w.gi].id]||0) < 3 && (Save.data.jar||0) < JAR_MAX){
       Save.data.jar = (Save.data.jar||0) + 1;
       setTimeout(() => toast(`<span class="t-icon">💡</span><span><b>+1 hint in your jar</b><small>You have ${Save.data.jar} saved. They’re used before any ad.</small></span>`), 1400);
     }
